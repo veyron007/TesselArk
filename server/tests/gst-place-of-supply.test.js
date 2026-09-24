@@ -1,10 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const require = createRequire(import.meta.url);
 const { openDatabase } = require('../db.cjs');
 const { createApp } = require('../api.cjs');
+const { seedGstPlaceOfSupplyDemo } = require('../gst-place-of-supply.cjs');
 
 async function fixture(t) {
   const db = openDatabase(':memory:');
@@ -211,4 +215,38 @@ test('sales-only, company/GSTIN/branch scope and proposal identity prevent leaki
   db.prepare("UPDATE user_gstin_grants SET revoked_by=3,revoked_at=CURRENT_TIMESTAMP,revoked_reason='Test revocation' WHERE company_id=1 AND user_id=2 AND gstin_id=1 AND revoked_at IS NULL").run();
   assert.equal((await api('POST',`${path(id)}/proposals/${made.data.assessment.proposal.id}/review`,
     {decision:'approved',reason:'Revoked reviewer'}, {userId:2})).status,403);
+});
+
+test('synthetic source-linked specimens seed once across reopen and do not change source balances',t => {
+  const dir = mkdtempSync(join(tmpdir(),'erp-pos-demo-'));
+  t.after(() => rmSync(dir,{recursive:true,force:true}));
+  const file = join(dir,'erp.sqlite');
+  let db = openDatabase(file);
+  const sourceRows = database => Object.fromEntries(['invoices','invoice_lines','gst_periods','journals','journal_lines','stock_movements']
+    .map(table => [table,database.prepare(`SELECT * FROM ${table} ORDER BY id`).all()]));
+  const before = sourceRows(db);
+  const first = seedGstPlaceOfSupplyDemo(db);
+  assert.equal(first.length,3);
+  assert.deepEqual(sourceRows(db),before);
+  const examples = db.prepare(`SELECT v.number,v.company_id,v.type,p.invoice_id,p.invoice_fingerprint,p.version,
+    p.basis_reference,p.outcome,p.tax_head,p.line_split_json,p.proposed_by,r.decision,r.reviewed_by
+    FROM gst_pos_proposals p JOIN invoices v ON v.id=p.invoice_id
+    LEFT JOIN gst_pos_reviews r ON r.proposal_id=p.id
+    ORDER BY p.id`).all();
+  assert.deepEqual(examples.map(row => [row.number,row.outcome,row.tax_head,row.decision]),[
+    ['DEMO-MUM-201','proposed_split','CGST+SGST','approved'],
+    ['DEMO-SAL-BLR-301','requires_specialist_review',null,null],
+    ['DEMO-SVC-MUM-501','proposed_split','CGST+SGST','approved'],
+  ]);
+  assert.ok(examples.every(row => row.type === 'sale' && row.version === 1 && row.basis_reference.startsWith('SYNTHETIC-POS-')));
+  assert.ok(examples.filter(row => row.decision).every(row => row.proposed_by !== row.reviewed_by));
+  assert.equal(examples[1].line_split_json,null);
+  assert.deepEqual(seedGstPlaceOfSupplyDemo(db),[]);
+  db.close();
+  db = openDatabase(file);
+  t.after(() => db.close());
+  assert.deepEqual(seedGstPlaceOfSupplyDemo(db),[]);
+  assert.deepEqual(sourceRows(db),before);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM gst_pos_proposals').get().n,3);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM gst_pos_reviews').get().n,2);
 });

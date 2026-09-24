@@ -207,4 +207,59 @@ function registerGstPlaceOfSupplyRoutes(app,db) {
   })));
 }
 
-module.exports = { registerGstPlaceOfSupplyRoutes,installGstPlaceOfSupplySchema,assessment,decision };
+// Idempotent presentation specimens. A missing or already-assessed source is
+// left alone so opening an existing demo database cannot replace user work.
+function seedGstPlaceOfSupplyDemo(db) {
+  installGstPlaceOfSupplySchema(db);
+  const examples = [
+    {companyId:1,number:'DEMO-MUM-201',staffId:1,reviewerId:2,
+      supplyKind:'goods_movement',posStateCode:'27',
+      declaration:{composition:'goods_only',recipientRegistered:true,ordinaryDomestic:true,movementTerminatesAtPos:true,specialCase:'none'},
+      basisReference:'SYNTHETIC-POS-MUM-201-DELIVERY-MEMO',
+      reason:'Synthetic staff declaration: this specimen goods delivery ends in Maharashtra. The memo label is a demo reference, not an authentic transport record.',
+      reviewReason:'Independent internal review of the synthetic specimen only; no legal or portal verification.'},
+    {companyId:1,number:'DEMO-SAL-BLR-301',staffId:1,reviewerId:null,
+      supplyKind:'specialist_review',posStateCode:null,
+      declaration:{composition:'goods_only',recipientRegistered:true,ordinaryDomestic:false,movementTerminatesAtPos:false,specialCase:'other_or_unknown'},
+      basisReference:'SYNTHETIC-POS-BLR-301-DELIVERY-QUERY',
+      reason:'Synthetic referral: the linked dispatch demonstrates movement, but this specimen does not establish where delivery terminates. Obtain source evidence and specialist review before choosing tax heads.'},
+    {companyId:2,number:'DEMO-SVC-MUM-501',staffId:4,reviewerId:5,
+      supplyKind:'domestic_service_default',posStateCode:'27',
+      declaration:{composition:'services_only',recipientRegistered:true,ordinaryDomestic:true,movementTerminatesAtPos:false,specialCase:'none'},
+      basisReference:'SYNTHETIC-POS-SVC-501-RECIPIENT-LOCATION-NOTE',
+      reason:'Synthetic staff declaration: ordinary domestic service to the registered Mumbai recipient; the location note is a demo reference only.',
+      reviewReason:'Independent internal review of the synthetic service specimen only; no statutory determination.'},
+  ];
+  db.exec('BEGIN IMMEDIATE');
+  try {
+    const created=[];
+    for (const example of examples) {
+      const invoice = db.prepare("SELECT id FROM invoices WHERE company_id=? AND number=? AND type='sale'").get(example.companyId,example.number);
+      if (!invoice) continue;
+      const existing = db.prepare('SELECT 1 FROM gst_pos_proposals WHERE company_id=? AND invoice_id=? LIMIT 1').get(example.companyId,invoice.id);
+      if (existing) continue;
+      const req = {company:{id:example.companyId},user:{id:example.staffId}};
+      const current = source(db,req,invoice.id);
+      const calculated = decision(current,example);
+      if (example.reviewerId && calculated.outcome !== 'proposed_split') throw new Error(`Synthetic POS seed ${example.number} no longer supports a split`);
+      if (!example.reviewerId && calculated.outcome !== 'requires_specialist_review') throw new Error(`Synthetic POS seed ${example.number} lost specialist referral`);
+      const proposalId = Number(db.prepare(`INSERT INTO gst_pos_proposals(company_id,invoice_id,version,invoice_fingerprint,
+        supply_kind,pos_state_code,declaration_json,basis_reference,reason,outcome,tax_head,line_split_json,
+        reasons_json,warnings_json,proposed_by) VALUES (?,?,1,?,?,?,?,?,?,?,?,?,?,?,?)`)
+        .run(example.companyId,invoice.id,current.fingerprint,example.supplyKind,example.posStateCode,
+          JSON.stringify(example.declaration),example.basisReference,example.reason,calculated.outcome,
+          calculated.taxHead,calculated.lineSplit ? JSON.stringify(calculated.lineSplit) : null,
+          JSON.stringify(calculated.reasons),JSON.stringify(calculated.warnings),example.staffId).lastInsertRowid);
+      if (example.reviewerId) db.prepare(`INSERT INTO gst_pos_reviews(company_id,proposal_id,decision,reason,reviewed_by)
+        VALUES (?,?,'approved',?,?)`).run(example.companyId,proposalId,example.reviewReason,example.reviewerId);
+      created.push({invoiceId:invoice.id,proposalId,reviewed:Boolean(example.reviewerId)});
+    }
+    db.exec('COMMIT');
+    return created;
+  } catch (error) {
+    db.exec('ROLLBACK');
+    throw error;
+  }
+}
+
+module.exports = { registerGstPlaceOfSupplyRoutes,installGstPlaceOfSupplySchema,assessment,decision,seedGstPlaceOfSupplyDemo };
