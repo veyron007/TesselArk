@@ -5,7 +5,8 @@ const { sourceFingerprint } = require('./expenses.cjs');
 const { installInboxSchema } = require('./inbox-db.cjs');
 
 const fail = (message,status=400) => Object.assign(new Error(message),{status});
-const sourceTypes = new Set(['crm','invoice','expense','cashier']);
+const sourceTypes = new Set(['crm','invoice','expense','cashier','work_task']);
+const policySourceTypes = new Set(['crm','invoice','expense','cashier']);
 const validId = (value,name) => { const n=Number(value); if (!Number.isSafeInteger(n) || n<1 || !/^\d+$/.test(String(value))) throw fail(`${name} must be a positive integer`); return n; };
 const date = (value,name) => { const parsed=typeof value==='string' ? Date.parse(`${value}T00:00:00Z`) : NaN; if (typeof value!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(value) || Number.isNaN(parsed) || new Date(parsed).toISOString().slice(0,10)!==value) throw fail(`${name} must be a real YYYY-MM-DD date`); return value; };
 const reason = value => { if (typeof value!=='string' || !value.trim() || value.trim().length>500 || /[\x00-\x1f\x7f]/.test(value)) throw fail('reason must be 1 to 500 printable characters'); return value.trim(); };
@@ -13,6 +14,30 @@ const hash = value => createHash('sha256').update(JSON.stringify(value)).digest(
 const toIso = value => value && value.replace(' ','T') + (value.includes('Z') ? '' : 'Z');
 const localLink = (page,row,id=null) => `/${page}${id ? `?record=${id}&` : '?'}gstin=${row.gstin_id}&branch=${row.branch_id}`;
 const eventsFor = (db,sql,sourceId) => db.prepare(sql).all(sourceId).map(row => ({id:row.id,kind:row.kind,detail:row.detail,at:toIso(row.created_at),actorName:row.actor_name}));
+
+function userState(db,req,item) {
+  return item.sourceType==='work_task'
+    ? db.prepare('SELECT * FROM inbox_work_task_user_state WHERE company_id=? AND user_id=? AND task_id=?').get(req.company.id,req.user.id,item.sourceId)
+    : db.prepare('SELECT * FROM inbox_user_state WHERE company_id=? AND user_id=? AND source_type=? AND source_id=?')
+      .get(req.company.id,req.user.id,item.sourceType,item.sourceId);
+}
+
+function writeUserState(db,req,item,kind,value) {
+  const column=kind==='acknowledge'?'acknowledged_revision':'snoozed_revision';
+  const other=kind==='acknowledge'?'acknowledged_at':'snoozed_until';
+  const timestamp=kind==='acknowledge'?'CURRENT_TIMESTAMP':'?';
+  if (item.sourceType==='work_task') {
+    db.prepare(`INSERT INTO inbox_work_task_user_state(company_id,user_id,task_id,${column},${other})
+      VALUES (?,?,?,?,${timestamp}) ON CONFLICT(company_id,user_id,task_id)
+      DO UPDATE SET ${column}=excluded.${column},${other}=excluded.${other},updated_at=CURRENT_TIMESTAMP`)
+      .run(req.company.id,req.user.id,item.sourceId,item.sourceRevision,...(kind==='snooze'?[value]:[]));
+  } else {
+    db.prepare(`INSERT INTO inbox_user_state(company_id,user_id,source_type,source_id,${column},${other})
+      VALUES (?,?,?,?,?,${timestamp}) ON CONFLICT(company_id,user_id,source_type,source_id)
+      DO UPDATE SET ${column}=excluded.${column},${other}=excluded.${other},updated_at=CURRENT_TIMESTAMP`)
+      .run(req.company.id,req.user.id,item.sourceType,item.sourceId,item.sourceRevision,...(kind==='snooze'?[value]:[]));
+  }
+}
 
 function targetUser(db,req,item) {
   const forbidden = new Set(item.participantIds.filter(Boolean));
@@ -26,8 +51,7 @@ function targetUser(db,req,item) {
 }
 
 function decorate(db,req,item) {
-  const state=db.prepare('SELECT * FROM inbox_user_state WHERE company_id=? AND user_id=? AND source_type=? AND source_id=?')
-    .get(req.company.id,req.user.id,item.sourceType,item.sourceId);
+  const state=userState(db,req,item);
   const escalation=db.prepare('SELECT e.*,u.name AS target_name FROM inbox_escalations e JOIN users u ON u.id=e.target_user_id WHERE e.company_id=? AND e.source_type=? AND e.source_id=? AND e.source_revision=?')
     .get(req.company.id,item.sourceType,item.sourceId,item.sourceRevision);
   const policy=db.prepare('SELECT * FROM inbox_escalation_policies WHERE company_id=? AND source_type=? AND revoked_at IS NULL ORDER BY id DESC LIMIT 1')
@@ -38,7 +62,7 @@ function decorate(db,req,item) {
   const canEscalate=Boolean(policy && target && trigger && item.canEscalateSource && !escalation);
   const snoozedUntil=state?.snoozed_revision===item.sourceRevision && state.snoozed_until>=new Date().toISOString().slice(0,10) ? state.snoozed_until : null;
   const {participantIds,canEscalateSource,...publicItem}=item;
-  const escalationUnavailableReason=!policy ? 'No approved escalation policy' : !item.canEscalateSource ? 'Only the source owner can escalate' : !target ? 'No independent scoped reviewer is available' : !trigger ? 'Policy threshold has not been met' : escalation ? 'Already escalated for this source revision' : null;
+  const escalationUnavailableReason=item.sourceType==='work_task' ? 'Task escalation policy is not configured' : !policy ? 'No approved escalation policy' : !item.canEscalateSource ? 'Only the source owner can escalate' : !target ? 'No independent scoped reviewer is available' : !trigger ? 'Policy threshold has not been met' : escalation ? 'Already escalated for this source revision' : null;
   return {...publicItem,acknowledged:state?.acknowledged_revision===item.sourceRevision,
     acknowledgedRevision:state?.acknowledged_revision||null,snoozedUntil,canEscalate,
     escalationUnavailableReason,
@@ -136,11 +160,75 @@ function cashierItems(db,req) {
   });
 }
 
+function taskScopeVisible(db,req,row) {
+  if (!req.scopes.gstinIds.includes(row.gstin_id)) return false;
+  if (row.scope_type==='branch') return req.scopes.branchIds.includes(row.branch_id)
+    && Boolean(db.prepare('SELECT 1 FROM branches WHERE id=? AND company_id=? AND gstin_id=?').get(row.branch_id,row.company_id,row.gstin_id));
+  if (row.scope_type!=='gstin' || row.branch_id!==null) return false;
+  const branchIds=db.prepare('SELECT id FROM branches WHERE company_id=? AND gstin_id=?').all(row.company_id,row.gstin_id).map(x=>x.id);
+  return branchIds.length>0 && branchIds.every(id=>req.scopes.branchIds.includes(id));
+}
+
+function taskAssignmentGrants(db,row,userId) {
+  const gstin=db.prepare('SELECT id FROM user_gstin_grants WHERE company_id=? AND user_id=? AND gstin_id=? AND revoked_at IS NULL')
+    .get(row.company_id,userId,row.gstin_id)?.id||null;
+  const branches=row.scope_type==='branch' ? [row.branch_id]
+    : db.prepare('SELECT id FROM branches WHERE company_id=? AND gstin_id=? ORDER BY id').all(row.company_id,row.gstin_id).map(x=>x.id);
+  const grants=branches.map(branchId=>db.prepare('SELECT id FROM user_branch_grants WHERE company_id=? AND user_id=? AND branch_id=? AND revoked_at IS NULL')
+    .get(row.company_id,userId,branchId)?.id||null);
+  return {gstin,branches:grants,valid:Boolean(gstin && branches.length && grants.every(Boolean))};
+}
+
+function taskItems(db,req) {
+  if (!db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='work_tasks'").get()) return [];
+  const rows=db.prepare(`SELECT t.*,p.name AS preparer_name,p.role AS preparer_role,r.name AS reviewer_name,r.role AS reviewer_role
+    FROM work_tasks t JOIN users p ON p.id=t.preparer_user_id AND p.company_id=t.company_id
+    JOIN users r ON r.id=t.reviewer_user_id AND r.company_id=t.company_id
+    WHERE t.company_id=? AND t.status IN ('open','submitted') ORDER BY t.internal_target_date,t.id`).all(req.company.id);
+  return rows.filter(row=>taskScopeVisible(db,req,row) && (req.user.role!=='staff'
+    || row.preparer_user_id===req.user.id || row.reviewer_user_id===req.user.id)).map(row=>{
+    const events=eventsFor(db,'SELECT e.id,e.action AS kind,e.details AS detail,e.created_at,u.name AS actor_name FROM work_task_events e JOIN users u ON u.id=e.actor_id WHERE e.task_id=? ORDER BY e.id',row.id);
+    const evidence=db.prepare('SELECT id,version,sha256,status,uploaded_by,reviewed_by FROM work_task_evidence WHERE task_id=? ORDER BY version DESC LIMIT 1').get(row.id)||null;
+    const template=db.prepare('SELECT id,version,status,title,checklist_json FROM work_template_versions WHERE template_id=? AND version=?')
+      .get(row.template_id,row.template_version)||null;
+    const source=row.scope_type==='gstin' ? db.prepare('SELECT id,status,reviewed_by,approved_by FROM gst_periods WHERE company_id=? AND gstin_id=? AND period=?')
+      .get(row.company_id,row.gstin_id,row.period)||null : null;
+    let dependencyIds;
+    try { dependencyIds=JSON.parse(row.dependency_task_ids_json); } catch { dependencyIds=null; }
+    if (!Array.isArray(dependencyIds) || dependencyIds.some(id=>!Number.isSafeInteger(id) || id<1)) dependencyIds=null;
+    const dependencies=dependencyIds?.map(id=>db.prepare('SELECT id,status,version FROM work_tasks WHERE id=? AND company_id=?').get(id,row.company_id)||{id,status:'missing',version:null})||[];
+    const preparerGrants=taskAssignmentGrants(db,row,row.preparer_user_id);
+    const reviewerGrants=taskAssignmentGrants(db,row,row.reviewer_user_id);
+    const blockers=[];
+    if (!preparerGrants.valid || !reviewerGrants.valid) blockers.push('Assigned preparer or reviewer lacks current scope access');
+    if (!dependencyIds) blockers.push('Task dependency list needs correction');
+    else if (dependencies.some(x=>x.status!=='closed')) blockers.push('A dependency task remains open');
+    if (!template || template.status!=='approved') blockers.push('Approved task template version is unavailable');
+    if (row.status==='submitted' && evidence?.status!=='approved') blockers.push('Approved task evidence is required for closure');
+    const assignedReviewer=row.reviewer_user_id===req.user.id && ['accountant','admin'].includes(req.user.role);
+    const assignedPreparer=row.preparer_user_id===req.user.id;
+    const deepLink=`/work-tasks?record=${row.id}&gstin=${row.gstin_id}${row.branch_id===null?'':`&branch=${row.branch_id}`}`;
+    return {id:`work_task:${row.id}`,sourceType:'work_task',sourceId:row.id,companyId:row.company_id,gstinId:row.gstin_id,branchId:row.branch_id,
+      title:row.title,summary:`${row.period} · ${row.status==='submitted'?'Awaiting independent review':'Preparation in progress'}`,
+      owner:{id:row.preparer_user_id,name:row.preparer_name},reviewer:{id:row.reviewer_user_id,name:row.reviewer_name},
+      amountCents:null,dueDate:row.internal_target_date,dueDateKind:'internal',statutoryDueDate:row.statutory_due_date||null,
+      blocker:blockers.join('; ')||null,updatedAt:toIso(row.updated_at),status:row.status,
+      evidence:evidence?{version:evidence.version,status:evidence.status}:null,
+      source:source?{type:'gst_period',id:source.id,status:source.status}:null,
+      sourceRevision:hash(['work_task',row,events.at(-1)?.id||0,evidence,template,source,dependencies,preparerGrants,reviewerGrants]),events,
+      deepLink,permittedAction:row.status==='submitted' && assignedReviewer?'Review assigned work task'
+        :row.status==='open' && assignedPreparer?'Prepare work task':'Open work task',
+      participantIds:[row.preparer_user_id,row.reviewer_user_id],canEscalateSource:false};
+  });
+}
+
 function list(db,req,{gstinId=null,branchId=null,includeSnoozed=false}={}) {
   if (gstinId!==null || branchId!==null) assertScopeAccess(db,{companyId:req.company.id,userId:req.user.id,
     ...(gstinId!==null?{gstinId}:{}),...(branchId!==null?{branchId}:{})});
-  const rows=[...crmItems(db,req),...invoiceItems(db,req),...expenseItems(db,req),...cashierItems(db,req)]
-    .filter(x=>(gstinId===null || x.gstinId===gstinId) && (branchId===null || x.branchId===branchId))
+  const selectedGstinId=gstinId??(branchId===null?null:db.prepare('SELECT gstin_id FROM branches WHERE id=? AND company_id=?').get(branchId,req.company.id)?.gstin_id);
+  const rows=[...crmItems(db,req),...invoiceItems(db,req),...expenseItems(db,req),...cashierItems(db,req),...taskItems(db,req)]
+    .filter(x=>(selectedGstinId===null || x.gstinId===selectedGstinId)
+      && (branchId===null || x.branchId===branchId || (x.sourceType==='work_task' && x.branchId===null)))
     .map(x=>decorate(db,req,x)).sort((a,b)=>(a.dueDate||'9999').localeCompare(b.dueDate||'9999') || a.id.localeCompare(b.id));
   const counts={total:rows.length,unacknowledged:rows.filter(x=>!x.acknowledged).length,
     overdue:rows.filter(x=>x.dueDate && x.dueDate<new Date().toISOString().slice(0,10)).length,snoozed:rows.filter(x=>x.snoozedUntil).length};
@@ -170,27 +258,21 @@ function registerInboxRoutes(app,db) {
   }));
   app.post('/api/inbox/:sourceType/:sourceId/acknowledge',route(req=>{
     const item=selected(req);checkRevision(req,item);
-    db.prepare(`INSERT INTO inbox_user_state(company_id,user_id,source_type,source_id,acknowledged_revision,acknowledged_at)
-      VALUES (?,?,?,?,?,CURRENT_TIMESTAMP) ON CONFLICT(company_id,user_id,source_type,source_id)
-      DO UPDATE SET acknowledged_revision=excluded.acknowledged_revision,acknowledged_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP`)
-      .run(req.company.id,req.user.id,item.sourceType,item.sourceId,item.sourceRevision);
+    writeUserState(db,req,item,'acknowledge');
     return {item:selected(req)};
   }));
   app.post('/api/inbox/:sourceType/:sourceId/snooze',route(req=>{
     const item=selected(req);checkRevision(req,item);
     const until=date(req.body?.until,'until'),today=new Date().toISOString().slice(0,10);
     if (until<=today || until>new Date(Date.now()+30*86400000).toISOString().slice(0,10)) throw fail('Snooze date must be within the next 30 days');
-    db.prepare(`INSERT INTO inbox_user_state(company_id,user_id,source_type,source_id,snoozed_revision,snoozed_until)
-      VALUES (?,?,?,?,?,?) ON CONFLICT(company_id,user_id,source_type,source_id)
-      DO UPDATE SET snoozed_revision=excluded.snoozed_revision,snoozed_until=excluded.snoozed_until,updated_at=CURRENT_TIMESTAMP`)
-      .run(req.company.id,req.user.id,item.sourceType,item.sourceId,item.sourceRevision,until);
+    writeUserState(db,req,item,'snooze',until);
     return {item:selected(req)};
   }));
   app.post('/api/inbox/policies',route(req=>{
     if (req.user.role!=='admin') throw fail('Company admin role required to approve inbox escalation policy',403);
     assertCompanyWideAccess(db,{companyId:req.company.id,userId:req.user.id});
     const type=req.body?.sourceType,days=req.body?.overdueDays,allowed=req.body?.blockerAllowed;
-    if (!sourceTypes.has(type) || !Number.isSafeInteger(days) || days<0 || days>365 || typeof allowed!=='boolean') throw fail('Valid sourceType, overdueDays, and blockerAllowed required');
+    if (!policySourceTypes.has(type) || !Number.isSafeInteger(days) || days<0 || days>365 || typeof allowed!=='boolean') throw fail('Valid sourceType, overdueDays, and blockerAllowed required');
     const why=reason(req.body?.reason);
     db.exec('SAVEPOINT inbox_policy');
     try {

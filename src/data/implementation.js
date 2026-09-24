@@ -38,6 +38,7 @@ export const implemented = {
   'TAX-15': 'Company and GSTIN scope selection',
   'TAX-24': 'Local accountant review states',
   'WORK-05': 'Versioned local evidence files with hashes, scoped record links and internal review; no production client access controls',
-  'WORK-03': 'Scoped browser inbox groups customer case events, submitted invoices, expense claims and pending cashier discrepancies by source record; revision-aware acknowledgement and snooze stay separate from source approval, while escalation requires an explicit admin-approved company policy and an independent eligible reviewer. External delivery and wider workflow coverage remain planned',
+  'WORK-02': 'Approved versioned task templates generate one scoped task per period, with assigned preparer and reviewer, dependencies, internal targets, exact evidence review, audit and independent local closure. GSTIN-wide work pins a local GST period source; statutory dates require an explicit recorded basis. No filing or external workflow automation',
+  'WORK-03': 'Scoped browser inbox groups customer cases, submitted invoices, expense claims, cashier discrepancies and recurring work by source record; revision-aware acknowledgement and snooze stay separate from source approval, while escalation requires an explicit admin-approved company policy and an independent eligible reviewer for supported sources. External delivery remains planned',
   'WORK-09': 'Scoped purchase-invoice expense claims with approved versioned proof, independent review, one-time employee-payable allocation, partial recorded reimbursement and separate company-paid categorisation; no advance management, bank-confirmed payout, foreign-currency handling or payroll link',
 };

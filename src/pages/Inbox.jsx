@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import './Inbox.css';
 
-const sourceNames = { crm: 'Customer follow-up', invoice: 'Invoice', expense: 'Expense claim', cashier: 'Cash drawer' };
+const sourceNames = { crm: 'Customer follow-up', invoice: 'Invoice', expense: 'Expense claim', cashier: 'Cash drawer', work_task: 'Recurring work' };
+const policySourceNames = Object.fromEntries(Object.entries(sourceNames).filter(([type]) => type !== 'work_task'));
 const dateOnly = (value) => value ? new Date(`${value.slice(0, 10)}T12:00:00`) : null;
 const dateLabel = (value) => {
   const parsed = dateOnly(value);
@@ -34,7 +35,7 @@ const safeSourceLink = (value) => {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return null;
   try {
     const url = new URL(value, window.location.origin);
-    if (url.origin !== window.location.origin || !/^\/(order-crm|operations|expenses|invoice-checks|cashier)(\/|$)/.test(url.pathname)) return null;
+    if (url.origin !== window.location.origin || !/^\/(order-crm|operations|expenses|invoice-checks|cashier|work-tasks)(\/|$)/.test(url.pathname)) return null;
     return `${url.pathname}${url.search}`;
   } catch { return null; }
 };
@@ -198,7 +199,7 @@ export default function Inbox({ context = {}, refresh }) {
             : <div className="inbox-list">{visible.map((item) => <button key={item.id} type="button" className={`inbox-thread ${selected?.id === item.id ? 'selected' : ''}`} onClick={() => { setSelectedId(item.id); setNotice(''); }} aria-current={selected?.id === item.id ? 'true' : undefined}>
               <span className="inbox-thread-top"><span className="inbox-source">{sourceNames[item.sourceType] || 'Source record'}</span><span className="inbox-thread-date">{dateLabel(item.updatedAt)}</span></span>
               <span className="inbox-thread-title">{item.title || 'Untitled thread'}</span><span className="inbox-thread-summary">{item.summary || 'No summary available.'}</span>
-              <span className="inbox-thread-foot"><Status item={item} /><span>{item.owner?.name || 'Unassigned'}</span>{item.dueDate && <span className={isOverdue(item) ? 'inbox-due-overdue' : ''}>Due {dateLabel(item.dueDate)}</span>}</span>
+              <span className="inbox-thread-foot"><Status item={item} /><span>{item.owner?.name || 'Unassigned'}</span>{item.dueDate && <span className={isOverdue(item) ? 'inbox-due-overdue' : ''}>{item.dueDateKind === 'internal' ? 'Internal target' : 'Due'} {dateLabel(item.dueDate)}</span>}</span>
             </button>)}</div>}
       </section>
       <section className="inbox-detail-panel" aria-label="Selected thread details">
@@ -207,7 +208,7 @@ export default function Inbox({ context = {}, refresh }) {
           <div className="inbox-detail-meta">
             <div><span>OWNER</span><strong>{selected.owner?.name || 'Unassigned'}</strong></div>
             <div><span>AMOUNT</span><strong>{moneyLabel(selected.amountCents)}</strong></div>
-            <div><span>DUE DATE</span><strong className={isOverdue(selected) ? 'inbox-due-overdue' : ''}>{dateLabel(selected.dueDate)}</strong></div>
+            <div><span>{selected.dueDateKind === 'internal' ? 'INTERNAL TARGET' : 'DUE DATE'}</span><strong className={isOverdue(selected) ? 'inbox-due-overdue' : ''}>{dateLabel(selected.dueDate)}</strong></div>
             <div><span>LAST CHANGE</span><strong>{timeLabel(selected.updatedAt)}</strong></div>
           </div>
           <div className="inbox-next-step"><div><span className="inbox-eyebrow">NEXT PERMITTED ACTION</span><strong>{selected.permittedAction || 'Review the source record'}</strong>{selected.blocker && <p><b>Blocker:</b> {selected.blocker}</p>}</div>{safeSourceLink(selected.deepLink) && <a href={safeSourceLink(selected.deepLink)}>Open source <span aria-hidden="true">↗</span></a>}</div>
@@ -229,7 +230,7 @@ export default function Inbox({ context = {}, refresh }) {
       {policyError && <div className="inbox-message error" role="alert">{policyError}<button type="button" onClick={() => loadPolicies()}>Retry</button></div>}
       {policyNotice && <div className="inbox-message success" role="status">{policyNotice}</div>}
       <div className="inbox-policy-layout"><div className="inbox-policy-list"><h3>Current company policies</h3>{policyLoading ? <p role="status">Loading policies…</p> : policies.length ? policies.map((policy) => <div className="inbox-policy-row" key={policy.id}><div><strong>{sourceNames[policy.sourceType] || policy.sourceType}</strong><span>{policy.blockerAllowed ? 'Blocker eligible' : 'No blocker trigger'} · {policy.overdueDays} overdue day{policy.overdueDays === 1 ? '' : 's'}</span><small>Approved {timeLabel(policy.approvedAt)}{policy.approvedBy ? ` · by user #${policy.approvedBy}` : ''}</small></div><p>{policy.reason}</p></div>) : <p>No escalation policy has been approved for this company.</p>}</div>
-        <form className="inbox-policy-form" onSubmit={savePolicy}><h3>Approve or replace policy</h3><p>Choose the source type and threshold. The server assigns an independent eligible reviewer when an escalation is requested.</p><label>Source type<select value={policyForm.sourceType} onChange={(event) => setPolicyForm((current) => ({ ...current, sourceType: event.target.value }))}>{Object.entries(sourceNames).map(([value, name]) => <option key={value} value={value}>{name}</option>)}</select></label><label>Overdue days<input type="number" min="0" max="365" step="1" required value={policyForm.overdueDays} onChange={(event) => setPolicyForm((current) => ({ ...current, overdueDays: event.target.value }))} /></label><label className="inbox-policy-check"><input type="checkbox" checked={policyForm.blockerAllowed} onChange={(event) => setPolicyForm((current) => ({ ...current, blockerAllowed: event.target.checked }))} /> Allow a recorded blocker to trigger review</label><label>Approval reason<textarea required maxLength="500" rows="3" value={policyForm.reason} onChange={(event) => setPolicyForm((current) => ({ ...current, reason: event.target.value }))} placeholder="Why this policy is appropriate for this company" /></label><button type="submit" disabled={policyBusy || !policyForm.reason.trim()}>{policyBusy ? 'Saving policy…' : 'Approve policy'}</button></form></div>
+        <form className="inbox-policy-form" onSubmit={savePolicy}><h3>Approve or replace policy</h3><p>Choose the source type and threshold. The server assigns an independent eligible reviewer when an escalation is requested.</p><label>Source type<select value={policyForm.sourceType} onChange={(event) => setPolicyForm((current) => ({ ...current, sourceType: event.target.value }))}>{Object.entries(policySourceNames).map(([value, name]) => <option key={value} value={value}>{name}</option>)}</select></label><label>Overdue days<input type="number" min="0" max="365" step="1" required value={policyForm.overdueDays} onChange={(event) => setPolicyForm((current) => ({ ...current, overdueDays: event.target.value }))} /></label><label className="inbox-policy-check"><input type="checkbox" checked={policyForm.blockerAllowed} onChange={(event) => setPolicyForm((current) => ({ ...current, blockerAllowed: event.target.checked }))} /> Allow a recorded blocker to trigger review</label><label>Approval reason<textarea required maxLength="500" rows="3" value={policyForm.reason} onChange={(event) => setPolicyForm((current) => ({ ...current, reason: event.target.value }))} placeholder="Why this policy is appropriate for this company" /></label><button type="submit" disabled={policyBusy || !policyForm.reason.trim()}>{policyBusy ? 'Saving policy…' : 'Approve policy'}</button></form></div>
     </section>}
   </div>;
 }

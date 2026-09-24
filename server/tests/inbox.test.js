@@ -1,11 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
+import { mkdtempSync,rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 const require=createRequire(import.meta.url);
 const { openDatabase }=require('../db.cjs');
 const { createApp }=require('../api.cjs');
 const { sourceFingerprint }=require('../expenses.cjs');
+const { installInboxSchema }=require('../inbox-db.cjs');
+const { installWorkTasksSchema }=require('../work-tasks-db.cjs');
 
 async function fixture(t) {
   const db=openDatabase(':memory:');
@@ -24,6 +29,21 @@ function caseWithEvents(db,count=10) {
     VALUES (1,2,3,1,1,'INBOX-CRM-1','Remaining delivery','Customer called',1,'Call customer','2020-01-01',1,'{}')`).run().lastInsertRowid);
   for (let n=0;n<count;n++) db.prepare(`INSERT INTO order_crm_events(case_id,client_reference,kind,detail,actor_id,payload_json)
     VALUES (?,?,'follow_up',?,1,'{}')`).run(id,`INBOX-EVENT-${n}`,`Change ${n+1}`);
+  return id;
+}
+
+function workTaskWithEvents(db,{scopeType='branch',branchId=1,gstinId=1,period='2026-09',count=10}={}) {
+  installWorkTasksSchema(db);
+  const templateId=Number(db.prepare('INSERT INTO work_templates(company_id,gstin_id,branch_id,scope_type,created_by) VALUES (1,?,?,?,3)')
+    .run(gstinId,branchId,scopeType).lastInsertRowid);
+  db.prepare(`INSERT INTO work_template_versions(template_id,version,title,obligation_key,recurrence,checklist_json,dependency_template_ids_json,status,created_by,approved_by,approved_at)
+    VALUES (?,1,'Local month close','MONTH-CLOSE','monthly','[{"key":"prepare","label":"Prepare work"}]','[]','approved',3,2,CURRENT_TIMESTAMP)`).run(templateId);
+  const id=Number(db.prepare(`INSERT INTO work_tasks(company_id,gstin_id,branch_id,scope_type,template_id,template_version,title,obligation_key,period,period_start,period_end,
+    preparer_user_id,reviewer_user_id,internal_target_date,checklist_json,generation_hash,created_by)
+    VALUES (1,?,?,?, ?,1,'Local month close','MONTH-CLOSE',?,'2026-09-01','2026-09-30',1,2,'2026-10-05','[{"key":"prepare","label":"Prepare work"}]','test-source',3)`)
+    .run(gstinId,branchId,scopeType,templateId,period).lastInsertRowid);
+  for(let n=0;n<count;n++) db.prepare('INSERT INTO work_task_events(task_id,action,details,actor_id) VALUES (?,\'checklist\',?,1)')
+    .run(id,`Task change ${n+1}`);
   return id;
 }
 
@@ -172,4 +192,111 @@ test('cashier discrepancy is one scoped review item and never closes through inb
   assert.equal((await api('POST',`/api/inbox/cashier/${id}/acknowledge`,{expectedRevision:review.sourceRevision},2)).status,200);
   assert.equal(db.prepare('SELECT status FROM cashier_sessions WHERE id=?').get(id).status,'pending_review');
   assert.equal((await api('GET','/api/inbox?branchId=3',undefined,2)).data.items.some(x=>x.id===`cashier:${id}`),false);
+});
+
+test('work task source events, evidence and GST period changes stay one thread and reopen attention',async t=>{
+  const {db,api}=await fixture(t),id=workTaskWithEvents(db,{scopeType:'gstin',branchId:null});
+  const path=`/api/inbox/work_task/${id}`;
+  const first=(await api('GET','/api/inbox?gstinId=1&branchId=1')).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.ok(first);
+  assert.equal(first.events.length,10);
+  assert.equal(first.dueDate,'2026-10-05');
+  assert.equal(first.statutoryDueDate,null);
+  assert.match(first.deepLink,/^\/work-tasks\?record=\d+&gstin=1$/);
+  assert.equal(first.permittedAction,'Prepare work task');
+  assert.equal(first.canEscalate,false);
+  assert.match(first.escalationUnavailableReason,/not configured/);
+  assert.equal((await api('POST','/api/inbox/policies',{sourceType:'work_task',overdueDays:0,blockerAllowed:true,reason:'No policy yet'},3)).status,400);
+  const original=db.prepare('SELECT status,version FROM work_tasks WHERE id=?').get(id);
+  assert.equal((await api('POST',`${path}/acknowledge`,{expectedRevision:first.sourceRevision})).data.item.acknowledged,true);
+  const tomorrow=new Date(Date.now()+86400000).toISOString().slice(0,10);
+  assert.equal((await api('POST',`${path}/snooze`,{expectedRevision:first.sourceRevision,until:tomorrow})).data.item.snoozedUntil,tomorrow);
+  assert.equal(db.prepare('SELECT status,version FROM work_tasks WHERE id=?').get(id).status,original.status);
+  assert.equal(db.prepare('SELECT status,version FROM work_tasks WHERE id=?').get(id).version,original.version);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM work_task_events WHERE task_id=?').get(id).n,10);
+  db.prepare("INSERT INTO work_task_events(task_id,action,details,actor_id) VALUES (?,'checklist','Eleventh change',1)").run(id);
+  const changed=(await api('GET','/api/inbox?branchId=1')).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.equal(changed.events.length,11);
+  assert.notEqual(changed.sourceRevision,first.sourceRevision);
+  assert.equal(changed.acknowledged,false);
+  assert.equal(changed.snoozedUntil,null);
+  assert.equal((await api('POST',`${path}/acknowledge`,{expectedRevision:first.sourceRevision})).status,409);
+  db.prepare("INSERT INTO work_task_evidence(task_id,version,file_name,mime_type,byte_size,sha256,content,status,uploaded_by) VALUES (?,1,'proof.txt','text/plain',1,?,'x','pending',1)").run(id,'a'.repeat(64));
+  const proof=(await api('GET','/api/inbox')).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.notEqual(proof.sourceRevision,changed.sourceRevision);
+  assert.deepEqual(proof.evidence,{version:1,status:'pending'});
+  db.prepare("INSERT OR IGNORE INTO gst_periods(company_id,gstin_id,period,status) VALUES (1,1,'2026-09','open')").run();
+  const withSource=(await api('GET','/api/inbox')).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.ok(withSource.source);
+  db.prepare("UPDATE gst_periods SET status='reviewed',reviewed_by=2 WHERE company_id=1 AND gstin_id=1 AND period='2026-09'").run();
+  const sourceChanged=(await api('GET','/api/inbox')).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.notEqual(sourceChanged.sourceRevision,withSource.sourceRevision);
+  assert.equal(sourceChanged.source.status,'reviewed');
+  db.prepare("UPDATE work_tasks SET status='submitted',version=version+1,submitted_by=1,submitted_at=CURRENT_TIMESTAMP WHERE id=?").run(id);
+  const reviewer=(await api('GET','/api/inbox',undefined,2)).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.equal(reviewer.permittedAction,'Review assigned work task');
+  assert.match(reviewer.blocker,/Approved task evidence/);
+  assert.equal((await api('POST',`${path}/acknowledge`,{expectedRevision:reviewer.sourceRevision},2)).status,200);
+  assert.equal(db.prepare('SELECT status FROM work_tasks WHERE id=?').get(id).status,'submitted');
+});
+
+test('work task scope requires assignment or reviewer role and full GSTIN branch grants',async t=>{
+  const {db,api}=await fixture(t),id=workTaskWithEvents(db,{scopeType:'gstin',branchId:null,count:1});
+  const branchTaskId=workTaskWithEvents(db,{scopeType:'branch',branchId:1,count:1});
+  const staff=(await api('GET','/api/inbox',undefined,1)).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.ok(staff);
+  assert.match(staff.deepLink,/^\/work-tasks\?record=\d+&gstin=1$/);
+  assert.ok((await api('GET','/api/inbox?gstinId=1&branchId=1',undefined,1)).data.items.some(x=>x.id===`work_task:${id}`));
+  const branchTask=(await api('GET','/api/inbox?branchId=1',undefined,1)).data.items.find(x=>x.id===`work_task:${branchTaskId}`);
+  assert.ok(branchTask);
+  assert.equal(branchTask.source,null);
+  assert.equal((await api('GET','/api/inbox?branchId=3',undefined,1)).data.items.some(x=>x.id===`work_task:${branchTaskId}`),false);
+  assert.equal((await api('GET','/api/inbox',undefined,4,2)).data.items.some(x=>x.id===`work_task:${id}`),false);
+  assert.equal((await api('POST',`/api/inbox/work_task/${id}/acknowledge`,{expectedRevision:staff.sourceRevision},4,2)).status,404);
+  const reviewer=(await api('GET','/api/inbox',undefined,2)).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.ok(reviewer);
+  db.prepare("UPDATE user_branch_grants SET revoked_at=CURRENT_TIMESTAMP,revoked_by=3,revoked_reason='Test partial GSTIN scope' WHERE company_id=1 AND user_id=2 AND branch_id=2 AND revoked_at IS NULL").run();
+  assert.equal((await api('GET','/api/inbox',undefined,2)).data.items.some(x=>x.id===`work_task:${id}`),false);
+  assert.equal((await api('POST',`/api/inbox/work_task/${id}/acknowledge`,{expectedRevision:reviewer.sourceRevision},2)).status,404);
+  const admin=(await api('GET','/api/inbox',undefined,3)).data.items.find(x=>x.id===`work_task:${id}`);
+  assert.ok(admin);
+  assert.match(admin.blocker,/reviewer lacks current scope/);
+  assert.notEqual(admin.sourceRevision,staff.sourceRevision);
+});
+
+test('work task state upgrades legacy rows, rejects orphans and cascades deletion across startup',t=>{
+  const directory=mkdtempSync(join(tmpdir(),'inbox-task-state-'));
+  t.after(()=>rmSync(directory,{recursive:true,force:true}));
+  const path=join(directory,'erp.sqlite');
+  let db=openDatabase(path);
+  const taskId=workTaskWithEvents(db,{count:0});
+  db.prepare("INSERT INTO inbox_user_state(company_id,user_id,source_type,source_id,acknowledged_revision) VALUES (1,1,'crm',42,'old-revision')").run();
+  db.exec(`DROP TABLE inbox_work_task_user_state;
+    CREATE TABLE inbox_work_task_user_state (
+      company_id INTEGER NOT NULL REFERENCES companies(id),
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      task_id INTEGER NOT NULL,
+      acknowledged_revision TEXT,
+      acknowledged_at TEXT,
+      snoozed_revision TEXT,
+      snoozed_until TEXT,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY(company_id,user_id,task_id)
+    );`);
+  db.prepare("INSERT INTO inbox_work_task_user_state(company_id,user_id,task_id,acknowledged_revision) VALUES (1,1,?,'task-revision')").run(taskId);
+  db.prepare("INSERT INTO inbox_work_task_user_state(company_id,user_id,task_id,acknowledged_revision) VALUES (1,1,999999,'orphan')").run();
+  db.close();
+  db=openDatabase(path);
+  installInboxSchema(db);
+  assert.equal(db.prepare("SELECT acknowledged_revision FROM inbox_user_state WHERE company_id=1 AND user_id=1 AND source_type='crm' AND source_id=42").get().acknowledged_revision,'old-revision');
+  assert.equal(db.prepare('SELECT acknowledged_revision FROM inbox_work_task_user_state WHERE company_id=1 AND user_id=1 AND task_id=?').get(taskId).acknowledged_revision,'task-revision');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM inbox_work_task_user_state WHERE task_id=999999').get().n,0);
+  assert.ok(db.prepare('PRAGMA foreign_key_list(inbox_work_task_user_state)').all().some(row=>row.table==='work_tasks' && row.from==='task_id' && row.on_delete==='CASCADE'));
+  assert.ok(db.prepare('PRAGMA index_list(inbox_work_task_user_state)').all().some(row=>row.origin==='pk'));
+  assert.throws(()=>db.prepare("INSERT INTO inbox_work_task_user_state(company_id,user_id,task_id) VALUES (1,1,999999)").run(),/FOREIGN KEY/);
+  assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
+  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='index' AND tbl_name='inbox_user_state'").get().n,1);
+  db.prepare('DELETE FROM work_tasks WHERE id=?').run(taskId);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM inbox_work_task_user_state WHERE task_id=?').get(taskId).n,0);
+  db.close();
 });

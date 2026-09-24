@@ -4,10 +4,10 @@ const pages = new Set([
   'supplier-comparison', 'bundles', 'credit', 'finance', 'expenses', 'accounting', 'bank',
   'cashier', 'reporting', 'budgets', 'returns', 'return-inspection',
   'return-settlement', 'return-tax', 'evidence', 'gst', 'invoice-checks', 'statement-import',
-  'simulator', 'access-grants', 'coverage', 'inbox',
+  'simulator', 'access-grants', 'coverage', 'inbox', 'work-tasks',
 ]);
 
-const detailPages = new Set(['orders', 'operations', 'documents', 'invoice-checks']);
+const detailPages = new Set(['orders', 'operations', 'documents', 'invoice-checks', 'work-tasks']);
 
 function validRecord(value) {
   if (typeof value !== 'string' || !/^[1-9]\d*$/.test(value)) return null;

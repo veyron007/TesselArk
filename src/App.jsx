@@ -43,10 +43,12 @@ const Coverage = lazy(() => import('./pages/Coverage.jsx'));
 const StatutoryLifecycle = lazy(() => import('./pages/StatutoryLifecycle.jsx'));
 const AccessGrants = lazy(() => import('./pages/AccessGrants.jsx'));
 const Inbox = lazy(() => import('./pages/Inbox.jsx'));
+const WorkTasks = lazy(() => import('./pages/WorkTasks.jsx'));
 
 const navigation = [
   { id: 'dashboard', label: 'Dashboard', icon: '◫', description: 'Business overview' },
   { id: 'inbox', label: 'Action Inbox', icon: '▤', description: 'Scoped cases, documents and follow-ups' },
+  { id: 'work-tasks', label: 'Work Tasks', icon: '▦', description: 'Period tasks, checklists and local review' },
   { id: 'orders', label: 'Orders', icon: '▧', description: 'Sales orders & fulfilment' },
   { id: 'delivery', label: 'Delivery Proof', icon: '◇', description: 'Partial delivery and staff-reported proof' },
   { id: 'order-crm', label: 'Customer Follow-up', icon: '◷', description: 'Requests, commitments & blockers' },
@@ -162,6 +164,10 @@ export function WorkspaceApp() {
     const route = readWorkspaceRoute(window.location);
     return route.page === 'orders' ? route.recordId : null;
   });
+  const [initialTaskId, setInitialTaskId] = useState(() => {
+    const route = readWorkspaceRoute(window.location);
+    return route.page === 'work-tasks' ? route.recordId : null;
+  });
   const [authMode, setAuthMode] = useState('unknown');
   const [needsLogin, setNeedsLogin] = useState(false);
   const [authUser, setAuthUser] = useState(null);
@@ -247,6 +253,7 @@ export function WorkspaceApp() {
       setActivePage(route.page);
       setInitialInvoiceId(['operations', 'documents', 'invoice-checks'].includes(route.page) ? route.recordId : null);
       setInitialOrderId(route.page === 'orders' ? route.recordId : null);
+      setInitialTaskId(route.page === 'work-tasks' ? route.recordId : null);
       if (bootstrap) setSelection(previous => {
         const company = bootstrap.companies?.find(item => String(item.id) === String(previous.companyId));
         return { ...previous, ...resolveWorkspaceScope(company, scope) };
@@ -358,6 +365,7 @@ export function WorkspaceApp() {
       setActivePage('dashboard');
       setInitialInvoiceId(null);
       setInitialOrderId(null);
+      setInitialTaskId(null);
       window.history.replaceState(null, '', workspaceUrl('dashboard', null, window.location.href));
     } catch (error) {
       setBootError(error.message || 'Could not sign out. Try again.');
@@ -373,6 +381,7 @@ export function WorkspaceApp() {
       window.history.pushState(null, '', url);
     setInitialInvoiceId(['operations', 'documents', 'invoice-checks'].includes(page) ? recordId : null);
     setInitialOrderId(page === 'orders' ? recordId : null);
+    setInitialTaskId(page === 'work-tasks' ? recordId : null);
     setActivePage(page);
   }, [selection]);
   const context = useMemo(() => ({ ...selection, bootstrap, apiFetch }), [selection, bootstrap, apiFetch]);
@@ -388,13 +397,13 @@ export function WorkspaceApp() {
   }, [scopeReady, authMode, selection]);
   useEffect(() => {
     if (!scopeReady) return;
-    const recordId = ['operations', 'documents', 'invoice-checks'].includes(activePage) ? initialInvoiceId : activePage === 'orders' ? initialOrderId : null;
+    const recordId = ['operations', 'documents', 'invoice-checks'].includes(activePage) ? initialInvoiceId : activePage === 'orders' ? initialOrderId : activePage === 'work-tasks' ? initialTaskId : null;
     const url = workspaceUrl(activePage, recordId, window.location.href, selection);
     if (`${window.location.pathname}${window.location.search}` !== url)
       window.history.replaceState(null, '', url);
-  }, [scopeReady, activePage, initialInvoiceId, initialOrderId, selection]);
+  }, [scopeReady, activePage, initialInvoiceId, initialOrderId, initialTaskId, selection]);
   const active = navigation.find((item) => item.id === activePage);
-  const pageProps = { context, refresh: refreshDashboard, bootstrap, selection, onSelectionChange, refreshDashboard, initialInvoiceId, initialOrderId, onNavigate: navigate, onOpenInvoice: (invoiceId) => navigate('operations', invoiceId), onOpenDocument: (invoiceId) => navigate('documents', invoiceId) };
+  const pageProps = { context, refresh: refreshDashboard, bootstrap, selection, onSelectionChange, refreshDashboard, initialInvoiceId, initialOrderId, initialTaskId, onNavigate: navigate, onOpenInvoice: (invoiceId) => navigate('operations', invoiceId), onOpenDocument: (invoiceId) => navigate('documents', invoiceId) };
 
   if (needsLogin) return <AuthScreen onSubmit={signIn} busy={signInBusy} error={signInError} />;
   if (bootError && !bootstrap) return (
@@ -443,6 +452,7 @@ export function WorkspaceApp() {
           {scopeReady && <Suspense fallback={<div className="alert info" role="status">Opening workspace…</div>}>
             {activePage === 'dashboard' && <Dashboard {...pageProps} refreshKey={refreshKey} onNavigate={navigate} />}
             {activePage === 'inbox' && <Inbox {...pageProps} />}
+            {activePage === 'work-tasks' && <WorkTasks {...pageProps} />}
             {activePage === 'operations' && <Operations {...pageProps} />}
             {activePage === 'documents' && <DocumentOutput {...pageProps} />}
             {activePage === 'master-import' && <MasterImport {...pageProps} />}

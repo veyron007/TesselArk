@@ -36,6 +36,8 @@ const { installGstInvoiceAssistantSchema, seedGstInvoiceCheckDemo } = require('.
 const { installGstPlaceOfSupplySchema } = require('./gst-place-of-supply-db.cjs');
 const { installExpensesSchema } = require('./expenses-db.cjs');
 const { installInboxSchema } = require('./inbox-db.cjs');
+const { installWorkTasksSchema } = require('./work-tasks-db.cjs');
+const { seedWorkTasksDemo } = require('./work-tasks-demo.cjs');
 const { seedExpensesDemo } = require('./expenses-demo.cjs');
 const { seedGstPlaceOfSupplyDemo } = require('./gst-place-of-supply.cjs');
 
@@ -120,6 +122,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
   installGstPlaceOfSupplySchema(db);
   installExpensesSchema(db);
   installInboxSchema(db);
+  installWorkTasksSchema(db);
   if (!db.prepare('SELECT 1 FROM companies LIMIT 1').get()) seed(db);
   if (!db.prepare("SELECT 1 FROM users WHERE company_id=2 AND role='admin'").get()) {
     db.prepare("INSERT INTO users(company_id,name,role) VALUES (2,'Aarav Services Owner','admin')").run();
@@ -157,6 +160,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
   }
   syncLedgerSources(db);
   if (file === path.join(__dirname, 'erp.sqlite')) seedExpensesDemo(db);
+  if (file === path.join(__dirname, 'erp.sqlite')) seedWorkTasksDemo(db);
   return db;
 }
 
