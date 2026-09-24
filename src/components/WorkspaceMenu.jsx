@@ -142,6 +142,11 @@ export default function WorkspaceMenu({
           </select>
         </label>}
       </div>
+      <div className="workspace-menu-section workspace-menu-inbox">
+        <button type="button" className="workspace-menu-work-link" onClick={() => navigate('inbox')}>
+          <span>Action Inbox<small>Cases and documents in this scope</small></span><span aria-hidden="true">↗</span>
+        </button>
+      </div>
       {canReviewWork && <div className="workspace-menu-section workspace-menu-work">
         <span className="workspace-menu-kicker">WORK NEEDING ATTENTION</span>
         {!scopeReady ? <p role="status">Loading permitted context…</p> : workError ? <div className="workspace-menu-work-error" role="alert"><span>{workError}</span><button type="button" onClick={() => setWorkRetry((value) => value + 1)}>Retry</button></div> : !work ? <p role="status">Loading work counts…</p> : <>

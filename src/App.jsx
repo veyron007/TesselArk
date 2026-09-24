@@ -42,9 +42,11 @@ const StatementImport = lazy(() => import('./pages/StatementImport.jsx'));
 const Coverage = lazy(() => import('./pages/Coverage.jsx'));
 const StatutoryLifecycle = lazy(() => import('./pages/StatutoryLifecycle.jsx'));
 const AccessGrants = lazy(() => import('./pages/AccessGrants.jsx'));
+const Inbox = lazy(() => import('./pages/Inbox.jsx'));
 
 const navigation = [
   { id: 'dashboard', label: 'Dashboard', icon: '◫', description: 'Business overview' },
+  { id: 'inbox', label: 'Action Inbox', icon: '▤', description: 'Scoped cases, documents and follow-ups' },
   { id: 'orders', label: 'Orders', icon: '▧', description: 'Sales orders & fulfilment' },
   { id: 'delivery', label: 'Delivery Proof', icon: '◇', description: 'Partial delivery and staff-reported proof' },
   { id: 'order-crm', label: 'Customer Follow-up', icon: '◷', description: 'Requests, commitments & blockers' },
@@ -440,6 +442,7 @@ export function WorkspaceApp() {
           {!scopeReady && !bootError && <div className="alert info" role="status">Loading permitted business context…</div>}
           {scopeReady && <Suspense fallback={<div className="alert info" role="status">Opening workspace…</div>}>
             {activePage === 'dashboard' && <Dashboard {...pageProps} refreshKey={refreshKey} onNavigate={navigate} />}
+            {activePage === 'inbox' && <Inbox {...pageProps} />}
             {activePage === 'operations' && <Operations {...pageProps} />}
             {activePage === 'documents' && <DocumentOutput {...pageProps} />}
             {activePage === 'master-import' && <MasterImport {...pageProps} />}

@@ -4,7 +4,7 @@ const pages = new Set([
   'supplier-comparison', 'bundles', 'credit', 'finance', 'expenses', 'accounting', 'bank',
   'cashier', 'reporting', 'budgets', 'returns', 'return-inspection',
   'return-settlement', 'return-tax', 'evidence', 'gst', 'invoice-checks', 'statement-import',
-  'simulator', 'access-grants', 'coverage',
+  'simulator', 'access-grants', 'coverage', 'inbox',
 ]);
 
 const detailPages = new Set(['orders', 'operations', 'documents', 'invoice-checks']);

@@ -96,3 +96,9 @@ Demo users now have explicit GSTIN/branch grants with server-side enforcement an
 - Applied user-approved Option C to the real dashboard and shared shell, with matching styles across existing domain pages. Kept all current routes including Pricing and Credit Controls.
 - Dashboard now uses scoped API metrics, real six-month invoice/GST charts with exact data tables, invoice drilldowns and a local-review rail. Scope and tax-state distinctions remain explicit; no coverage claims were promoted.
 - Final verification: 179/179 tests, build passed, all 25 desktop destinations opened, core context switches and invoice/GST drilldowns checked. Initial 390px shell/menu checks passed; broader responsive sweep deferred per later steering. See `qa/prism-redesign.md` for evidence and limitations.
+
+## Later working slices — 2026-09-24
+
+- WORK-09 Expenses & Reimbursements adds scoped invoice-linked claims, versioned proof, independent review, employee payable allocation, partial recorded reimbursement and company-paid categorisation. The source remains separate from bank-confirmed payment.
+- WORK-03 Action Inbox groups customer cases, submitted invoices, submitted expense claims and pending cashier discrepancies by source record. Per-user acknowledgement and snooze follow the source revision; an admin-approved company policy is required before an independent-review escalation. These actions do not approve or settle source work. Browser delivery only; external notifications remain planned.
+- Build Status now marks 41 of 85 researched groups partial and 44 planned; none is claimed as full parity. The WORK-03 API regression suite raised the full test count to 279 passing tests. Desktop browser QA confirmed staff thread rendering and, on an isolated copy of the database, acknowledgement, snooze and admin policy creation. A separate independent review found an expense source-revision gap, which was fixed and regression-tested.
