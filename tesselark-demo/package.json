@@ -1,0 +1,37 @@
+{
+  "name": "tesselark-demo",
+  "version": "1.0.0",
+  "description": "TesselArk product demo video",
+  "repository": {},
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@remotion/cli": "4.0.528",
+    "@remotion/media": "4.0.528",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.528"
+  },
+  "devDependencies": {
+    "@remotion/eslint-config-flat": "4.0.528",
+    "@types/react": "19.2.7",
+    "@types/web": "0.0.166",
+    "eslint": "^9.39.5",
+    "playwright": "^1.63.0",
+    "prettier": "3.8.1",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion bundle",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc",
+    "capture": "node scripts/capture-app.mjs",
+    "voice": "node scripts/generate-voiceover.mjs",
+    "score": "node scripts/generate-soundtrack.mjs",
+    "render": "remotion render src/index.ts TesselArkProductDemo out/TesselArk-Product-Demo.mp4 --codec h264 --crf 18 --audio-codec aac"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}

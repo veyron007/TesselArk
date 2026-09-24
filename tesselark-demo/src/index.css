@@ -1,0 +1,38 @@
+@font-face{font-family:Manrope;src:url('../public/fonts/Manrope-Medium.ttf') format('truetype');font-weight:500}
+@font-face{font-family:Manrope;src:url('../public/fonts/Manrope-Bold.ttf') format('truetype');font-weight:700}
+@font-face{font-family:Manrope;src:url('../public/fonts/Manrope-ExtraBold.ttf') format('truetype');font-weight:800}
+@font-face{font-family:'DM Sans';src:url('../public/fonts/DMSans-Regular.ttf') format('truetype');font-weight:400}
+*{box-sizing:border-box}
+html,body{margin:0;background:#f6faff}
+body{font-family:'DM Sans',Arial,sans-serif}
+.grain{position:absolute;inset:0;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E")}
+.brand-art{position:absolute;right:78px;top:130px;filter:drop-shadow(0 40px 60px #255c9a38)}
+.brand-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;width:1120px;height:100%;padding:105px 0 105px 112px}
+.brand-lockup{display:flex;align-items:center;gap:21px;font:800 48px Manrope,Arial,sans-serif;letter-spacing:-.06em}
+.brand-lockup svg{width:66px;height:66px}
+.brand-line{width:92px;height:8px;border-radius:9px;background:#3c85ee;margin:67px 0 31px}
+.brand-content h1{font:800 101px/1.07 Manrope,Arial,sans-serif;letter-spacing:-.075em;margin:0;max-width:1030px}
+.brand-content p{font:400 35px/1.36 'DM Sans',Arial,sans-serif;letter-spacing:-.017em;max-width:730px;margin:30px 0 0;color:inherit;opacity:.74}
+.brand-trail{font:800 22px Manrope,Arial,sans-serif;letter-spacing:.21em;margin-top:67px;color:#3b7ed8}
+.legal-footnote{position:absolute;left:112px;bottom:58px;font:500 18px Manrope,Arial,sans-serif;color:#7f93b3}
+.feature-grid{position:absolute;inset:0;background-image:linear-gradient(#4376c80d 1px,transparent 1px),linear-gradient(90deg,#4376c80d 1px,transparent 1px);background-size:66px 66px;mask-image:linear-gradient(90deg,transparent,#000 72%);opacity:.65}
+.feature-glow{position:absolute;right:-230px;top:-380px;width:1160px;height:1160px;border-radius:50%;background:radial-gradient(circle,#dbeaff 0,#e8f2ff99 42%,transparent 70%)}
+.feature-top{position:absolute;top:78px;left:100px;right:100px;display:flex;align-items:center;justify-content:space-between;font:700 17px Manrope,Arial,sans-serif;letter-spacing:.17em;color:#6c83a6}
+.feature-brand{display:flex;align-items:center;gap:12px;color:#2256aa;font-size:27px;letter-spacing:-.055em}
+.feature-brand svg{width:36px;height:36px}
+.feature-copy{position:absolute;left:100px;top:310px;width:480px;z-index:3}
+.eyebrow{display:block;font:800 20px Manrope,Arial,sans-serif;letter-spacing:.18em;color:#4673ad}
+.feature-copy h2{font:800 76px/1.08 Manrope,Arial,sans-serif;letter-spacing:-.07em;margin:27px 0 30px}
+.feature-copy p{font:400 29px/1.42 'DM Sans',Arial,sans-serif;letter-spacing:-.016em;color:#526d92;margin:0}
+.cue{display:flex;align-items:center;gap:18px;margin-top:55px;color:#245fc2;font:800 19px Manrope,Arial,sans-serif;letter-spacing:.13em}
+.cue-line{display:block;width:55px;height:4px;border-radius:9px;background:#3c83e8}
+.screen-frame{position:absolute;left:605px;top:181px;width:1380px;height:803px;padding:13px;background:#fff;border:1px solid #cadcf4;border-radius:27px;box-shadow:0 54px 90px #1539672e,0 9px 24px #15396717;overflow:hidden;z-index:2}
+.screen-chrome{height:36px;display:flex;align-items:center;gap:9px;padding:0 13px;background:#fbfdff;color:#8ca0bc;font:800 13px Manrope,Arial,sans-serif;letter-spacing:.13em}
+.screen-chrome span{width:10px;height:10px;border-radius:50%;background:#bdd0ea}
+.screen-chrome span:nth-child(2){background:#8eb3eb}
+.screen-chrome span:nth-child(3){background:#5d94e9}
+.screen-chrome strong{margin:auto;font-weight:800}
+.screen-images{position:relative;width:100%;height:calc(100% - 36px);border-radius:0 0 15px 15px;overflow:hidden;background:#f7fbff}
+.feature-footer{position:absolute;left:100px;right:100px;bottom:53px;display:flex;align-items:center;gap:24px;color:#7a91ae;font:700 15px Manrope,Arial,sans-serif;letter-spacing:.11em;z-index:4}
+.feature-footer .progress{width:190px;height:5px;margin-left:auto;background:#dce7f7;border-radius:20px;overflow:hidden}
+.feature-footer .progress span{display:block;height:100%;background:#397de4}
