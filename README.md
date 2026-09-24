@@ -7,13 +7,21 @@ This is a working local ERP under active development against the researched [85-
 Requires Node 26+ and Python 3 for refreshing the research catalogue.
 
 ```bash
-npm install
+git clone https://github.com/veyron007/TesselArk.git
+cd TesselArk
+npm ci
 npm run dev
 ```
 
 Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The web app proxies `/api` to the Node server on port 3001. Both servers bind to loopback. The API uses a local SQLite file and seeds synthetic demo records on first start. `npm test` runs API tests; `npm run build` checks the frontend build. After building, `ERP_AUTH_MODE=demo npm start` serves both the API and built web app at [http://127.0.0.1:3001](http://127.0.0.1:3001).
 
 The public `/` page explains the current product with GSAP scroll motion and a lazy Three.js scope scene; `/demo` lists prepared, scoped demo accounts. Sign in and Sign up both open that chooser in demo mode. `/app` opens the selected workspace, while existing workspace deep links remain valid. Flute's development-only live workspace scene is in `src/flute/`; it is an authoring preview, not a statutory or production service.
+
+### Data included with a clone
+
+The mock data is checked into GitHub as synthetic seed code in `server/`. Every fresh clone creates `server/erp.sqlite` and loads it automatically on first launch; no database download or external account is required. At this revision, a clean launch contains 3 companies, 4 GSTINs, 5 branches, 121 invoices, 38 orders, 5 evidence documents, and 4 work tasks. The research catalogue is in `research/`, the generated feature catalogue is in `src/data/features.json`, and [`qa/demo-fixtures.md`](qa/demo-fixtures.md) maps the presentation examples to their records.
+
+The SQLite database, uploaded local evidence, `node_modules/`, and built `dist/` are local/generated files and are not committed. Changes made to a local database after startup will therefore not appear in a fresh clone. To reset to the original demo state, stop the server, remove your local `server/erp.sqlite` (and any `server/erp.sqlite-*` files), then start the app again. This deletes local changes, so back up anything you need first.
 
 Use the company/GSTIN/branch selectors and **Demo user** selector to explore staff preparation and accountant approval. The selector is a demonstration control; it is not production sign-in. Demo mode accepts user headers and is restricted to loopback. Do not expose demo mode to an untrusted network.
 
