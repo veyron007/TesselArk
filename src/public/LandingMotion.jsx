@@ -1,50 +1,34 @@
 import { useEffect } from 'react';
 
-export default function LandingMotion() {
+export default function LandingMotion({ root }) {
   useEffect(() => {
     let disposed = false;
     let media;
-    Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([gsapModule, triggerModule]) => {
-      if (disposed) return;
-      const gsap = gsapModule.gsap;
-      gsap.registerPlugin(triggerModule.ScrollTrigger);
+    Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(([{ gsap }, { ScrollTrigger }]) => {
+      if (disposed || !root.current) return;
+      gsap.registerPlugin(ScrollTrigger);
       media = gsap.matchMedia();
       media.add('(prefers-reduced-motion: no-preference)', () => {
         const context = gsap.context(() => {
-          const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
-          intro.from('.hero-copy .public-kicker', { autoAlpha: 0, y: 15, duration: .55, clearProps: 'all' })
-            .from('.hero-copy h1', { autoAlpha: 0, y: 28, duration: .85, clearProps: 'all' }, '-=.33')
-            .from('.hero-copy > :is(.hero-description, .hero-actions, .hero-note)', {
-              autoAlpha: 0, y: 20, duration: .65, stagger: .09, clearProps: 'all',
-            }, '-=.55');
-          gsap.to('.product-scene', {
-            y: -38, ease: 'none', scrollTrigger: { trigger: '.public-hero', start: 'top top', end: 'bottom top', scrub: .8 },
+          gsap.from('.hero-copy, .hero-introduction', { y: 22, opacity: 0, duration: .9, stagger: .12, ease: 'power3.out', clearProps: 'all' });
+          // The window settles into a flat, readable surface as the visitor approaches it.
+          gsap.fromTo('.hero-stage .scene-platform', { rotationX: 7, y: 24, scale: .97 }, {
+            rotationX: 0, y: 0, scale: 1, ease: 'none',
+            scrollTrigger: { trigger: '.hero-stage', start: 'top 75%', end: 'top 12%', scrub: .6 },
           });
-          gsap.to('.hero-scope-visual', {
-            y: -24, x: 16, ease: 'none', scrollTrigger: { trigger: '.public-hero', start: 'top top', end: 'bottom top', scrub: .8 },
+          gsap.utils.toArray('.section-intro, .workflow-heading, .scope-copy, .trust-copy, .trust-ledger').forEach(element => {
+            gsap.from(element, { y: 24, opacity: 0, duration: .8, ease: 'power2.out', clearProps: 'all', scrollTrigger: { trigger: element, start: 'top 92%', once: true } });
           });
-          gsap.utils.toArray('.section-intro, .trust-copy, .scope-copy, .final-inner > div').forEach(element => {
-            gsap.from(element, {
-              autoAlpha: 0, y: 30, duration: .85, ease: 'power2.out', clearProps: 'all',
-              scrollTrigger: { trigger: element, start: 'top 88%', once: true },
-            });
+          gsap.utils.toArray('.workflow-row').forEach(element => {
+            gsap.from(element, { x: 24, opacity: 0, duration: .65, clearProps: 'all', scrollTrigger: { trigger: element, start: 'top 92%', once: true } });
           });
-          gsap.from('.platform-composition > *', {
-            autoAlpha: 0, y: 36, duration: .9, ease: 'power2.out', stagger: .12, clearProps: 'all',
-            scrollTrigger: { trigger: '.platform-composition', start: 'top 86%', once: true },
-          });
-          gsap.from('.workflow-row', {
-            autoAlpha: 0, x: -24, duration: .65, ease: 'power2.out', stagger: .1, clearProps: 'all',
-            scrollTrigger: { trigger: '.workflow-list', start: 'top 83%', once: true },
-          });
-          gsap.to('.scope-visual', {
-            y: -32, ease: 'none', scrollTrigger: { trigger: '.scope-section', start: 'top bottom', end: 'bottom top', scrub: 1 },
-          });
-        });
+          gsap.to('.final-symbol', { y: -40, rotation: -10, ease: 'none', scrollTrigger: { trigger: '.final-section', start: 'top bottom', end: 'bottom bottom', scrub: 1 } });
+        }, root.current);
         return () => context.revert();
       });
-    }).catch(() => { /* The page remains fully readable without motion. */ });
+      document.fonts?.ready.then(() => { if (!disposed) ScrollTrigger.refresh(); });
+    }).catch(() => { /* Optional enhancement: content remains visible if motion cannot load. */ });
     return () => { disposed = true; media?.revert(); };
-  }, []);
+  }, [root]);
   return null;
 }

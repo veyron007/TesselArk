@@ -1,62 +1,89 @@
+import { useRef, useState } from 'react';
 import { BrandMark } from '../components/WorkspaceIcon.jsx';
 import LandingMotion from './LandingMotion.jsx';
 import ScopeVisual from './ScopeVisual.jsx';
 import './public.css';
 
+const Arrow = ({ down = false }) => <span aria-hidden="true">{down ? '↓' : '↗'}</span>;
 export function PublicHeader({ compact = false }) {
   return <header className="public-header">
     <a className="public-brand" href="/" aria-label="TesselArk home"><span className="public-brand-symbol"><BrandMark /></span><span>TesselArk</span></a>
-    {!compact && <nav className="public-nav" aria-label="Page sections"><a href="#platform">Platform</a><a href="#workflow">Workflow</a><a href="#trust">Build status</a></nav>}
-    <div className="public-header-actions"><a className="public-signin" href="/demo">Sign in</a><a className="public-button public-button-small" href="/demo">Sign up <span aria-hidden="true">↗</span></a></div>
+    {!compact && <nav className="public-nav" aria-label="Page sections"><a href="#platform">Platform</a><a href="#workflow">How it connects</a><a href="#trust">Build status</a></nav>}
+    <div className="public-header-actions"><a className="public-signin" href="/demo">Sign in</a><a className="public-button public-button-small" href="/demo">Sign up <Arrow /></a></div>
   </header>;
 }
 
+// A deliberately small, synthetic product specimen. No live metrics or customer claims.
 export function ProductScene() {
-  return <div className="product-scene" role="img" aria-label="Illustration of scoped operations, invoice checks and GST review in the TesselArk workspace">
-    <div className="scene-halo" aria-hidden="true" />
-    <ScopeVisual compact />
+  return <div className="product-scene">
     <div className="scene-platform">
-      <div className="scene-top"><span className="scene-brand"><BrandMark /> TesselArk <small>/ Workspace</small></span><span className="scene-live">LOCAL DEMO</span></div>
-      <div className="scene-context"><span className="scene-context-label">BUSINESS CONTEXT</span><strong>Aster Medical Supplies</strong><span>Mumbai GSTIN <b>·</b> Main branch <b>·</b> Accountant</span></div>
-      <div className="scene-columns">
-        <div className="scene-main"><span className="scene-caption">CONNECTED WORK</span><strong>One record. A clearer trail.</strong><div className="scene-flow"><div><i>01</i><span>Purchase order<small>Partially received</small></span></div><div><i>02</i><span>Invoice review<small>Source linked</small></span></div><div><i>03</i><span>GST evidence<small>Local review</small></span></div></div></div>
-        <div className="scene-aside"><span className="scene-caption">REVIEW QUEUE</span><div className="scene-queue"><span>Invoice checks</span><strong>Evidence ready</strong><small>Policy + source review</small></div><div className="scene-mini"><span>Scope</span><strong>GSTIN → Branch → User</strong></div></div>
+      <div className="scene-top"><span className="scene-brand"><BrandMark /> TesselArk <small>/ Workspace overview</small></span><span className="scene-live">SYNTHETIC DEMO</span></div>
+      <div className="specimen-layout">
+        <aside className="specimen-sidebar" aria-label="Illustrated workspace navigation"><span className="specimen-nav-active">Overview</span><span>Orders</span><span>Inventory</span><span>Finance</span><span>GST workspace</span><div className="specimen-user"><b>AM</b><span>Aster Medical<small>Mumbai · Accountant</small></span></div></aside>
+        <div className="specimen-body">
+          <div className="specimen-heading"><div><span className="scene-caption">YOUR BUSINESS, IN CONTEXT</span><h2>A clearer working day.</h2></div><span className="specimen-context">Mumbai GSTIN <i> / </i> Main branch</span></div>
+          <div className="specimen-metrics"><div><span>Order fulfilment</span><strong>12 <small>/ 20 units</small></strong><span className="specimen-meter"><i /></span></div><div><span>Source linkage</span><strong>Order <small>→ Invoice</small></strong><small>One movement. No double posting.</small></div><div><span>Review context</span><strong>Evidence <small>→ Decision</small></strong><small>Matching and ITC stay separate.</small></div></div>
+          <div className="specimen-detail"><div className="specimen-register"><div className="specimen-register-title"><strong>Follow the source</strong><span>ILLUSTRATIVE RECORDS</span></div><table><thead><tr><th>Record</th><th>Source reference</th><th>State</th></tr></thead><tbody><tr><td><b>Purchase order</b><small>Aster Medical Supplies</small></td><td>PO-DEMO-024</td><td><span className="specimen-status">Partial receipt</span></td></tr><tr><td><b>Purchase invoice</b><small>Linked to the receipt</small></td><td>INV-DEMO-018</td><td><span className="specimen-status neutral">Internal review</span></td></tr><tr><td><b>Purchase evidence</b><small>Supplier statement</small></td><td>SEP · 2026</td><td><span className="specimen-status neutral">ITC pending</span></td></tr></tbody></table></div><aside className="specimen-review"><span className="scene-caption">THE DECISION TRAIL</span><h3>Context travels<br />with the record.</h3><ol><li><span>01</span> Company & branch</li><li><span>02</span> Source evidence</li><li><span>03</span> Independent review</li></ol><p>Local review · No official filing</p></aside></div>
+        </div>
       </div>
     </div>
-    <div className="scene-floating scene-floating-left"><span>ORDER → INVOICE</span><strong>Linked at the source</strong></div>
-    <div className="scene-floating scene-floating-right"><span>STATUTORY SANDBOX</span><strong>Simulation only</strong></div>
+    <div className="scene-footnote"><span><i /> A connected workspace, illustrated with synthetic records</span><span>ORDERS / STOCK / FINANCE / GST</span></div>
   </div>;
 }
 
-const workflow = [
-  { index: '01', title: 'Choose your business scope', body: 'Move between a company, its GST registration and an allowed branch before working with records.', meta: 'COMPANY / GSTIN / BRANCH' },
-  { index: '02', title: 'Follow operational evidence', body: 'Trace orders, partial fulfilment, invoices, stock and dated batches through their source links.', meta: 'ORDER / STOCK / INVOICE' },
-  { index: '03', title: 'Review before deciding', body: 'Compare purchase evidence, inspect invoice findings and record local accountant decisions with reasons.', meta: 'EVIDENCE / REVIEW / AUDIT' },
+const chapters = [
+  { id: 'operations', label: 'Orders & fulfilment', title: 'A sale is a sequence. Keep it connected.', body: 'Follow sales and purchase orders through partial fulfilment and source-linked invoices. The record preserves what moved, what remains and where the next step begins.', steps: ['Order confirmed', 'Partially fulfilled', 'Invoice linked'], note: 'Linked fulfilment avoids posting the same stock movement twice.', ref: 'ORDER → FULFILMENT → INVOICE', number: '01', detail: '12 received', total: '20 ordered', percent: 60 },
+  { id: 'inventory', label: 'Inventory & movement', title: 'See the stock behind the number.', body: 'Trace stock movements, dated batches and storage locations. Inspect same-GSTIN transfers as they move from dispatch to partial receipt in the permitted branches.', steps: ['Source branch', 'In transit', 'Receipt recorded'], note: 'Batch history and location workflows are partial, distinct working slices.', ref: 'BRANCH → MOVEMENT → RECEIPT', number: '02', detail: '8 received', total: '12 dispatched', percent: 67 },
+  { id: 'finance', label: 'Finance & review', title: 'Every total deserves a way back.', body: 'Move from journals, payments and scoped reports to their source documents. Review purchase evidence and record an ITC decision as a separate, local accounting step.', steps: ['Source document', 'Journal linked', 'Review recorded'], note: 'Internal approval and ITC eligibility never imply official filing.', ref: 'SOURCE → JOURNAL → REVIEW', number: '03', detail: 'Source linked', total: 'Local records', percent: 100 },
 ];
 
+function PlatformExplorer() {
+  const [selected, setSelected] = useState(0);
+  const chapter = chapters[selected];
+  const selectWithKey = (event, index) => {
+    const next = event.key === 'ArrowRight' ? (index + 1) % chapters.length : event.key === 'ArrowLeft' ? (index + chapters.length - 1) % chapters.length : event.key === 'Home' ? 0 : event.key === 'End' ? chapters.length - 1 : null;
+    if (next === null) return;
+    event.preventDefault();
+    setSelected(next);
+    event.currentTarget.parentElement.children[next].focus();
+  };
+  return <div className="platform-explorer">
+    <div className="platform-tabs" role="tablist" aria-label="Explore the platform">{chapters.map((item, index) => <button key={item.id} id={`tab-${item.id}`} type="button" role="tab" aria-selected={selected === index} aria-controls="platform-panel" tabIndex={selected === index ? 0 : -1} onClick={() => setSelected(index)} onKeyDown={event => selectWithKey(event, index)}><span>{item.number}</span>{item.label}<Arrow /></button>)}</div>
+    <div className="platform-panel" id="platform-panel" role="tabpanel" aria-labelledby={`tab-${chapter.id}`} tabIndex={0}>
+      <div className="platform-panel-copy"><span className="public-kicker">{chapter.ref}</span><h3>{chapter.title}</h3><p>{chapter.body}</p><a className="public-text-link" href="/demo">Explore this workflow <Arrow /></a></div>
+      <div className="flow-specimen"><div className="flow-specimen-top"><span>CONNECTED RECORDS</span><b>{chapter.number} / 03</b></div><div className="flow-specimen-value"><strong>{chapter.detail}</strong><span>{chapter.total}</span></div><div className="flow-meter" aria-hidden="true"><span style={{ width: `${chapter.percent}%` }} /></div><ol>{chapter.steps.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong><i aria-hidden="true">{index === 2 ? '↗' : '↓'}</i></li>)}</ol><p>{chapter.note}</p></div>
+    </div>
+  </div>;
+}
+
 export default function Landing() {
-  return <div className="public-page landing-page">
-    <LandingMotion />
+  const root = useRef(null);
+  return <div className="public-page landing-page" ref={root}>
+    <LandingMotion root={root} />
     <a className="public-skip" href="#public-main">Skip to content</a>
     <PublicHeader />
     <main id="public-main">
       <section className="public-hero public-container" aria-labelledby="hero-title">
-        <div className="hero-copy"><p className="public-kicker"><span className="kicker-rule" /> THE WORKSPACE WITH A MEMORY</p><h1 id="hero-title">See the whole business.<br /><em>Keep every detail.</em></h1><p className="hero-description">A connected workspace for orders, inventory, finance and local GST review. Move from a decision to the records behind it, in the right company and branch context.</p><div className="hero-actions"><a className="public-button" href="/demo">Explore the demo <span aria-hidden="true">↗</span></a><a className="public-text-link" href="#platform">See how it connects <span aria-hidden="true">↓</span></a></div><p className="hero-note">Synthetic business data · Local demonstration · No account registration required</p></div>
-        <ProductScene />
+        <div className="hero-copy"><p className="public-kicker"><span className="kicker-rule" /> THE CONNECTED BUSINESS WORKSPACE</p><h1 id="hero-title">Every detail.<br /><span>One clear picture.</span></h1></div>
+        <div className="hero-introduction"><p className="hero-description">Orders, inventory, finance and GST review.<br />Connected by the records behind them.</p><div className="hero-actions"><a className="public-button" href="/demo">Explore the demo <Arrow /></a><a className="public-text-link" href="#platform">Take a closer look <Arrow down /></a></div><p className="hero-note">Local demonstration. Synthetic data. <br />A prepared workspace, ready to explore.</p></div>
       </section>
+      <section className="hero-stage public-container" aria-label="An illustrated TesselArk workspace"><ProductScene /></section>
+      <div className="public-ticker public-container"><span>Clarity at every handoff.</span><p>One company.<b>Its registrations.</b>The right branch.<b>A visible trail.</b></p><a href="#workflow" aria-label="See how the workflow connects"><Arrow down /></a></div>
 
-      <div className="public-ticker"><div className="public-container ticker-inner"><strong>Built for work with context</strong><span>COMPANY SCOPE</span><span>ORDER TRAIL</span><span>STOCK MOVEMENT</span><span>REVIEW EVIDENCE</span><span>LOCAL GST PREVIEW</span></div></div>
+      <section className="platform-section public-container" id="platform" aria-labelledby="platform-title"><div className="section-intro"><p className="public-kicker">01 / THE PLATFORM</p><div className="section-heading-row"><h2 id="platform-title">The work moves.<br /><span>The context stays.</span></h2><p>A document is only part of the story. See the source, the movement and the decision together in the working slices of TesselArk.</p></div></div><PlatformExplorer /></section>
 
-      <section className="platform-section public-container" id="platform" aria-labelledby="platform-title"><div className="section-intro"><p className="public-kicker">THE PLATFORM</p><h2 id="platform-title">A thread through the work.</h2><p>Each workspace keeps the operational record close to its financial and review context. These are partial, working slices of a larger ERP plan.</p></div><div className="platform-composition"><div className="platform-large"><span className="platform-label">OPERATIONS</span><h3>Trade moves. The source stays visible.</h3><p>Sales and purchase orders support partial fulfilment, with linked invoices that avoid posting stock twice.</p><div className="platform-path"><span>ORDER</span><b aria-hidden="true">→</b><span>FULFILMENT</span><b aria-hidden="true">→</b><span>INVOICE</span></div></div><div className="platform-side"><article><span className="platform-label">INVENTORY</span><h3>Know where stock has been.</h3><p>Inspect movement history, dated batches, locations and in-transit transfers within permitted branches.</p></article><article><span className="platform-label">FINANCE + REPORTS</span><h3>Numbers with a route back.</h3><p>Review payments, journals, balances and scoped reports beside their source documents.</p></article></div></div></section>
+      <section className="workflow-section" id="workflow" aria-labelledby="workflow-title"><div className="public-container workflow-inner"><div className="workflow-heading"><p className="public-kicker">02 / A VISIBLE TRAIL</p><h2 id="workflow-title">Less piecing together.<br /><span>More understanding.</span></h2><p>From the first record to the next decision, each step has its own place.</p><a className="public-text-link" href="/demo">Follow a demo record <Arrow /></a></div><div className="workflow-list">{[
+        ['01', 'Start with the right scope.', 'Choose a company, GST registration and permitted branch. Keep the working context visible.'],
+        ['02', 'See what actually happened.', 'Trace orders, partial fulfilment and stock movements through their linked records.'],
+        ['03', 'Make the review explicit.', 'Inspect source evidence and record a local decision. Matching, eligibility and approval stay distinct.'],
+      ].map(([number, title, copy]) => <article className="workflow-row" key={number}><span className="workflow-index">{number}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div></div></section>
 
-      <section className="workflow-section" id="workflow" aria-labelledby="workflow-title"><div className="public-container workflow-inner"><div className="section-intro"><p className="public-kicker">A WORKABLE SEQUENCE</p><h2 id="workflow-title">From scope to evidence to review.</h2><p>TesselArk separates the record, the evidence and the human decision, so each step remains legible.</p></div><div className="workflow-list">{workflow.map(item => <article className="workflow-row" key={item.index}><span className="workflow-index">{item.index}</span><div><h3>{item.title}</h3><p>{item.body}</p></div><span className="workflow-meta">{item.meta}</span></article>)}</div><a className="public-button public-button-outline" href="/demo">Choose a demo workspace <span aria-hidden="true">↗</span></a></div></section>
+      <section className="scope-section public-container" aria-labelledby="scope-title"><div className="scope-copy"><p className="public-kicker">03 / CONTEXT IS THE CONTROL</p><h2 id="scope-title">One business.<br /><span>Distinct layers.</span></h2><p>Company identity, GST registration and branch access are separate. TesselArk keeps the layers legible, with user grants applied by the server.</p><div className="scope-note"><strong>The right view for each role.</strong><span>Choose staff, accountant or owner access and inspect the permitted context.</span></div><a className="public-text-link" href="/demo">Find your point of view <Arrow /></a></div><ScopeVisual /></section>
 
-      <section className="scope-section public-container" aria-labelledby="scope-title"><div className="scope-copy"><p className="public-kicker">CONTEXT IS THE CONTROL</p><h2 id="scope-title">Every layer of access, in its place.</h2><p>Company identity, GST registration, branch and user grants are distinct. The workspace keeps that scope visible while the server applies it to the records you can see and change.</p><div className="scope-note"><strong>A boundary you can inspect</strong><span>Switch a prepared demo role and see the permitted context change with it.</span></div><a className="public-text-link" href="/demo">See the roles <span aria-hidden="true">↗</span></a></div><ScopeVisual /></section>
+      <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">04 / AN HONEST WORKING BUILD</p><h2 id="trust-title">Made to explore.<br /><span>Clear about its scope.</span></h2><p>This is a local ERP demonstration with fictional companies and sample transactions. Purchase matching and GST review are local workflows. Statutory screens are simulations, with no live government connection or official filing.</p><a href="/demo" className="public-text-link">View Build Status in the demo <Arrow /></a></div><div className="trust-ledger"><div className="trust-total"><strong>85</strong><span>researched feature groups</span></div><div className="trust-coverage" aria-label="40 partly implemented groups and 45 planned groups"><span /><span /></div><div className="trust-counts"><div><strong>40</strong><span>Partly implemented</span></div><div><strong>45</strong><span>Planned</span></div></div><p>Partial means a specific working slice. The in-app register describes what is implemented and what remains.</p></div></section>
 
-      <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">CLEAR ABOUT WHAT THIS IS</p><h2 id="trust-title">The record is real.<br />The scenario is synthetic.</h2><p>Explore a local working build with fictional companies and sample transactions. GST purchase matching, invoice checks and statutory screens are review and simulation tools, not live government connections or official filing.</p><a href="/demo" className="public-text-link">Enter and view Build Status <span aria-hidden="true">↗</span></a></div><div className="trust-ledger"><div><strong>85</strong><span>researched feature groups</span></div><div><strong>40</strong><span>partly implemented</span></div><div><strong>45</strong><span>planned</span></div><p>Coverage is shown inside the demo, with the implemented behavior described for each group.</p></div></section>
-
-      <section className="final-section"><div className="public-container final-inner"><div><p className="public-kicker">START WITH A REAL ROLE</p><h2>See the work from the inside.</h2><p>Choose a prepared staff, accountant or owner demo account. Your selection opens the actual workspace in its granted company scope.</p></div><a className="public-button public-button-light" href="/demo">Explore TesselArk <span aria-hidden="true">↗</span></a></div></section>
+      <section className="final-section"><div className="public-container final-inner"><div className="final-symbol" aria-hidden="true"><BrandMark /></div><p className="public-kicker">YOUR NEXT CLEARER WORKING DAY</p><h2>Step inside<br /><span>the whole picture.</span></h2><a className="public-button" href="/demo">Explore TesselArk <Arrow /></a><p>Prepared accounts. Synthetic companies. No registration required.</p></div></section>
     </main>
-    <footer className="public-footer public-container"><span className="public-footer-brand"><BrandMark /> TesselArk</span><span>Local ERP demonstration · Synthetic data</span><a href="/demo">Demo access <span aria-hidden="true">↗</span></a></footer>
+    <footer className="public-footer public-container"><a className="public-footer-brand" href="/"><BrandMark /> TesselArk</a><span>Local ERP demonstration · Synthetic data</span><a href="/demo">Demo access <Arrow /></a></footer>
   </div>;
 }

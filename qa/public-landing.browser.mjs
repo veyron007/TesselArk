@@ -1,0 +1,106 @@
+// Run with both local servers: LANDING_URL=http://127.0.0.1:5187 node qa/public-landing.browser.mjs
+// Playwright is supplied by the existing Flute development dependency.
+import assert from 'node:assert/strict';
+import { mkdir } from 'node:fs/promises';
+import { chromium } from 'playwright';
+
+const origin = process.env.LANDING_URL || 'http://127.0.0.1:5173';
+const output = process.env.LANDING_SCREENSHOTS || '/tmp/tesselark-public-qa';
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--enable-unsafe-swiftshader'] });
+const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+const errors = [];
+page.on('pageerror', error => errors.push(error.message));
+page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+const capture = async name => page.screenshot({ path: `${output}/${name}.png` });
+const settle = async () => page.waitForTimeout(1100);
+const noOverflow = async () => assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, 'No horizontal overflow');
+try {
+  await page.goto(origin);
+  await settle();
+  await noOverflow();
+  assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), 'Every detail.One clear picture.');
+  for (const label of ['Sign in', 'Sign up']) assert.equal(await page.getByRole('link', { name: label, exact: true }).getAttribute('href'), '/demo');
+  await page.keyboard.press('Tab');
+  assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Skip to content');
+  await capture('01-hero');
+  await page.getByRole('link', { name: 'Platform', exact: true }).click();
+  await settle();
+  assert.equal(new URL(page.url()).hash, '#platform');
+  await capture('02-platform');
+  await page.getByRole('tab', { name: /Inventory & movement/ }).click();
+  assert.match(await page.getByRole('tabpanel').textContent(), /See the stock behind the number/);
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await page.getByRole('tab', { name: /Finance & review/ }).getAttribute('aria-selected'), 'true');
+  assert.match(await page.getByRole('tabpanel').textContent(), /Every total deserves a way back/);
+  await page.keyboard.press('Home');
+  assert.equal(await page.getByRole('tab', { name: /Orders & fulfilment/ }).getAttribute('aria-selected'), 'true');
+  await page.locator('.workflow-section').scrollIntoViewIfNeeded();
+  await settle();
+  await capture('03-workflow');
+  await page.locator('.scope-section').scrollIntoViewIfNeeded();
+  await page.waitForSelector('.scope-visual-ready');
+  await settle();
+  await capture('04-scope-three');
+  // Context loss restores a readable diagram rather than leaving an empty canvas.
+  await page.locator('.scope-canvas canvas').evaluate(canvas => canvas.dispatchEvent(new Event('webglcontextlost', { cancelable: true })));
+  await page.waitForFunction(() => !document.querySelector('.scope-visual-ready'));
+  assert.equal(await page.locator('.scope-fallback').isVisible(), true);
+  await capture('05-context-loss-fallback');
+  await page.locator('.final-section').scrollIntoViewIfNeeded();
+  await settle();
+  await capture('06-final-cta');
+  await page.getByRole('link', { name: 'Explore TesselArk', exact: false }).click();
+  await page.waitForSelector('.chooser-card');
+  assert.equal(new URL(page.url()).pathname, '/demo');
+  await noOverflow();
+  await capture('07-demo-chooser');
+  const first = page.locator('.chooser-card').first();
+  const user = await first.locator('h3').textContent();
+  await first.getByRole('link', { name: /^Enter demo as/ }).click();
+  await page.waitForURL('**/app');
+  await page.waitForSelector('.app-shell');
+  await settle();
+  assert.match(await page.locator('body').textContent(), new RegExp(user.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  await capture('08-selected-workspace');
+  // Existing bookmark paths must continue to resolve to the workspace.
+  await page.goto(`${origin}/orders`);
+  await page.waitForSelector('.app-shell');
+  assert.equal(await page.locator('.public-hero').count(), 0);
+  await page.goto(origin);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.locator('.scope-section').scrollIntoViewIfNeeded();
+  await settle();
+  assert.equal(await page.locator('.scope-canvas canvas').count(), 0);
+  assert.equal(await page.locator('.scope-fallback').isVisible(), true);
+  assert.equal(await page.locator('.scope-copy').evaluate(el => getComputedStyle(el).opacity), '1');
+  await capture('09-reduced-motion');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.waitForSelector('.scope-visual-ready');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.waitForFunction(() => !document.querySelector('.scope-canvas canvas'));
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(origin);
+  await settle();
+  await noOverflow();
+  await capture('10-mobile');
+  // Exercise capability fallback without relying on the machine's GPU availability.
+  const fallback = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await fallback.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, ...args) {
+      return type.startsWith('webgl') ? null : original.call(this, type, ...args);
+    };
+  });
+  await fallback.goto(origin);
+  await fallback.locator('.scope-section').scrollIntoViewIfNeeded();
+  await fallback.waitForTimeout(1200);
+  assert.equal(await fallback.locator('.scope-canvas canvas').count(), 0);
+  assert.equal(await fallback.locator('.scope-fallback').isVisible(), true);
+  await fallback.screenshot({ path: `${output}/11-no-webgl.png` });
+  await fallback.close();
+  assert.deepEqual(errors, [], 'No page or console errors');
+  console.log(`PASS: desktop landing, keyboard tabs, deep links, demo entry, reduced-motion changes, context loss, no-WebGL fallback, mobile overflow. Screenshots: ${output}`);
+} finally {
+  await browser.close();
+}
