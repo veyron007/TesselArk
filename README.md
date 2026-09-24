@@ -13,6 +13,8 @@ npm run dev
 
 Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The web app proxies `/api` to the Node server on port 3001. Both servers bind to loopback. The API uses a local SQLite file and seeds synthetic demo records on first start. `npm test` runs API tests; `npm run build` checks the frontend build. After building, `ERP_AUTH_MODE=demo npm start` serves both the API and built web app at [http://127.0.0.1:3001](http://127.0.0.1:3001).
 
+The public `/` page explains the current product with GSAP scroll motion and a lazy Three.js scope scene; `/demo` lists prepared, scoped demo accounts. Sign in and Sign up both open that chooser in demo mode. `/app` opens the selected workspace, while existing workspace deep links remain valid. Flute's development-only live workspace scene is in `src/flute/`; it is an authoring preview, not a statutory or production service.
+
 Use the company/GSTIN/branch selectors and **Demo user** selector to explore staff preparation and accountant approval. The selector is a demonstration control; it is not production sign-in. Demo mode accepts user headers and is restricted to loopback. Do not expose demo mode to an untrusted network.
 
 Demo users have explicit, durable GSTIN and branch grants. API lists, source reads and writes enforce those grants; an admin can manage them in **Access Grants** with an audit trail. The sample users start with grants across their own companies. Bank statement lines and company-wide ledger summaries require full-company grants because those records lack narrower scope fields. Shared item and party masters remain company-wide for any user with a branch grant.
@@ -26,6 +28,7 @@ Demo users have explicit, durable GSTIN and branch grants. API lists, source rea
 - **Aster Medical · Mumbai:** the Batches page contains `DEMO-SALINE-NEAR-EXPIRY`, allocated from existing stock without a second physical receipt. The Evidence Library contains `SYNTHETIC DEMO: Pharmacy receiving note`, with locally reviewed version 1 and pending version 2.
 - **Return Tax Review:** `DEMO-CRN-MUM-201` is an approved physical sales return awaiting an internal tax decision. Accepting it shows ₹5.40 in a separate local preview; it does not alter recorded GST totals.
 - **Return Inspection:** `DEMO-CRN-MUM-QA-001` is a synthetic approved sales return held outside saleable stock until inspection and explicit release or rejection.
+- **Place of Supply:** `DEMO-MUM-201` has an internally reviewed ordinary goods split, `DEMO-SAL-BLR-301` has a pending specialist referral with no tax head, and Aster Services' `DEMO-SVC-MUM-501` has an internally reviewed default-service split. Their evidence references are synthetic; these decisions do not change invoice tax or GST totals.
 - **Across companies:** Pune and Bengaluru have additional draft orders and lot specimens; Aster Services has a service sale with partial payment and a simulated IRN; Nila Retail has a zero-GST sale and draft return. See the [synthetic fixture map](qa/demo-fixtures.md) for exact states.
 
 All examples are synthetic training records. The generated SQLite file is local to this workspace.

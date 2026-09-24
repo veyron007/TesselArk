@@ -7,12 +7,23 @@ export default function ScopeVisual({ compact = false }) {
   useEffect(() => {
     const host = holder.current;
     if (!host || window.matchMedia('(prefers-reduced-motion: reduce), (max-width: 799px)').matches) return;
+    if (navigator.connection?.saveData || (navigator.deviceMemory && navigator.deviceMemory < 4)) return;
     let disposed = false;
     let cleanup = () => {};
+    let pendingTimer;
+    let pendingIdle;
+    const hasWebGl = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        return Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+      } catch { return false; }
+    };
     const observer = new IntersectionObserver(entries => {
       if (!entries[0]?.isIntersecting) return;
       observer.disconnect();
-      import('./three-pieces.js').then(THREE => {
+      const start = () => {
+        if (disposed || !hasWebGl()) return;
+        import('./three-pieces.js').then(THREE => {
         if (disposed) return;
         let renderer;
         try {
@@ -110,10 +121,23 @@ export default function ScopeVisual({ compact = false }) {
           renderer.dispose();
           renderer.domElement.remove();
         };
-      }).catch(() => {});
+        }).catch(() => {});
+      };
+      // The first viewport stays usable while the larger scene waits for idle time.
+      if (compact) pendingTimer = window.setTimeout(() => {
+        if ('requestIdleCallback' in window) pendingIdle = window.requestIdleCallback(start, { timeout: 3000 });
+        else start();
+      }, 1400);
+      else start();
     });
     observer.observe(host);
-    return () => { disposed = true; observer.disconnect(); cleanup(); };
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      window.clearTimeout(pendingTimer);
+      if (pendingIdle && 'cancelIdleCallback' in window) window.cancelIdleCallback(pendingIdle);
+      cleanup();
+    };
   }, []);
 
   return <div className={`scope-visual ${compact ? 'hero-scope-visual' : ''} ${ready ? 'scope-visual-ready' : ''}`} aria-hidden="true"><div className="scope-canvas" ref={holder} /><div className="scope-fallback"><span /><span /><span /></div>{compact ? <span className="hero-scope-caption">COMPANY · GSTIN · BRANCH</span> : <><div className="scope-label scope-label-company">COMPANY <strong>Business boundary</strong></div><div className="scope-label scope-label-gstin">GSTIN <strong>Registration scope</strong></div><div className="scope-label scope-label-branch">BRANCH <strong>Permitted work</strong></div></>}</div>;
