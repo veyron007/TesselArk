@@ -33,27 +33,30 @@ function registerFinanceRoutes(app, db) {
       SELECT v.id,v.company_id,v.branch_id,v.gstin_id,v.party_id,v.number,v.type,v.status,v.invoice_date,v.total_cents,
         COALESCE(NULLIF(v.party_name_snapshot,''),p.name) AS party_name,b.name AS branch_name,g.gstin,
         COALESCE(pay.paid_cents,0) AS paid_cents,
+        COALESCE(emp.employee_allocated_cents,0) AS employee_allocated_cents,
         COALESCE(adj.commercial_adjustment_cents,0) AS commercial_adjustment_cents
       FROM invoices v
       JOIN parties p ON p.id=v.party_id
       JOIN branches b ON b.id=v.branch_id
       JOIN gstins g ON g.id=v.gstin_id
       LEFT JOIN (SELECT company_id,invoice_id,SUM(amount_cents) AS paid_cents FROM invoice_payments GROUP BY company_id,invoice_id) pay ON pay.invoice_id=v.id AND pay.company_id=v.company_id
+      LEFT JOIN (SELECT company_id,invoice_id,SUM(amount_cents) AS employee_allocated_cents FROM employee_invoice_allocations GROUP BY company_id,invoice_id) emp ON emp.invoice_id=v.id AND emp.company_id=v.company_id
       LEFT JOIN (SELECT company_id,invoice_id,SUM(amount_cents) AS commercial_adjustment_cents FROM return_settlements GROUP BY company_id,invoice_id) adj ON adj.invoice_id=v.id AND adj.company_id=v.company_id
       WHERE v.company_id=? AND v.type=? AND v.status='approved' AND v.branch_id IN (${permittedBranches.map(() => '?').join(',') || 'NULL'})
       ORDER BY v.invoice_date DESC,v.id DESC
     `).all(req.company.id, type, ...permittedBranches).map(row => {
-      const difference = row.total_cents - row.commercial_adjustment_cents - row.paid_cents;
+      const difference = row.total_cents - row.commercial_adjustment_cents - row.paid_cents - row.employee_allocated_cents;
       return { ...toCamel(row), adjustedTotalCents: row.total_cents - row.commercial_adjustment_cents,
         outstandingCents: Math.max(0,difference), refundableCents: Math.max(0,-difference) };
     });
     return { invoices, totals: invoices.reduce((acc, invoice) => ({
       invoicedCents: acc.invoicedCents + invoice.totalCents,
       paidCents: acc.paidCents + invoice.paidCents,
+      employeeAllocatedCents: acc.employeeAllocatedCents + invoice.employeeAllocatedCents,
       commercialAdjustmentCents: acc.commercialAdjustmentCents + invoice.commercialAdjustmentCents,
       outstandingCents: acc.outstandingCents + invoice.outstandingCents,
       refundableCents: acc.refundableCents + invoice.refundableCents,
-    }), { invoicedCents: 0, paidCents: 0, commercialAdjustmentCents: 0, outstandingCents: 0, refundableCents: 0 }) };
+    }), { invoicedCents: 0, paidCents: 0, employeeAllocatedCents:0, commercialAdjustmentCents: 0, outstandingCents: 0, refundableCents: 0 }) };
   }));
 
   app.get('/api/finance/payments', route(req => {

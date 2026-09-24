@@ -35,7 +35,9 @@ test('existing journal schema upgrades without losing lines or foreign keys', t 
   t.after(() => reopened.close());
   assert.equal(reopened.prepare('SELECT COUNT(*) AS count FROM journal_lines').get().count, before);
   assert.deepEqual(reopened.prepare('PRAGMA foreign_key_check').all(), []);
-  assert.match(reopened.prepare("SELECT sql FROM sqlite_master WHERE name='journals'").get().sql, /return_settlement/);
+  const schema = reopened.prepare("SELECT sql FROM sqlite_master WHERE name='journals'").get().sql;
+  for (const source of ['return_settlement','employee_expense_allocation','expense_reimbursement']) assert.match(schema,new RegExp(source));
+  assert.ok(reopened.prepare("SELECT id FROM ledger_accounts WHERE company_id=1 AND code='2400'").get());
 });
 
 function fixture(t) {

@@ -26,6 +26,7 @@ const Delivery = lazy(() => import('./pages/Delivery.jsx'));
 const DocumentOutput = lazy(() => import('./pages/DocumentOutput.jsx'));
 const MasterImport = lazy(() => import('./pages/MasterImport.jsx'));
 const Finance = lazy(() => import('./pages/Finance.jsx'));
+const Expenses = lazy(() => import('./pages/Expenses.jsx'));
 const Cashier = lazy(() => import('./pages/Cashier.jsx'));
 const Reporting = lazy(() => import('./pages/Reporting.jsx'));
 const Accounting = lazy(() => import('./pages/Accounting.jsx'));
@@ -62,6 +63,7 @@ const navigation = [
   { id: 'bundles', label: 'Bundles & Schemes', icon: '◈', description: 'Versioned formulas, offers & deal history' },
   { id: 'credit', label: 'Credit Controls', icon: '◎', description: 'Customer exposure & temporary limits' },
   { id: 'finance', label: 'Finance', icon: '₹', description: 'Balances & payments' },
+  { id: 'expenses', label: 'Expenses', icon: '₹', description: 'Claims, independent review & reimbursements' },
   { id: 'accounting', label: 'Accounting', icon: '▥', description: 'Journals & trial balance' },
   { id: 'bank', label: 'Bank Reconciliation', icon: '↔', description: 'Local statement matching' },
   { id: 'cashier', label: 'Cashier', icon: '▤', description: 'Cash drawer & close review' },
@@ -456,6 +458,7 @@ export function WorkspaceApp() {
             {activePage === 'bundles' && <Bundles {...pageProps} />}
             {activePage === 'credit' && <CreditControls {...pageProps} />}
             {activePage === 'finance' && <Finance {...pageProps} />}
+            {activePage === 'expenses' && <Expenses {...pageProps} />}
             {activePage === 'accounting' && <Accounting {...pageProps} />}
             {activePage === 'bank' && <BankReconciliation {...pageProps} />}
             {activePage === 'cashier' && <Cashier {...pageProps} />}

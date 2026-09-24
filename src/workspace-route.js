@@ -1,7 +1,7 @@
 const pages = new Set([
   'dashboard', 'orders', 'delivery', 'order-crm', 'catalogue', 'operations', 'documents', 'master-import', 'batches', 'locations',
   'conversion', 'counts', 'consignment', 'pricing', 'price-adjustments',
-  'supplier-comparison', 'bundles', 'credit', 'finance', 'accounting', 'bank',
+  'supplier-comparison', 'bundles', 'credit', 'finance', 'expenses', 'accounting', 'bank',
   'cashier', 'reporting', 'budgets', 'returns', 'return-inspection',
   'return-settlement', 'return-tax', 'evidence', 'gst', 'invoice-checks', 'statement-import',
   'simulator', 'access-grants', 'coverage',

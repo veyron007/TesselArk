@@ -24,16 +24,17 @@ function invoiceSettlementBalance(db,invoiceId,companyId) {
   const id = positive(invoiceId,'invoiceId');
   const invoice = db.prepare('SELECT id,company_id,total_cents,subtotal_cents,status FROM invoices WHERE id=? AND company_id=?').get(id,companyId);
   if (!invoice) throw fail('Invoice not found in selected company',404);
-  const paidCents = db.prepare('SELECT COALESCE(SUM(amount_cents),0) AS cents FROM invoice_payments WHERE company_id=? AND invoice_id=?').get(companyId,id).cents;
+  const recordedPaymentsCents = db.prepare('SELECT COALESCE(SUM(amount_cents),0) AS cents FROM invoice_payments WHERE company_id=? AND invoice_id=?').get(companyId,id).cents;
+  const employeeAllocatedCents = db.prepare('SELECT COALESCE(SUM(amount_cents),0) AS cents FROM employee_invoice_allocations WHERE company_id=? AND invoice_id=?').get(companyId,id).cents;
   const totals = db.prepare(`SELECT COALESCE(SUM(amount_cents),0) AS amount_cents,
     COALESCE(SUM(tax_proposal_cents),0) AS tax_proposal_cents
     FROM return_settlements WHERE company_id=? AND invoice_id=?`).get(companyId,id);
   const commercialAdjustmentCents = checked(totals.amount_cents,'commercialAdjustmentCents');
   const adjustedTotalCents = checked(invoice.total_cents,'totalCents')-commercialAdjustmentCents;
   if (!Number.isSafeInteger(adjustedTotalCents) || adjustedTotalCents < 0) throw fail('Commercial adjustments exceed source invoice total',409);
-  const difference = adjustedTotalCents-checked(paidCents,'paidCents');
+  const difference = adjustedTotalCents-checked(recordedPaymentsCents,'paidCents')-checked(employeeAllocatedCents,'employeeAllocatedCents');
   return {
-    invoiceId:id,totalCents:invoice.total_cents,paidCents,
+    invoiceId:id,totalCents:invoice.total_cents,paidCents:recordedPaymentsCents,employeeAllocatedCents,
     commercialAdjustmentCents,adjustedTotalCents,
     outstandingCents:Math.max(0,difference),refundableCents:Math.max(0,-difference),
     pendingTaxProposalCents:checked(totals.tax_proposal_cents,'taxProposalCents'),
@@ -89,6 +90,7 @@ function postReturnSettlement(db,returnId,settlementDate,companyId,userId) {
   if (day < source.invoice_date) throw fail('Settlement date cannot precede source invoice date',409);
   const balance = invoiceSettlementBalance(db,source.invoice_id,companyId);
   if (source.subtotal_cents > source.invoice_subtotal_cents-balance.commercialAdjustmentCents) throw fail('Cumulative commercial adjustments exceed source invoice subtotal',409);
+  if (source.invoice_type === 'purchase' && balance.employeeAllocatedCents > 0 && source.subtotal_cents > balance.outstandingCents) throw fail('Purchase return would exceed supplier payable after employee allocation; specialist adjustment required',409);
   const inserted = db.prepare(`INSERT INTO return_settlements(company_id,invoice_id,return_id,amount_cents,tax_proposal_cents,settlement_date,posted_by)
     VALUES (?,?,?,?,?,?,?)`).run(companyId,source.invoice_id,id,source.subtotal_cents,source.tax_proposal_cents,day,userId);
   const sale = source.invoice_type === 'sale';

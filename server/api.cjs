@@ -36,6 +36,7 @@ const { registerMasterImportRoutes } = require('./master-import.cjs');
 const { registerGstInvoiceAssistantRoutes, assertInvoiceTaxReady } = require('./gst-invoice-assistant.cjs');
 const { registerGstPlaceOfSupplyRoutes } = require('./gst-place-of-supply.cjs');
 const { registerWorkspaceMenuRoutes } = require('./workspace-menu.cjs');
+const { registerExpenseRoutes } = require('./expenses.cjs');
 const { createAuth } = require('./auth.cjs');
 
 const fields = (row) => Object.fromEntries(Object.entries(row).map(([key, value]) => [key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()), value]));
@@ -540,6 +541,7 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
   registerGstInvoiceAssistantRoutes(app, db);
   registerGstPlaceOfSupplyRoutes(app, db);
   registerWorkspaceMenuRoutes(app, db);
+  registerExpenseRoutes(app, db);
   app.use((error, _req, res, _next) => {
     const status = error.status || (error.code?.startsWith('SQLITE_CONSTRAINT') || [1555,2067].includes(error.errcode) ? 409 : 500);
     res.status(status).json({ error: status === 500 ? 'Internal server error' : error.message });

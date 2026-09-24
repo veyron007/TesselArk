@@ -7,6 +7,7 @@ const ACCOUNT_DEFINITIONS = Object.freeze([
   ['2100','Trade payables','liability','credit'],
   ['2200','Sales GST control','liability','credit'],
   ['2300','Uncleared disbursements','liability','credit'],
+  ['2400','Employee reimbursements payable','liability','credit'],
   ['4000','Sales revenue','revenue','credit'],
   ['4100','Sales returns','revenue','debit'],
   ['5000','Purchases','expense','debit'],
@@ -31,7 +32,7 @@ function installLedgerSchema(db) {
       branch_id INTEGER REFERENCES branches(id),
       party_id INTEGER REFERENCES parties(id),
       party_name_snapshot TEXT NOT NULL DEFAULT '',
-      source_type TEXT NOT NULL CHECK(source_type IN ('invoice','payment','return_settlement')),
+      source_type TEXT NOT NULL CHECK(source_type IN ('invoice','payment','return_settlement','employee_expense_allocation','expense_reimbursement')),
       source_id INTEGER NOT NULL,
       document_number TEXT NOT NULL,
       journal_date TEXT NOT NULL,
@@ -55,7 +56,7 @@ function installLedgerSchema(db) {
     db.exec("ALTER TABLE journals ADD COLUMN party_name_snapshot TEXT NOT NULL DEFAULT ''");
   }
   const journalSql = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='journals'").get()?.sql || '';
-  if (!journalSql.includes("'return_settlement'")) {
+  if (!journalSql.includes("'expense_reimbursement'")) {
     db.exec('PRAGMA foreign_keys=OFF');
     db.exec('BEGIN IMMEDIATE');
     try {
@@ -67,7 +68,7 @@ function installLedgerSchema(db) {
           branch_id INTEGER REFERENCES branches(id),
           party_id INTEGER REFERENCES parties(id),
           party_name_snapshot TEXT NOT NULL DEFAULT '',
-          source_type TEXT NOT NULL CHECK(source_type IN ('invoice','payment','return_settlement')),
+          source_type TEXT NOT NULL CHECK(source_type IN ('invoice','payment','return_settlement','employee_expense_allocation','expense_reimbursement')),
           source_id INTEGER NOT NULL,
           document_number TEXT NOT NULL,
           journal_date TEXT NOT NULL,

@@ -34,6 +34,8 @@ const { seedConsumerHealthDemo } = require('./consumer-health-seed.cjs');
 const { seedAuxiliaryDemo } = require('./auxiliary-seed.cjs');
 const { installGstInvoiceAssistantSchema, seedGstInvoiceCheckDemo } = require('./gst-invoice-assistant.cjs');
 const { installGstPlaceOfSupplySchema } = require('./gst-place-of-supply-db.cjs');
+const { installExpensesSchema } = require('./expenses-db.cjs');
+const { seedExpensesDemo } = require('./expenses-demo.cjs');
 const { seedGstPlaceOfSupplyDemo } = require('./gst-place-of-supply.cjs');
 
 function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'erp.sqlite')) {
@@ -115,6 +117,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
   installMasterImportSchema(db);
   installGstInvoiceAssistantSchema(db);
   installGstPlaceOfSupplySchema(db);
+  installExpensesSchema(db);
   if (!db.prepare('SELECT 1 FROM companies LIMIT 1').get()) seed(db);
   if (!db.prepare("SELECT 1 FROM users WHERE company_id=2 AND role='admin'").get()) {
     db.prepare("INSERT INTO users(company_id,name,role) VALUES (2,'Aarav Services Owner','admin')").run();
@@ -151,6 +154,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
     seedGstPlaceOfSupplyDemo(db);
   }
   syncLedgerSources(db);
+  if (file === path.join(__dirname, 'erp.sqlite')) seedExpensesDemo(db);
   return db;
 }
 
