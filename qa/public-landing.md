@@ -4,7 +4,7 @@
 
 The public React page uses the existing Manrope / DM Sans typography, blue/white/ink palette and brand mark. It adds an editorial hero, a larger synthetic product specimen, accessible workflow tabs, a three-layer scope model and explicit demo coverage. Header Sign in and Sign up, hero, workflow and footer CTAs all lead to `/demo`; prepared-account entry and `/app` are unchanged.
 
-The page describes the build snapshot as 40 partly implemented groups / 45 planned groups. This is not live coverage data: reconcile these figures with the in-app register when merging later domain work.
+The page derives its partly implemented and planned group counts from the same feature register and implementation map used by the in-app Build Status page. The current build shows 41 partly implemented groups / 44 planned groups.
 
 GSAP is imported after mount, scopes selectors to this landing instance and reverts its matchMedia context. It settles the product window as it scrolls into view, reveals editorial sections and applies restrained depth movement to the final brand mark. The Three.js renderer loads near the scope section, renders only on scroll or resize, separates company/registration/branch surfaces and disposes GPU resources on unmount or reduced-motion changes. HTML diagram and legend remain available without WebGL, on context loss, with reduced motion or data saving enabled.
 

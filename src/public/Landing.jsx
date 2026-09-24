@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { BrandMark } from '../components/WorkspaceIcon.jsx';
 import LandingMotion from './LandingMotion.jsx';
 import ScopeVisual from './ScopeVisual.jsx';
+import features from '../data/features.json';
+import { implemented } from '../data/implementation.js';
 import './public.css';
 
 const Arrow = ({ down = false }) => <span aria-hidden="true">{down ? '↓' : '↗'}</span>;
@@ -57,6 +59,8 @@ function PlatformExplorer() {
 }
 
 export default function Landing() {
+  const partialCount = Object.keys(implemented).length;
+  const plannedCount = features.length - partialCount;
   const root = useRef(null);
   return <div className="public-page landing-page" ref={root}>
     <LandingMotion root={root} />
@@ -80,7 +84,7 @@ export default function Landing() {
 
       <section className="scope-section public-container" aria-labelledby="scope-title"><div className="scope-copy"><p className="public-kicker">03 / CONTEXT IS THE CONTROL</p><h2 id="scope-title">One business.<br /><span>Distinct layers.</span></h2><p>Company identity, GST registration and branch access are separate. TesselArk keeps the layers legible, with user grants applied by the server.</p><div className="scope-note"><strong>The right view for each role.</strong><span>Choose staff, accountant or owner access and inspect the permitted context.</span></div><a className="public-text-link" href="/demo">Find your point of view <Arrow /></a></div><ScopeVisual /></section>
 
-      <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">04 / AN HONEST WORKING BUILD</p><h2 id="trust-title">Made to explore.<br /><span>Clear about its scope.</span></h2><p>This is a local ERP demonstration with fictional companies and sample transactions. Purchase matching and GST review are local workflows. Statutory screens are simulations, with no live government connection or official filing.</p><a href="/demo" className="public-text-link">View Build Status in the demo <Arrow /></a></div><div className="trust-ledger"><div className="trust-total"><strong>85</strong><span>researched feature groups</span></div><div className="trust-coverage" aria-label="40 partly implemented groups and 45 planned groups"><span /><span /></div><div className="trust-counts"><div><strong>40</strong><span>Partly implemented</span></div><div><strong>45</strong><span>Planned</span></div></div><p>Partial means a specific working slice. The in-app register describes what is implemented and what remains.</p></div></section>
+      <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">04 / AN HONEST WORKING BUILD</p><h2 id="trust-title">Made to explore.<br /><span>Clear about its scope.</span></h2><p>This is a local ERP demonstration with fictional companies and sample transactions. Purchase matching and GST review are local workflows. Statutory screens are simulations, with no live government connection or official filing.</p><a href="/demo" className="public-text-link">View Build Status in the demo <Arrow /></a></div><div className="trust-ledger"><div className="trust-total"><strong>{features.length}</strong><span>researched feature groups</span></div><div className="trust-coverage" aria-label={`${partialCount} partly implemented groups and ${plannedCount} planned groups`}><span style={{ width: `${100 * partialCount / features.length}%` }} /><span /></div><div className="trust-counts"><div><strong>{partialCount}</strong><span>Partly implemented</span></div><div><strong>{plannedCount}</strong><span>Planned</span></div></div><p>Partial means a specific working slice. The in-app register describes what is implemented and what remains.</p></div></section>
 
       <section className="final-section"><div className="public-container final-inner"><div className="final-symbol" aria-hidden="true"><BrandMark /></div><p className="public-kicker">YOUR NEXT CLEARER WORKING DAY</p><h2>Step inside<br /><span>the whole picture.</span></h2><a className="public-button" href="/demo">Explore TesselArk <Arrow /></a><p>Prepared accounts. Synthetic companies. No registration required.</p></div></section>
     </main>

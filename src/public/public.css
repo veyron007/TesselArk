@@ -160,7 +160,7 @@
 .trust-total strong { color: #315e9a; font: 500 85px/1 Manrope, sans-serif; letter-spacing: -.075em; }
 .trust-total > span { color: #56718f; font-size: 12px; max-width: 100px; line-height: 1.6; }
 .trust-coverage { display: flex; gap: 4px; height: 8px; margin-top: 28px; }
-.trust-coverage > span:first-child { width: 47.06%; background: #6090d2; border-radius: 3px 0 0 3px; }
+.trust-coverage > span:first-child { background: #6090d2; border-radius: 3px 0 0 3px; }
 .trust-coverage > span:last-child { flex: 1; background: #d7e4f5; border-radius: 0 3px 3px 0; }
 .trust-counts { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; gap: 20px; }
 .trust-counts > div { display: grid; gap: 7px; }
