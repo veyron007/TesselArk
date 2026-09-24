@@ -64,6 +64,28 @@ const transaction = (db, action) => {
   catch (error) { db.exec('ROLLBACK'); throw error; }
 };
 
+function demoAccounts(db) {
+  const users = db.prepare(`SELECT u.id AS user_id,u.company_id,u.name AS user_name,u.role,c.name AS company_name
+    FROM users u JOIN companies c ON c.id=u.company_id
+    ORDER BY c.name,u.role,u.name,u.id`).all();
+  const gstins = db.prepare('SELECT id,company_id,gstin,state_code FROM gstins ORDER BY id').all();
+  const branches = db.prepare('SELECT id,company_id,gstin_id,name FROM branches ORDER BY id').all();
+  return users.flatMap(user => {
+    const scopes = allowedScopes(db,{ companyId:user.company_id,userId:user.user_id });
+    if (!scopes.branchIds.length) return [];
+    const allowedGstins = new Set(scopes.gstinIds);
+    const allowedBranches = new Set(scopes.branchIds);
+    return [{
+      companyId:user.company_id,companyName:user.company_name,
+      userId:user.user_id,userName:user.user_name,role:user.role,
+      gstins:gstins.filter(row => row.company_id === user.company_id && allowedGstins.has(row.id))
+        .map(row => ({ id:row.id,gstin:row.gstin,stateCode:row.state_code })),
+      branches:branches.filter(row => row.company_id === user.company_id && allowedBranches.has(row.id) && allowedGstins.has(row.gstin_id))
+        .map(row => ({ id:row.id,name:row.name,gstinId:row.gstin_id })),
+    }];
+  });
+}
+
 function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE || 'demo', authOptions } = {}) {
   if (!['demo', 'production'].includes(authMode)) throw new Error('ERP_AUTH_MODE must be demo or production');
   const app = express();
@@ -79,6 +101,11 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
   const auth = authMode === 'production' ? createAuth(db, authOptions) : null;
   if (auth) app.use('/api', auth.apiLimiter);
   app.use(express.json({ limit: '200kb' }));
+  app.get('/api/demo/accounts', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    if (auth) return res.status(403).json({ demoMode:false,error:'Demo accounts are unavailable in production mode' });
+    return res.json({ demoMode:true,accounts:demoAccounts(db) });
+  });
   if (auth) {
     auth.registerRoutes(app);
     app.use('/api', auth.authenticate);

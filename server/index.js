@@ -19,7 +19,8 @@ const app = createApp({ authOptions: { trustedProxyIps: process.env.ERP_AUTH_TRU
 const dist = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../dist');
 if (fs.existsSync(path.join(dist, 'index.html'))) {
   app.use(express.static(dist));
-  app.get(/^\/(?!api(?:\/|$)).*/, (_req, res) => res.sendFile(path.join(dist, 'index.html')));
+  const indexHtml = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
+  app.get(/^\/(?!api(?:\/|$)).*/, (_req, res) => res.type('html').send(indexHtml));
 }
 app.listen(port, host, () => console.log(`ERP API listening on http://${host}:${port} (${process.env.ERP_AUTH_MODE === 'production' ? 'production auth' : 'demo auth'})`));
 

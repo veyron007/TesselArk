@@ -3,6 +3,10 @@ import WorkspaceIcon, { BrandMark } from './components/WorkspaceIcon.jsx';
 import Dashboard from './components/PrismDashboard.jsx';
 import WorkspaceMenu from './components/WorkspaceMenu.jsx';
 import { readWorkspaceRoute, readWorkspaceScope, resolveWorkspaceScope, workspaceUrl } from './workspace-route.js';
+import { readDemoSelection, saveDemoSelection } from './demo-entry.js';
+import { readEntryRoute } from './public-route.js';
+import Landing from './public/Landing.jsx';
+import DemoChooser from './public/DemoChooser.jsx';
 const Operations = lazy(() => import('./pages/Operations.jsx'));
 const Orders = lazy(() => import('./pages/Orders.jsx'));
 const BatchInventory = lazy(() => import('./pages/BatchInventory.jsx'));
@@ -103,7 +107,7 @@ function AuthScreen({ onSubmit, busy, error }) {
   </main>;
 }
 
-function App() {
+function WorkspaceApp() {
   const [activePage, setActivePage] = useState(() => readWorkspaceRoute(window.location).page);
   const [bootstrap, setBootstrap] = useState(null);
   const [bootError, setBootError] = useState('');
@@ -112,7 +116,8 @@ function App() {
   const bootstrapRequest = useRef(0);
   const [selection, setSelection] = useState(() => {
     const scope = readWorkspaceScope(window.location);
-    return { companyId: '', branchId: scope.branchId || '', gstinId: scope.gstinId || '', userId: '', role: '' };
+    const demo = readDemoSelection();
+    return { companyId: demo?.companyId || '', branchId: scope.branchId || '', gstinId: scope.gstinId || '', userId: demo?.userId || '', role: '' };
   });
   const [refreshKey, setRefreshKey] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -375,6 +380,9 @@ function App() {
     && String(bootstrap?.currentCompanyId) === String(selection.companyId)
     && String(bootstrap?.currentUserId) === String(selection.userId);
   useEffect(() => {
+    if (scopeReady && authMode === 'demo') saveDemoSelection(selection);
+  }, [scopeReady, authMode, selection]);
+  useEffect(() => {
     if (!scopeReady) return;
     const recordId = ['operations', 'documents', 'invoice-checks'].includes(activePage) ? initialInvoiceId : activePage === 'orders' ? initialOrderId : null;
     const url = workspaceUrl(activePage, recordId, window.location.href, selection);
@@ -472,4 +480,14 @@ function App() {
 }
 
 
-export default App;
+export default function App() {
+  const [entryRoute, setEntryRoute] = useState(() => readEntryRoute(window.location));
+  useEffect(() => {
+    const onHistoryChange = () => setEntryRoute(readEntryRoute(window.location));
+    window.addEventListener('popstate', onHistoryChange);
+    return () => window.removeEventListener('popstate', onHistoryChange);
+  }, []);
+  if (entryRoute === 'landing') return <Landing />;
+  if (entryRoute === 'demo') return <DemoChooser />;
+  return <WorkspaceApp />;
+}

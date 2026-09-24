@@ -17,7 +17,7 @@ function validRecord(value) {
 
 export function readWorkspaceRoute(location) {
   const pathname = location.pathname.replace(/^\/+|\/+$/g, '');
-  const requested = pathname || new URLSearchParams(location.search).get('page') || 'dashboard';
+  const requested = pathname === 'app' ? 'dashboard' : pathname || new URLSearchParams(location.search).get('page') || 'dashboard';
   const page = pages.has(requested) ? requested : 'dashboard';
   const recordId = detailPages.has(page)
     ? validRecord(new URLSearchParams(location.search).get('record')) : null;
@@ -42,7 +42,7 @@ export function resolveWorkspaceScope(company, preferred = {}) {
 export function workspaceUrl(page, recordId, currentUrl, scope = null) {
   const destination = new URL(currentUrl);
   const selectedPage = pages.has(page) ? page : 'dashboard';
-  destination.pathname = selectedPage === 'dashboard' ? '/' : `/${selectedPage}`;
+  destination.pathname = selectedPage === 'dashboard' ? '/app' : `/${selectedPage}`;
   destination.searchParams.delete('page');
   destination.searchParams.delete('record');
   destination.searchParams.delete('gstin');
