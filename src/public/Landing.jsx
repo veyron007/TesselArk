@@ -39,6 +39,13 @@ const chapters = [
   { id: 'finance', label: 'Finance & review', title: 'Every total deserves a way back.', body: 'Move from journals, payments and scoped reports to their source documents. Review purchase evidence and record an ITC decision as a separate, local accounting step.', steps: ['Source document', 'Journal linked', 'Review recorded'], note: 'Internal approval and ITC eligibility never imply official filing.', ref: 'SOURCE → JOURNAL → REVIEW', number: '03', detail: 'Source linked', total: 'Local records', percent: 100 },
 ];
 
+const reviewStages = [
+  ['01', 'Match the evidence', 'Compare the purchase with the synthetic supplier statement. A match describes evidence, not tax eligibility.'],
+  ['02', 'Review ITC eligibility', 'An accountant records a local eligibility decision for the selected GST registration and period.'],
+  ['03', 'Approve internally', 'A separate person can review submitted work. The decision stays in the local audit trail.'],
+  ['04', 'Keep filing distinct', 'The statutory sandbox simulates outcomes. It does not sign or file a return with a government portal.'],
+];
+
 function PlatformExplorer() {
   const [selected, setSelected] = useState(0);
   const chapter = chapters[selected];
@@ -68,10 +75,10 @@ export default function Landing() {
     <PublicHeader />
     <main id="public-main">
       <section className="public-hero public-container" aria-labelledby="hero-title">
-        <div className="hero-copy"><p className="public-kicker"><span className="kicker-rule" /> THE CONNECTED BUSINESS WORKSPACE</p><h1 id="hero-title">Every detail.<br /><span>One clear picture.</span></h1></div>
-        <div className="hero-introduction"><p className="hero-description">Orders, inventory, finance and GST review.<br />Connected by the records behind them.</p><div className="hero-actions"><a className="public-button" href="/demo">Explore the demo <Arrow /></a><a className="public-text-link" href="#platform">Take a closer look <Arrow down /></a></div><p className="hero-note">Local demonstration. Synthetic data. <br />A prepared workspace, ready to explore.</p></div>
+        <div className="hero-copy"><p className="public-kicker"><span className="kicker-rule" /> THE CONNECTED BUSINESS WORKSPACE</p><h1 id="hero-title">Every detail.<br /><span>One clear picture.</span></h1><p className="hero-description">Orders, inventory, finance and GST review. Connected by the records behind them, in the right company and branch context.</p><div className="hero-actions"><a className="public-button" href="/demo">Explore the demo <Arrow /></a><a className="public-text-link" href="#platform">Take a closer look <Arrow down /></a></div><p className="hero-note">Local demonstration · Synthetic data · Prepared accounts</p><div className="hero-scroll-cue" aria-hidden="true"><span>SCROLL TO EXPLORE THE LAYERS</span><i /></div></div>
+        <div className="hero-visual"><ScopeVisual /></div>
       </section>
-      <section className="hero-stage public-container" aria-label="An illustrated TesselArk workspace"><ProductScene /></section>
+      <section className="hero-stage public-container" aria-label="An illustrated TesselArk workspace"><div className="stage-heading"><p className="public-kicker">A WORKSPACE THAT KEEPS ITS CONTEXT</p><p>A source becomes a movement.<br />A movement becomes a record.</p></div><ProductScene /><div className="stage-endnote"><span>01 / SOURCE</span><span>02 / MOVEMENT</span><span>03 / REVIEW</span></div></section>
       <div className="public-ticker public-container"><span>Clarity at every handoff.</span><p>One company.<b>Its registrations.</b>The right branch.<b>A visible trail.</b></p><a href="#workflow" aria-label="See how the workflow connects"><Arrow down /></a></div>
 
       <section className="platform-section public-container" id="platform" aria-labelledby="platform-title"><div className="section-intro"><p className="public-kicker">01 / THE PLATFORM</p><div className="section-heading-row"><h2 id="platform-title">The work moves.<br /><span>The context stays.</span></h2><p>A document is only part of the story. See the source, the movement and the decision together in the working slices of TesselArk.</p></div></div><PlatformExplorer /></section>
@@ -82,7 +89,7 @@ export default function Landing() {
         ['03', 'Make the review explicit.', 'Inspect source evidence and record a local decision. Matching, eligibility and approval stay distinct.'],
       ].map(([number, title, copy]) => <article className="workflow-row" key={number}><span className="workflow-index">{number}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div></div></section>
 
-      <section className="scope-section public-container" aria-labelledby="scope-title"><div className="scope-copy"><p className="public-kicker">03 / CONTEXT IS THE CONTROL</p><h2 id="scope-title">One business.<br /><span>Distinct layers.</span></h2><p>Company identity, GST registration and branch access are separate. TesselArk keeps the layers legible, with user grants applied by the server.</p><div className="scope-note"><strong>The right view for each role.</strong><span>Choose staff, accountant or owner access and inspect the permitted context.</span></div><a className="public-text-link" href="/demo">Find your point of view <Arrow /></a></div><ScopeVisual /></section>
+      <section className="review-section public-container" aria-labelledby="review-title"><div className="review-copy"><p className="public-kicker">03 / THE DECISION TRAIL</p><h2 id="review-title">A review is a journey.<br /><span>Every step has its place.</span></h2><p>Source matching, ITC eligibility and internal approval are separate local decisions. TesselArk keeps each one visible without suggesting that a return has been filed.</p><a className="public-text-link" href="/demo">Inspect the local review <Arrow /></a></div><div className="review-stages">{reviewStages.map(([number, title, body]) => <article className="review-stage" key={number}><span>{number}</span><div><h3>{title}</h3><p>{body}</p></div></article>)}</div></section>
 
       <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">04 / AN HONEST WORKING BUILD</p><h2 id="trust-title">Made to explore.<br /><span>Clear about its scope.</span></h2><p>This is a local ERP demonstration with fictional companies and sample transactions. Purchase matching and GST review are local workflows. Statutory screens are simulations, with no live government connection or official filing.</p><a href="/demo" className="public-text-link">View Build Status in the demo <Arrow /></a></div><div className="trust-ledger"><div className="trust-total"><strong>{features.length}</strong><span>researched feature groups</span></div><div className="trust-coverage" aria-label={`${partialCount} partly implemented groups and ${plannedCount} planned groups`}><span style={{ width: `${100 * partialCount / features.length}%` }} /><span /></div><div className="trust-counts"><div><strong>{partialCount}</strong><span>Partly implemented</span></div><div><strong>{plannedCount}</strong><span>Planned</span></div></div><p>Partial means a specific working slice. The in-app register describes what is implemented and what remains.</p></div></section>
 

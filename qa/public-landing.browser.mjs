@@ -1,11 +1,11 @@
-// Run with both local servers: LANDING_URL=http://127.0.0.1:5187 node qa/public-landing.browser.mjs
+// Run with both local servers: LANDING_URL=http://127.0.0.1:5193 node qa/public-landing.browser.mjs
 // Playwright is supplied by the existing Flute development dependency.
 import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright';
 
 const origin = process.env.LANDING_URL || 'http://127.0.0.1:5173';
-const output = process.env.LANDING_SCREENSHOTS || '/tmp/tesselark-public-qa';
+const output = process.env.LANDING_SCREENSHOTS || '/tmp/tesselark-cinematic-qa';
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--enable-unsafe-swiftshader'] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -19,15 +19,34 @@ try {
   await page.goto(origin);
   await settle();
   await noOverflow();
+  await page.waitForSelector('.hero-visual .scope-visual-ready');
+  assert.equal(await page.locator('.hero-visual .scope-canvas canvas').count(), 1);
+  assert.equal(await page.locator('.hero-visual').isVisible(), true);
+  assert.equal(await page.locator('.hero-stage').isVisible(), true);
   assert.equal(await page.getByRole('heading', { level: 1 }).textContent(), 'Every detail.One clear picture.');
   for (const label of ['Sign in', 'Sign up']) assert.equal(await page.getByRole('link', { name: label, exact: true }).getAttribute('href'), '/demo');
+  await capture('01-opening-three');
   await page.keyboard.press('Tab');
   assert.equal(await page.evaluate(() => document.activeElement.textContent), 'Skip to content');
-  await capture('01-hero');
+  await page.evaluate(() => document.activeElement.blur());
+  const beforeLayers = await page.locator('.scope-canvas').screenshot();
+  await page.evaluate(() => window.scrollBy(0, 210));
+  await page.waitForTimeout(400);
+  const afterLayers = await page.locator('.scope-canvas').screenshot();
+  assert.equal(beforeLayers.equals(afterLayers), false, 'Three.js layers and camera must respond to scroll');
+  await capture('02-layer-travel');
+  await page.locator('.hero-stage').scrollIntoViewIfNeeded();
+  await settle();
+  const beforeProduct = await page.locator('.scene-platform').evaluate(el => getComputedStyle(el).transform);
+  await page.evaluate(() => window.scrollBy(0, 260));
+  await page.waitForTimeout(800);
+  const afterProduct = await page.locator('.scene-platform').evaluate(el => getComputedStyle(el).transform);
+  assert.notEqual(beforeProduct, afterProduct, 'Product window must settle during the scroll chapter');
+  await capture('03-product-chapter');
   await page.getByRole('link', { name: 'Platform', exact: true }).click();
   await settle();
   assert.equal(new URL(page.url()).hash, '#platform');
-  await capture('02-platform');
+  await capture('04-platform');
   await page.getByRole('tab', { name: /Inventory & movement/ }).click();
   assert.match(await page.getByRole('tabpanel').textContent(), /See the stock behind the number/);
   await page.keyboard.press('ArrowRight');
@@ -37,24 +56,26 @@ try {
   assert.equal(await page.getByRole('tab', { name: /Orders & fulfilment/ }).getAttribute('aria-selected'), 'true');
   await page.locator('.workflow-section').scrollIntoViewIfNeeded();
   await settle();
-  await capture('03-workflow');
-  await page.locator('.scope-section').scrollIntoViewIfNeeded();
-  await page.waitForSelector('.scope-visual-ready');
+  await capture('05-workflow');
+  await page.locator('.review-section').scrollIntoViewIfNeeded();
   await settle();
-  await capture('04-scope-three');
+  await capture('06-decision-trail');
+  await page.locator('.hero-visual').scrollIntoViewIfNeeded();
+  await page.waitForSelector('.scope-visual-ready');
   // Context loss restores a readable diagram rather than leaving an empty canvas.
   await page.locator('.scope-canvas canvas').evaluate(canvas => canvas.dispatchEvent(new Event('webglcontextlost', { cancelable: true })));
   await page.waitForFunction(() => !document.querySelector('.scope-visual-ready'));
   assert.equal(await page.locator('.scope-fallback').isVisible(), true);
-  await capture('05-context-loss-fallback');
+  assert.equal(await page.locator('.scope-canvas canvas').count(), 0, 'Lost WebGL canvas must be released');
+  await capture('07-context-loss-fallback');
   await page.locator('.final-section').scrollIntoViewIfNeeded();
   await settle();
-  await capture('06-final-cta');
+  await capture('08-final-cta');
   await page.getByRole('link', { name: 'Explore TesselArk', exact: false }).click();
   await page.waitForSelector('.chooser-card');
   assert.equal(new URL(page.url()).pathname, '/demo');
   await noOverflow();
-  await capture('07-demo-chooser');
+  await capture('09-demo-chooser');
   const first = page.locator('.chooser-card').first();
   const user = await first.locator('h3').textContent();
   await first.getByRole('link', { name: /^Enter demo as/ }).click();
@@ -62,19 +83,19 @@ try {
   await page.waitForSelector('.app-shell');
   await settle();
   assert.match(await page.locator('body').textContent(), new RegExp(user.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
-  await capture('08-selected-workspace');
+  await capture('10-selected-workspace');
   // Existing bookmark paths must continue to resolve to the workspace.
   await page.goto(`${origin}/orders`);
   await page.waitForSelector('.app-shell');
   assert.equal(await page.locator('.public-hero').count(), 0);
   await page.goto(origin);
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.locator('.scope-section').scrollIntoViewIfNeeded();
+  await page.locator('.hero-visual').scrollIntoViewIfNeeded();
   await settle();
   assert.equal(await page.locator('.scope-canvas canvas').count(), 0);
   assert.equal(await page.locator('.scope-fallback').isVisible(), true);
-  assert.equal(await page.locator('.scope-copy').evaluate(el => getComputedStyle(el).opacity), '1');
-  await capture('09-reduced-motion');
+  assert.equal(await page.locator('.hero-copy').evaluate(el => getComputedStyle(el).opacity), '1');
+  await capture('11-reduced-motion');
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.waitForSelector('.scope-visual-ready');
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -83,9 +104,11 @@ try {
   await page.goto(origin);
   await settle();
   await noOverflow();
-  await capture('10-mobile');
+  await capture('12-mobile');
   // Exercise capability fallback without relying on the machine's GPU availability.
   const fallback = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  fallback.on('pageerror', error => errors.push(error.message));
+  fallback.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   await fallback.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, ...args) {
@@ -93,14 +116,14 @@ try {
     };
   });
   await fallback.goto(origin);
-  await fallback.locator('.scope-section').scrollIntoViewIfNeeded();
+  await fallback.locator('.hero-visual').scrollIntoViewIfNeeded();
   await fallback.waitForTimeout(1200);
   assert.equal(await fallback.locator('.scope-canvas canvas').count(), 0);
   assert.equal(await fallback.locator('.scope-fallback').isVisible(), true);
-  await fallback.screenshot({ path: `${output}/11-no-webgl.png` });
+  await fallback.screenshot({ path: `${output}/13-no-webgl.png` });
   await fallback.close();
   assert.deepEqual(errors, [], 'No page or console errors');
-  console.log(`PASS: desktop landing, keyboard tabs, deep links, demo entry, reduced-motion changes, context loss, no-WebGL fallback, mobile overflow. Screenshots: ${output}`);
+  console.log(`PASS: cinematic 3D/GSAP scroll, desktop landing, keyboard tabs, deep links, demo entry, reduced-motion changes, context loss, no-WebGL fallback, mobile overflow. Screenshots: ${output}`);
 } finally {
   await browser.close();
 }
