@@ -6,6 +6,7 @@ const { registerReturnTaxRoutes } = require('./return-tax.cjs');
 const { registerWorkflowRoutes } = require('./workflows.cjs');
 const { registerStatutoryMockRoutes } = require('./statutory-mock.cjs');
 const { registerOrdersRoutes } = require('./orders.cjs');
+const { registerQuotesRoutes } = require('./quotes.cjs');
 const { registerBatchInventoryRoutes, allocateBatchIssue } = require('./batch-inventory.cjs');
 const { registerEvidenceRoutes } = require('./evidence.cjs');
 const { registerStatementImportRoutes } = require('./statement-import.cjs');
@@ -482,6 +483,7 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
   registerWorkflowRoutes(app, db);
   registerStatutoryMockRoutes(app, db);
   registerOrdersRoutes(app, db);
+  registerQuotesRoutes(app, db);
   registerBatchInventoryRoutes(app, db);
   registerEvidenceRoutes(app, db);
   registerStatementImportRoutes(app, db);

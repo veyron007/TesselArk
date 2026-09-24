@@ -7,6 +7,7 @@ const { installReturnsSchema } = require('./returns-db.cjs');
 const { installReturnTaxSchema } = require('./return-tax-db.cjs');
 const { installWorkflowSchema } = require('./workflows-db.cjs');
 const { installOrdersSchema } = require('./orders-db.cjs');
+const { installQuotesSchema, seedQuoteDemo } = require('./quotes-db.cjs');
 const { installBatchInventorySchema, seedBatchSpecimen } = require('./batch-inventory-db.cjs');
 const { installEvidenceSchema } = require('./evidence-db.cjs');
 const { installStatementImportSchema } = require('./statement-import-db.cjs');
@@ -96,6 +97,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
   installReturnTaxSchema(db);
   installWorkflowSchema(db);
   installOrdersSchema(db);
+  installQuotesSchema(db);
   installBatchInventorySchema(db);
   installEvidenceSchema(db);
   installStatementImportSchema(db);
@@ -142,6 +144,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
     seedConsumerHealthDemo(db);
     seedGstInvoiceCheckDemo(db);
     seedAuxiliaryDemo(db);
+    seedQuoteDemo(db);
   }
   syncLedgerSources(db);
   return db;

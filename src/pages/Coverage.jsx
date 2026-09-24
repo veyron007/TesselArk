@@ -15,7 +15,7 @@ const implemented = {
   'ERP-013': 'Scoped advisory price rules with precedence, effective dates, discount bands and independently reviewed exceptions; existing invoice and order pricing is not yet bound to approved rules',
   'ERP-014': 'Versioned bundle component formulas, stock preview, independently reviewed schemes with explicit stacking and free-goods assumptions, and source-linked historical deal inspection; no automatic discount, stock or tax posting',
   'ERP-016': 'Scoped customer credit policies, receivable exposure and independently reviewed temporary limits with dated assessments; hold blocks new over-limit sales order confirmations and invoice submissions, while warn remains advisory. Cheque clearance and overdue aging remain pending',
-  'ERP-009': 'Sales and purchase orders with partial dispatch/receipt, stock posting and source-linked invoice creation; indents and quotes remain planned',
+  'ERP-009': 'Scoped sales quotations with draft editing, independent review, expiry, audit and one-time conversion to linked draft sales orders; sales and purchase orders support partial dispatch/receipt and source-linked invoicing. Indents and broader quote/approval variants remain planned',
   'ERP-010': 'Draft, submit and approve simple sales and purchase invoices',
   'ERP-011': 'Source-linked returns, purchase stock issue, sales-return quarantine with inspected release, and explicit commercial subtotal settlement; tax remains a separate proposal',
   'ERP-017': 'Balanced source-linked invoice, payment and commercial-return journals, party ledger, trial balance, periodic P&L and balance-sheet arithmetic; no opening balances, stock valuation, tax-return posting or close',
