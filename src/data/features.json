@@ -1,0 +1,597 @@
+[
+  {
+    "id": "ERP-001",
+    "domain": "Catalogue",
+    "capability": "Item discovery and curated substitutes",
+    "workflow": "Find products by category, salt, parameter or configured substitute and surface new launches; preserve product identity.",
+    "acceptance": "A filtered search returns permitted products, retains selected identity and never presents a medicinal substitute as an autonomous clinical decision."
+  },
+  {
+    "id": "ERP-002",
+    "domain": "Inventory",
+    "capability": "Stock ledger and inventory vouchers",
+    "workflow": "Receive, reserve, issue, transfer and adjust quantities through named stock vouchers and inspect the resulting balance.",
+    "acceptance": "A receipt, issue and approved adjustment reconcile to the same item/location balance with source-document drilldown."
+  },
+  {
+    "id": "ERP-003",
+    "domain": "Inventory",
+    "capability": "Godowns, stores and racks",
+    "workflow": "Allocate goods to warehouse/store/rack, inspect availability and move selected quantities with sending and receiving evidence.",
+    "acceptance": "A partial transfer shows in-transit and received quantities without counting one quantity in both available stocks."
+  },
+  {
+    "id": "ERP-004",
+    "domain": "Inventory",
+    "capability": "Batch dates, expiry and allocation",
+    "workflow": "Preserve batch identifiers including separators; track manufacture/expiry; allocate quantities automatically, with confirmation or manually; prepare expiry candidates.",
+    "acceptance": "A split-batch sale retains exact batch identifiers, dates and source quantities; uncertain legacy separator semantics remain flagged for demonstration."
+  },
+  {
+    "id": "ERP-005",
+    "domain": "Inventory",
+    "capability": "Stock conversion and packing",
+    "workflow": "Preview conversion between item forms or units, confirm ratios/wastage and inspect quantity/cost effects.",
+    "acceptance": "A reviewed conversion conserves quantities under its recorded conversion ratio and identifies allowed wastage and cost basis."
+  },
+  {
+    "id": "ERP-006",
+    "domain": "Inventory",
+    "capability": "Secondary stock records",
+    "workflow": "Maintain secondary stock records and reconcile them with the relevant main stock or channel records after source semantics are confirmed.",
+    "acceptance": "A documented customer example identifies what secondary stock means before posting rules are finalized; the requirement cannot be silently replaced with secondary-sales reporting."
+  },
+  {
+    "id": "ERP-007",
+    "domain": "Inventory",
+    "capability": "Consignment custody and settlement",
+    "workflow": "Record goods issued or received on consignment, ownership, custody, sale settlement and unsold returns separately.",
+    "acceptance": "An unsold consignment return changes custody without inventing an owned-stock purchase or sale."
+  },
+  {
+    "id": "ERP-008",
+    "domain": "Inventory",
+    "capability": "Counts, shortages and replenishment",
+    "workflow": "Compare barcode counts to recorded stock, investigate shortages and propose sales-based reorders with reviewer approval.",
+    "acceptance": "A count difference has a reason and approved adjustment; a reorder proposal shows demand, stock and existing commitments."
+  },
+  {
+    "id": "ERP-009",
+    "domain": "Trade",
+    "capability": "Procurement, orders and challans",
+    "workflow": "Raise indents, compare quotes, approve purchase/sales orders, fulfil partial quantities and convert orders/challans into invoices with shortages visible.",
+    "acceptance": "Two partial receipts or deliveries cannot consume the same ordered quantity twice; invoice conversion preserves remaining commitments."
+  },
+  {
+    "id": "ERP-010",
+    "domain": "Trade",
+    "capability": "Sales, purchases and provisional entry",
+    "workflow": "Enter sale/purchase invoices or fast counter/provisional records, review totals and finalize linked account, stock and tax effects.",
+    "acceptance": "A provisional document clearly shows its permitted effects; finalization posts each business effect once and links all consequences to one source."
+  },
+  {
+    "id": "ERP-011",
+    "domain": "Trade",
+    "capability": "Returns, replacements and claims",
+    "workflow": "Link returns to sold/purchased batches and original invoices; process breakage/expiry claims and replacement issue/receipt, including return entry within a sale.",
+    "acceptance": "A previously sold batch is traceable through return and replacement; commercial, stock and tax dispositions remain independently visible."
+  },
+  {
+    "id": "ERP-012",
+    "domain": "Trade",
+    "capability": "Price-difference adjustments",
+    "workflow": "Calculate sale/purchase price differences against identified invoices, quantities and previous rates; route tax consequences for review.",
+    "acceptance": "A price adjustment states the old rate, new rate, quantity and affected invoices without rewriting historical invoice values."
+  },
+  {
+    "id": "ERP-013",
+    "domain": "Trade",
+    "capability": "Pricing and discount controls",
+    "workflow": "Apply party/item/company rate and discount policies with precedence, effective dates, limits and permissioned fast rate changes.",
+    "acceptance": "An override outside the approved limit records authority and reason; recalculation shows the applicable rate and policy version."
+  },
+  {
+    "id": "ERP-014",
+    "domain": "Trade",
+    "capability": "Bundles, schemes and past deals",
+    "workflow": "Load bundle formulas, suggested products and group schemes; inspect previous sale/purchase deals before choosing permitted terms.",
+    "acceptance": "A bundle decomposes into traceable quantities; stacking and free-goods treatment follow a reviewed policy rather than an assumed discount order."
+  },
+  {
+    "id": "ERP-015",
+    "domain": "Trade",
+    "capability": "Supplier and purchase-cost comparison",
+    "workflow": "Compare supplier quotes and purchase histories, including landed-cost assumptions, then record the chosen supplier and reason.",
+    "acceptance": "A comparison shows equivalent quantity/unit and applicable charges so different pack sizes cannot mislead the buyer."
+  },
+  {
+    "id": "ERP-016",
+    "domain": "Finance",
+    "capability": "Customer credit and temporary limits",
+    "workflow": "Assess credit exposure during order/billing, request a time-limited override and review outstanding commitments before release.",
+    "acceptance": "An expired temporary limit no longer authorizes new credit, while the approved order history remains visible."
+  },
+  {
+    "id": "ERP-017",
+    "domain": "Finance",
+    "capability": "Books, ledgers and item trading accounts",
+    "workflow": "Maintain customer/supplier account identities and opening balances. Post linked vouchers to ledgers, inspect trial balance/P&L/balance sheet and drill into item trading accounts with valuation evidence.",
+    "acceptance": "A corrected transaction has traceable account effects and balanced postings; an item margin reconciles to its stated costing basis."
+  },
+  {
+    "id": "ERP-018",
+    "domain": "Finance",
+    "capability": "Receivables, allocations and collections",
+    "workflow": "Inspect outstanding invoices, tag receipts/credits/adjustments, review interest workings and prepare payment-aware collections.",
+    "acceptance": "A suspected unallocated bank receipt is reviewed before a reminder draft; allocated and remaining amounts reconcile without duplicate collection."
+  },
+  {
+    "id": "ERP-019",
+    "domain": "Finance",
+    "capability": "Banking, reconciliation and cheques",
+    "workflow": "Record issued/received advance and postdated cheques, reconcile statement lines and inspect supported connected-bank service outcomes.",
+    "acceptance": "A bank line has a traceable allocation, unresolved state or approved explanation; bank/provider availability stays an explicit dependency."
+  },
+  {
+    "id": "ERP-020",
+    "domain": "Finance",
+    "capability": "Cashier and payment collection",
+    "workflow": "Manage counter cash, payment modes and settlement references; close a cashier session and resolve payment discrepancies.",
+    "acceptance": "A session close reconciles opening cash, collections and payouts; payment-provider success is not inferred from invoice creation."
+  },
+  {
+    "id": "ERP-021",
+    "domain": "Reporting",
+    "capability": "Operational and management reporting",
+    "workflow": "Create MIS views, charts and combined management reports with source drilldown and role/company/period scope.",
+    "acceptance": "A combined view discloses companies, currency/period basis and freshness; totals drill into authorized records and statutory balances remain distinct."
+  },
+  {
+    "id": "ERP-022",
+    "domain": "Reporting",
+    "capability": "Budgets, cost centres and targets",
+    "workflow": "Assign transactions to cost centres, compare approved budgets and sales/collection targets, and explain variances.",
+    "acceptance": "A budget variance shows its period, allocation basis and source transactions rather than mixing unrelated targets."
+  },
+  {
+    "id": "ERP-023",
+    "domain": "Access",
+    "capability": "Users and scoped permissions",
+    "workflow": "Invite and manage users; grant viewing, editing and export rights by company, branch, GSTIN and record responsibility.",
+    "acceptance": "A user assigned to one company cannot retrieve another company through search, export, reports or direct record navigation."
+  },
+  {
+    "id": "ERP-024",
+    "domain": "Controls",
+    "capability": "Approval, audit and period controls",
+    "workflow": "Staff prepare; designated reviewers approve exceptional stock/account actions and period work; record operator history, freeze and controlled reopen.",
+    "acceptance": "Changing an approved calculation invalidates affected approval; reopening a frozen period records reason, authority and subsequent review."
+  },
+  {
+    "id": "ERP-025",
+    "domain": "Documents",
+    "capability": "Invoice, label and ancillary printing",
+    "workflow": "Configure invoices and local-language outputs; generate bank letters, packing slips, cover notes, gate passes, labels and barcodes from reviewed records.",
+    "acceptance": "An output contains the selected document version and template version with readable local-language content and correct barcode identity."
+  },
+  {
+    "id": "ERP-026",
+    "domain": "Counter",
+    "capability": "Browser counter and input ergonomics",
+    "workflow": "Offer touchscreen/multicounter billing, scales, virtual keyboard, item popups, recent reports, side displays and permissioned shortcut equivalents.",
+    "acceptance": "A counter can complete representative billing with supported browser/device inputs; unresolved F3/F4 semantics are demonstrated before shortcuts are assigned."
+  },
+  {
+    "id": "ERP-027",
+    "domain": "Trade",
+    "capability": "Legacy document separation and conversion",
+    "workflow": "Preview automatic invoice separation and amount/day-based document conversion after exact source criteria and document types are demonstrated.",
+    "acceptance": "A reviewed example establishes split/conversion rules and links every resulting document to its source; ambiguous vendor labels remain unresolved."
+  },
+  {
+    "id": "ERP-028",
+    "domain": "Communication",
+    "capability": "Business communication and schedules",
+    "workflow": "Draft SMS/email/messaging and calling follow-ups; schedule authorized stock/sales summaries with recipient and delivery visibility.",
+    "acceptance": "The sender previews recipient, business scope and message before authorized delivery; failed delivery never marks the business task complete."
+  },
+  {
+    "id": "ERP-029",
+    "domain": "Trade",
+    "capability": "Order CRM and customer follow-up",
+    "workflow": "Track enquiries and orders, ownership, customer requests, next actions and fulfilment blockers from first contact through delivery.",
+    "acceptance": "A customer follow-up opens the correct order and owner, preserving earlier commitments and their disposition."
+  },
+  {
+    "id": "ERP-030",
+    "domain": "Fulfilment",
+    "capability": "Home delivery and proof of completion",
+    "workflow": "Assign dispatch/delivery, confirm quantities, collect permitted proof and record failed/partial delivery and related collection.",
+    "acceptance": "A partially delivered order retains remaining quantities and proof; collection and delivery status are not conflated."
+  },
+  {
+    "id": "ERP-031",
+    "domain": "Data continuity",
+    "capability": "Backup, migration and financial-year continuity",
+    "workflow": "Create reviewable backups/exports, verify recovery, close the year, carry controlled opening balances and access migrated company records through the browser.",
+    "acceptance": "A restored/exported example reproduces balances and unresolved cases; backup destination and hosting remain undecided despite legacy cloud/email labels."
+  },
+  {
+    "id": "ERP-032",
+    "domain": "Data exchange",
+    "capability": "Imports, capture and ERP exchange",
+    "workflow": "Capture PDF/photo/tabular data, map masters, review control totals and exchange approved records with traceable errors and outcomes.",
+    "acceptance": "Reimporting the same input does not duplicate posted transactions; each accepted or rejected row has a reason and source link."
+  },
+  {
+    "id": "ERP-033",
+    "domain": "Commerce",
+    "capability": "Ordering, storefront and commerce exchange",
+    "workflow": "Expose permitted catalogues and ordering/QR discovery in browser flows; accept orders and collaborative trade exchanges under approved access.",
+    "acceptance": "An incoming order identifies source, customer, accepted prices and fulfilment state; branded service/data access remains a dependency."
+  },
+  {
+    "id": "ERP-034",
+    "domain": "Access",
+    "capability": "Service bundles and entitlement visibility",
+    "workflow": "Show the business which optional service bundles and usage entitlements are enabled and which workflows require external service access.",
+    "acceptance": "An unavailable entitlement is explained before action; Super Pack/Home Edition semantics remain an explicit research question."
+  },
+  {
+    "id": "ERP-035",
+    "domain": "Distribution",
+    "capability": "Sales force, routes and manufacturer reporting",
+    "workflow": "Take route/salesperson orders or field invoices in the browser; track targets, commissions, C&F/DMS activity and authorized secondary-sales reporting.",
+    "acceptance": "A route order links to fulfilment and collections; secondary-sales reports preserve provenance and never imply access to proprietary datasets."
+  },
+  {
+    "id": "ERP-036",
+    "domain": "Pharmacy",
+    "capability": "Medicine registers and drug references",
+    "workflow": "Capture permitted H1/narcotics sale details and produce reviewed registers; open approved drug/salt reference or helpline resources.",
+    "acceptance": "A register entry links to sale/prescriber/patient evidence under scoped access; references do not grant prescribing authority."
+  },
+  {
+    "id": "ERP-037",
+    "domain": "Pharmacy",
+    "capability": "Prescription, refill and patient dispensing",
+    "workflow": "Link prescriptions and patient records to dispensing; manage promise orders and authorized refill reminders with outstanding quantities.",
+    "acceptance": "A partial dispensing preserves remaining quantities and relevant prescription evidence without exposing patient data to unrelated users."
+  },
+  {
+    "id": "ERP-038",
+    "domain": "Mandi",
+    "capability": "Bag quantities and item expenses",
+    "workflow": "Record bag counts, variable weights/tare and item-level loading/commission/other expenses during mandi buying and selling.",
+    "acceptance": "A specimen commodity trade reconciles bags, net weight, expense ownership and reviewed landed-cost/tax treatment."
+  },
+  {
+    "id": "ERP-039",
+    "domain": "Specialist trade",
+    "capability": "Kitty instalments and secured pledges",
+    "workflow": "Maintain kitty/committee instalments separately from pledged articles, valuations, dues and redemption history.",
+    "acceptance": "Separate reviewed examples specify instalment and pledge accounting; legal/licensing/interest rules remain prerequisites rather than assumed permissions."
+  },
+  {
+    "id": "ERP-040",
+    "domain": "Inventory",
+    "capability": "Returnable crates and containers",
+    "workflow": "Record crate/caret issue, return, damage/loss, deposits and party balances after confirming legacy terminology.",
+    "acceptance": "A party container balance reconciles issued and returned quantities, with deposits and damaged stock separately reviewed."
+  },
+  {
+    "id": "ERP-041",
+    "domain": "Services",
+    "capability": "OPD service desk",
+    "workflow": "Register patient-linked visits, consultation/service charges and relevant pharmacy links once OPD/Reki source behaviour is demonstrated.",
+    "acceptance": "A reviewed example identifies clinical boundaries and permissions; a service charge does not expose unrelated patient data."
+  },
+  {
+    "id": "ERP-042",
+    "domain": "Apparel",
+    "capability": "Size, colour and seasonal stock",
+    "workflow": "Maintain style/size/colour/season variants, purchase and sell specific variants and inspect their balances and replenishment needs.",
+    "acceptance": "A colour/size return restores the correct variant rather than a pooled product balance."
+  },
+  {
+    "id": "ERP-043",
+    "domain": "Jewellery",
+    "capability": "Articles, valuation, repairs and exchange",
+    "workflow": "Track article/hallmark/insurance references, purity/weight/making charges, karigar custody, repairs and old-gold exchanges.",
+    "acceptance": "A repair or exchange retains article identity, weights and reviewed valuation; insurance/hallmark access and rules remain explicit dependencies."
+  },
+  {
+    "id": "ERP-044",
+    "domain": "Hospitality",
+    "capability": "Tables, kitchen and order fulfilment",
+    "workflow": "Manage tables/order modes, pending KOT/challans, kitchen display, recipe consumption, delivery-marketplace intake and tips/waiter reporting.",
+    "acceptance": "A changed or cancelled KOT is visible to kitchen and cashier; inventory consumption follows confirmed recipe and cancellation rules."
+  },
+  {
+    "id": "ERP-045",
+    "domain": "Services",
+    "capability": "Appointments and staff schedules",
+    "workflow": "Schedule appointments against staff availability, record changes/no-shows and link completed services to billing.",
+    "acceptance": "A rescheduled booking preserves history and prevents conflicting confirmed assignments under the agreed booking policy."
+  },
+  {
+    "id": "ERP-046",
+    "domain": "Manufacturing",
+    "capability": "Production, BOM and quality release",
+    "workflow": "Plan materials and production, apply formulation/BOM versions, trace batch consumption/cost and hold or release output with quality evidence.",
+    "acceptance": "A held batch cannot be selected as released stock; finished quantity and cost trace to the reviewed BOM and actual consumption."
+  },
+  {
+    "id": "ERP-047",
+    "domain": "People",
+    "capability": "Employees, attendance and payroll",
+    "workflow": "Maintain employee/attendance/leave/salary inputs, calculate and review payroll and produce permissioned payroll reports.",
+    "acceptance": "A payroll run identifies input version and review; reimbursement links never expose salary details to ordinary expense reviewers."
+  },
+  {
+    "id": "ERP-048",
+    "domain": "Retail",
+    "capability": "Loyalty and customer rewards",
+    "workflow": "Accrue and redeem approved customer rewards with sale/return links and a transparent balance.",
+    "acceptance": "A returned sale adjusts rewards under the applicable policy and cannot be redeemed twice."
+  },
+  {
+    "id": "TAX-01",
+    "domain": "GST",
+    "capability": "Registration and applicability",
+    "workflow": "Effective-dated registration/regime, filing frequency, turnover history, authorized signatory, declared locations and obligations. Explain why each return or document requirement applies.",
+    "acceptance": "An applicability change records effective dates and source basis; a workspace retains previous periods under their original registration context."
+  },
+  {
+    "id": "TAX-02",
+    "domain": "GST",
+    "capability": "Tax masters and policies",
+    "workflow": "HSN/SAC/UQC, taxability, cess and valuation rules, place-of-supply decisions, bill-to/ship-to, exemptions and rate history. Record the basis and reviewer for exceptional classifications.",
+    "acceptance": "An exceptional place-of-supply or classification decision retains facts, authority and reviewer; later policy changes preserve invoice history."
+  },
+  {
+    "id": "TAX-03",
+    "domain": "GST",
+    "capability": "Invoice assistant",
+    "workflow": "Line-level explanation, GSTIN checks with verification date, arithmetic/rounding review, duplicates, party status and tax-inclusive pricing. Preview corrections and preserve original evidence.",
+    "acceptance": "An invoice explains each tax line and highlights an invalid/unknown check result without claiming a live verification when only imported evidence exists."
+  },
+  {
+    "id": "TAX-04",
+    "domain": "GST",
+    "capability": "E-invoice workbench",
+    "workflow": "Applicability, validation, registration, original acknowledgement/QR evidence, errors, cancellation eligibility and uncertain-response recovery. Link all attempts to one document.",
+    "acceptance": "An uncertain response remains unresolved until evidence establishes acceptance or failure; retry cannot create a second registration for the same document."
+  },
+  {
+    "id": "TAX-05",
+    "domain": "GST",
+    "capability": "Transport compliance",
+    "workflow": "E-way applicability, transport/vehicle details, generation, updates, validity/extension checks, consolidation and dispatch readiness. Respect active rules rather than withdrawn announcements.",
+    "acceptance": "Dispatch readiness distinguishes document validity, movement requirements and vehicle details; an extension or update records applicable eligibility."
+  },
+  {
+    "id": "TAX-06",
+    "domain": "GST",
+    "capability": "Purchase evidence inbox",
+    "workflow": "PDF/photo/spreadsheet/manual capture, field provenance, party/item mapping, PO/receipt/service evidence, duplicate controls and quantity/rate/tax variances.",
+    "acceptance": "Extracted fields remain linked to source evidence; a duplicate expense/purchase cannot be posted a second time merely through another intake channel."
+  },
+  {
+    "id": "TAX-07",
+    "domain": "GST",
+    "capability": "Reconciliation",
+    "workflow": "Books versus 2B/IMS, sales versus IRP/GSTR-1, amendments, prior periods, credit notes and imported documents. Explain proposed matches and isolate unexplained differences.",
+    "acceptance": "A changed statement or invoice produces an explainable new comparison and preserves the previous run and affected approvals."
+  },
+  {
+    "id": "TAX-08",
+    "domain": "GST",
+    "capability": "ITC review",
+    "workflow": "Eligibility at line/amount level; evidence requirements; blocked/common/nonbusiness credit; receipt/payment conditions; claim history; reversals/reclaims; deadline exposure.",
+    "acceptance": "A matched purchase can remain ineligible; the same credit amount has traceable claim, reversal and reclaim history without double claiming."
+  },
+  {
+    "id": "TAX-09",
+    "domain": "GST",
+    "capability": "IMS decisions",
+    "workflow": "Allowed actions per record/period, consequence preview, no-action exposure, pending deadlines, remarks, actual reversal amounts and acknowledgement/recomputation checks.",
+    "acceptance": "An action preview shows permitted choices and consequences for this record/period; task completion alone cannot assert portal acknowledgement."
+  },
+  {
+    "id": "TAX-10",
+    "domain": "GST",
+    "capability": "Supplier/customer resolution",
+    "workflow": "Dispute bundles, follow-up drafts, evidence exchange, owner assignment and reminders. Commercial payment decisions remain separate from a GST mismatch.",
+    "acceptance": "A proposed supplier/customer follow-up includes the disputed documents and considers allocated or suspected payments; GST mismatch does not automatically block commercial payment."
+  },
+  {
+    "id": "TAX-11",
+    "domain": "GST",
+    "capability": "Returns, claims and notes",
+    "workflow": "Original-invoice-linked returns; expiry/breakage/destruction; replacements; discounts; commercial notes versus GST adjustments; tax and stock effects reviewed separately.",
+    "acceptance": "An expiry return after a rate change links original invoice, batch, commercial note and reviewed tax treatment separately."
+  },
+  {
+    "id": "TAX-12",
+    "domain": "GST",
+    "capability": "RCM and adjustments",
+    "workflow": "Classified obligations, self-documentation where applicable, tax liability/payment evidence and separately reviewed ITC. Explain applicability rather than treating every unregistered purchase as RCM.",
+    "acceptance": "An unregistered purchase is not automatically treated as RCM; applicable liability and any separately reviewed credit carry evidence."
+  },
+  {
+    "id": "TAX-13",
+    "domain": "GST",
+    "capability": "Filing workspace",
+    "workflow": "Period checklist, GSTR-1/IFF/1A and 3B preparation, other applicable forms, variance bridge, approvals, export/upload/signing status, official acknowledgements and locked filed snapshots.",
+    "acceptance": "Changing an approved return pack requires affected re-review; generated, uploaded, signed and officially filed states remain distinct."
+  },
+  {
+    "id": "TAX-14",
+    "domain": "GST",
+    "capability": "Liability and payment view",
+    "workflow": "Estimated versus approved liabilities, credit/cash ledger evidence, allocation, payment references, interest/late-fee review and period-specific obligations. Bank payment is not automatically proof of return filing.",
+    "acceptance": "Estimated liability, approved liability, payment and official ledger evidence are distinct; a bank receipt never automatically marks a return filed."
+  },
+  {
+    "id": "TAX-15",
+    "domain": "GST",
+    "capability": "Multi-GSTIN operations",
+    "workflow": "Create/select legal companies, GST registrations and branches; maintain independent company books and scoped management views. Same-registration movement, distinct-person supply and ISD workflows remain separate. Pair sending/receiving records and reconcile interbranch discrepancies without concealing them in group totals.",
+    "acceptance": "A same-GSTIN transfer, distinct-person supply and ISD allocation produce distinct reviewed records; independent company books and GSTIN records remain traceable in group totals."
+  },
+  {
+    "id": "TAX-16",
+    "domain": "GST",
+    "capability": "Imports, exports and SEZ",
+    "workflow": "BoE/customs evidence, import credit matching, export/SEZ applicability, LUT/bond evidence where relevant and refund dossier/status. Domestic matching rules cannot be blindly reused.",
+    "acceptance": "Import/export/SEZ treatment uses relevant customs/export evidence; domestic purchase matching cannot silently decide imported-credit eligibility."
+  },
+  {
+    "id": "TAX-17",
+    "domain": "GST",
+    "capability": "Special taxpayer regimes",
+    "workflow": "Composition, QRMP and relevant TDS/TCS/ISD cases with registration-specific forms, rights and calculations. Keep GST deductions distinct from income-tax deductions.",
+    "acceptance": "An obligation is selected for its registration and effective regime; GST TDS/TCS never collapses into income-tax deduction handling."
+  },
+  {
+    "id": "TAX-18",
+    "domain": "GST",
+    "capability": "Annual compliance and migration",
+    "workflow": "GSTR-9/9C where applicable, financial-year versus return-period reconciliation, historic claims/reversals, migration control totals and unresolved opening cases.",
+    "acceptance": "Migration control totals reconcile stock, accounts and historical credit cases; annual reconciliations expose period differences rather than erasing them."
+  },
+  {
+    "id": "TAX-19",
+    "domain": "GST",
+    "capability": "Notices and evidence",
+    "workflow": "Notice intake, response dates, issue-to-transaction links, evidence bundles, response versions and authorized submission/acknowledgement. No fabricated legal response or automatic admission.",
+    "acceptance": "A notice case links issues to evidence and versioned response drafts; only authorized submissions can receive official acknowledgement status."
+  },
+  {
+    "id": "TAX-20",
+    "domain": "GST",
+    "capability": "Compliance change workbench",
+    "workflow": "Source/effective-date/supersession tracking, rate/MRP transition previews, impact assessment, reviewer sign-off and period-specific audit evidence.",
+    "acceptance": "A rate/policy revision previews open documents and representative historical cases, records accountant sign-off and leaves historical calculations intact."
+  },
+  {
+    "id": "TAX-21",
+    "domain": "GST",
+    "capability": "Common credit and capital goods",
+    "workflow": "Attribute exclusive/common use, document allocation bases, prepare periodic reversal and applicable annual adjustment, track capital-goods history and preserve reviewer-approved calculations.",
+    "acceptance": "Common-credit allocations and capital-goods adjustments show basis, periods, asset use and approved workings."
+  },
+  {
+    "id": "TAX-22",
+    "domain": "GST",
+    "capability": "Job work",
+    "workflow": "Principal/job-worker roles, challans, goods sent and partially returned, direct dispatch, scrap/waste, applicable statutory clocks and reporting, and overdue-case assessment.",
+    "acceptance": "Partial job-work returns preserve principal-owned quantities, challans, remaining deadlines and separate scrap/direct-dispatch treatment."
+  },
+  {
+    "id": "TAX-23",
+    "domain": "GST",
+    "capability": "Advances and adjustments",
+    "workflow": "Receipt/payment evidence, receipt/refund vouchers where applicable, goods/services tax assessment, allocation to invoices, cancellation/refund, unadjusted balances and period reporting.",
+    "acceptance": "Advance allocation connects receipt/payment, invoice and refund without double recognition and retains reviewed goods/services tax treatment."
+  },
+  {
+    "id": "TAX-24",
+    "domain": "GST",
+    "capability": "CA engagement and review",
+    "workflow": "Explicit client/company/GSTIN access, assigned preparations, versioned review packs, reviewer reassignment, approval independence policy, client handover and access revocation.",
+    "acceptance": "A CA sees only authorized client/GSTIN/period work, receives a versioned review pack and loses access on revocation while handover evidence remains available."
+  },
+  {
+    "id": "WORK-01",
+    "domain": "Shared webapp workflows",
+    "capability": "Identity and account lifecycle",
+    "workflow": "Invite a user into explicit business scopes; enroll permitted authentication, recover access, inspect/revoke sessions and offboard the account.",
+    "acceptance": "Revoking a user or session prevents further protected actions; recovery cannot expand company or reviewer rights."
+  },
+  {
+    "id": "WORK-02",
+    "domain": "Shared webapp workflows",
+    "capability": "Task templates, recurrence and obligations",
+    "workflow": "Create period-specific work from approved task/checklist templates; assign preparer/reviewer, dependencies and internal targets; attach a statutory due date and its source basis only where applicable; manage reassignment, recurrence and reopening.",
+    "acceptance": "One active obligation creates one period task; overlapping engagements are flagged; closing requires evidence and no duplicate tasks arise on rerun."
+  },
+  {
+    "id": "WORK-03",
+    "domain": "Shared webapp workflows",
+    "capability": "Notification and action inbox",
+    "workflow": "Group notifications by document/case and scope; show owner, amount, due date, blocker and permitted action; acknowledge, snooze or escalate under an approved policy.",
+    "acceptance": "Ten changes on one case form a coherent thread; acknowledgement does not approve the transaction or complete the obligation."
+  },
+  {
+    "id": "WORK-04",
+    "domain": "Shared webapp workflows",
+    "capability": "Concurrent work and stale-session recovery",
+    "workflow": "Show preparation/review activity, surface new changes, compare conflicting edits and recheck document version before posting or approval.",
+    "acceptance": "A stale browser cannot silently overwrite a newer review or post an obsolete approval; user sees changed fields and permitted reload/merge choices."
+  },
+  {
+    "id": "WORK-05",
+    "domain": "Shared webapp workflows",
+    "capability": "Evidence library and portable dossiers",
+    "workflow": "Store each source file with business scope, period, provenance and version; link it to records/cases; detect duplicates and missing evidence; search and export authorized dossiers.",
+    "acceptance": "Replacing a file creates a version; a historical approval still opens the precise evidence version reviewed; an export reveals no unauthorized company files."
+  },
+  {
+    "id": "WORK-06",
+    "domain": "Shared webapp workflows",
+    "capability": "Document drafts, templates and consent records",
+    "workflow": "Draft supplier letters, review queries, management declarations, engagement scopes and notice working responses; compare versions, review exports and preserve signed/accepted copies and consent.",
+    "acceptance": "A signed/accepted copy refers to one immutable draft version and scope; editing produces a new draft and requires renewed acceptance where relevant."
+  },
+  {
+    "id": "WORK-07",
+    "domain": "Shared webapp workflows",
+    "capability": "CA engagement scope and assignment",
+    "workflow": "Agree services, client companies/GSTINs, periods, preparers and reviewer rights; turn accepted engagement scope into applicable work and create a controlled handover on closure.",
+    "acceptance": "An amended engagement cannot inherit acceptance for a different company or period; overlapping work and revocation are visible."
+  },
+  {
+    "id": "WORK-08",
+    "domain": "Shared webapp workflows",
+    "capability": "Shared client view and audience-aware discussion",
+    "workflow": "Offer business-visible status and evidence requests alongside separate internal accountant notes; preserve discussion context and revoke client access with a handover pack.",
+    "acceptance": "An internal review comment is absent from client views/exports unless deliberately shared; each request links its client, period and missing evidence."
+  },
+  {
+    "id": "WORK-09",
+    "domain": "Shared webapp workflows",
+    "capability": "Expenses, paid-by evidence and reimbursements",
+    "workflow": "Record invoice owner, company GSTIN, supplier, purpose/cost centre, paid-by party and payment proof; review staff claims, advances and reimbursements with purchase/ITC evidence.",
+    "acceptance": "One bill uploaded by both employee and purchasing links to one expense; company payment and employee reimbursement cannot both settle the same payable unnoticed."
+  },
+  {
+    "id": "WORK-10",
+    "domain": "Shared webapp workflows",
+    "capability": "Governed assistance and reviewable runs",
+    "workflow": "Show extraction provenance/confidence; suggest mappings, match candidates and drafts; expose each step, evidence, changed assumptions, failures and handoff before consequential actions.",
+    "acceptance": "A preparation run stops for missing facts or changed scope and hands off unresolved decisions; it cannot autonomously elect tax treatment, sign, file or send messages."
+  },
+  {
+    "id": "WORK-11",
+    "domain": "Shared webapp workflows",
+    "capability": "Saved work queues, imports and controlled bulk actions",
+    "workflow": "Save authorized filters; preview selected/blocked records, mappings, duplicates and control totals; perform permitted imports or bulk work with per-row outcomes and correction files.",
+    "acceptance": "A bulk action previews its exact scope, skips protected rows with reasons and cannot approve hidden cases; retries identify existing accepted rows."
+  },
+  {
+    "id": "WORK-12",
+    "domain": "Shared webapp workflows",
+    "capability": "Review scenarios, reruns and audit evidence",
+    "workflow": "Maintain representative business scenarios for tax/rate changes; compare before/after results, rerun reconciliation/review with diffs, preserve evidence and show recurring causes/backlog.",
+    "acceptance": "A changed rule or statement shows affected cases and approvals; the previous run and filed snapshot remain intact and operational indicators have explicit definitions."
+  },
+  {
+    "id": "WORK-13",
+    "domain": "Shared webapp workflows",
+    "capability": "Configurable review and escalation policies",
+    "workflow": "Version approved owner/reviewer assignments, thresholds, evidence requirements, escalation and exception reasons; preview affected open work before activating the policy.",
+    "acceptance": "A revised policy shows affected unfinished work; it cannot remove mandatory controls or retroactively rewrite completed approvals."
+  }
+]

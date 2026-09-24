@@ -1,0 +1,94 @@
+source_row_number,feature,basic,basic_details,silver,silver_details,gold,gold_details,source_url,retrieved_date
+1,Inventory Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+2,Multi Store Management (Godown Management),excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+3,Sales / Purchase Invoice,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+4,Sales Order / Purchase Order & Challan Entry (Delivery Challan) Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+5,Counter Sale Entry & Temporary Purchase Entry,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+6,Sale / Purchase Brk/Exp Return & Replacement Issue / Receive Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+7,Price Difference Sale / Purchase Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+8,Conversion Entry Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+9,Purchase Indent & Quotation Entry Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+10,Consignment Issue & Receive Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+11,All Inventory Voucher,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+12,Secondary Stock Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+13,"Default Discount / Maximum/ Minimum Discount Management Party, Item, Company Wise, etc.",excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+14,Alternet /Parameter/Substitute wise Searching system,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+15,Item wise Goods Account (Item Wise Trading A/c Management),included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+16,Pharmacy H1 & Narcotics Reports's,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+17,Item Wise Manufacturing Date,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+18,Item Wise Expiry Date,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+19,Expiry Stock Reports,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+20,Ask Bags wise Qty. in Sale/Purchase/Both for Krishi Mandi etc.,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+21,Ask Item wise Expenses for Krishi Mandi etc.,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+22,Print Shortage Item Detail in Bill,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+23,Advance Rate Management (Rate Add/Less on F6 Key and other key),excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+24,Separator Batch Maintain e.g. @#*,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+25,Separator Batch Split Auto/Sami/Manual 2nd etc..,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+26,New Launched Items & Loading,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+27,Shortage Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+28,Temporary Credit Limit,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+29,Credit Limit Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+30,Accounting Management,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+31,Post Dated (P.D.C.) & Advance Cheques Issue and Receive Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+32,Sales Man (M.R.) / Area / Rout wise Reporting,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+33,Barcode / Label Printing,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+34,Bank Reconciliation System,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+35,Outstanding Report,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+36,Interest & Collection Report,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+37,Category / Salt Master Inventory and Reporting system,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+38,Auto generate different bill,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+39,Operator Power & Boundations,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+40,Operator Log Book Report & Operator Worksheet,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+41,Self-configurable invoice formats,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+42,Inventory & Accounting Approval System,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+43,Show Pending Kot /Challans,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+44,Cashier Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+45,GST e-Return,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+46,Reports Manager (MIS Report),included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+47,Budget & Cost Centers Management System,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+48,Target,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+49,"Bank Letter,Packing Slip,Conver Note,Gatepass,Label,Barcode printing (Only Invoice Printing)",excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+50,Side Display At the time Of Billing,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+51,Show Dashboard,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+52,Shortcut Keys (Short Buttons) & Recently view reports,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+53,Sales Bundle Pack Formula (Set Of Bundle) Management & Bundle Formula Loadings In Billing and also Suggested Item Billing.,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+54,Allowed F3 & F4 Key in Bill,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+55,Take Sale Return in sale bill thru * Key,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+56,Show Last & Old Deals at the time of billing,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+57,Show Last & Old Deals in Purchase,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+58,Group Wise Scheme Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+59,Special Rates / Discounts Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+60,Bill Convert on Amount/Days bases,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+61,Show Graphs,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+62,Vertual Keyboard System,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+63,Vertual / Popup Item Billing,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+65,Chit fund Kitty (Kitty/Committee) & Mortgage (Girvi) Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+66,Caret Issue & Receive Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+66,Out Patient Department (OPD/Reki) Management,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+67,Cursor To Report,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+68,SMS & E-Mail System,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+69,Cloud Backup,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+70,WhatsApp,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+71,Business on Google Map,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+72,Margpay Intrigration,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+73,Direct calling/Order Calling,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+74,Go digital,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+75,ICICI banking,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+76,PDF Bill Import,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+77,Audit Trail,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+78,Order CRM,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+79,Merge Report,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+80,Super Pack/Home Edition,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+81,Home delivery,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+82,Bill Tagging,excluded,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+83,Financial Year Backup on Mail,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+84,E-Business,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+85,Salesman App,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+86,Pharmanxt Free Drug Helpline,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+87,Data Analysis Dashboard,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+88,Stock & Sales e-Mail Scheduler,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+89,Collaborative Commerce,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+90,Connected Banking,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+91,ERP to ERP,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+92,Pass Ki Dukaan,included,,included,,included,,https://margcompusoft.com/marg-features.html,2026-09-24
+93,Users,text_only,1 User Full Rights ₹ 3000/- per extra user Maximum 2 users ₹ 3000/- per extra Company Maximum 2 Company,text_only,1 User Full Rights 1 User for View only ₹ 3000/- per extra user ₹ 3000/- per extra Company,text_only,Unlimited Users Unlimited Extra Company,https://margcompusoft.com/marg-features.html,2026-09-24

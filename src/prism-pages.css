@@ -1,0 +1,266 @@
+/* Prism domain workspaces. Explicit page selectors keep lazy-loaded domain CSS
+   compatible; state badges retain each workflow's existing semantic colours. */
+body :is(.ops-page, .gst-page, .fin-page, .acct-page, .orders-page, .batch-page,
+  .returns-page, .rtr-page, .rsett-page, .return-inspection, .statement-page,
+  .evidence-page, .cash-page, .report-page, .locations-page, .catalogue-page,
+  .conversion-page, .counts-page, .pricing-page, .credit-page, .access-page,
+  .stat-life-page, .sim-page, .coverage-page, .studio-page) {
+  --pricing-ink: #182b58;
+  --pricing-muted: #5b6b89;
+  --pricing-line: #dce7f4;
+  --pricing-green: #245cd4;
+  --credit-ink: #182b58;
+  --credit-muted: #5b6b89;
+  --credit-line: #dce7f4;
+  --credit-green: #245cd4;
+  --credit-bg: #f4f8ff;
+  color: #182b58;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 0 24px;
+}
+
+/* Shared hierarchy, with compact headers and readable secondary text. */
+body :is(.ops-heading, .gst-header, .fin-heading, .acct-head, .orders-intro,
+  .batch-head, .returns-heading, .rtr-head, .rsett-head, .ri-header, .statement-head,
+  .evidence-heading, .cash-head, .report-head, .locations-head, .catalogue-header,
+  .conversion-header, .counts-head, .coverage-heading) h1 {
+  color: #182b58;
+  font-size: clamp(25px, 2.2vw, 33px);
+  letter-spacing: -.045em;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+body :is(.ops-heading, .gst-header, .fin-heading, .acct-head, .orders-intro,
+  .batch-head, .returns-heading, .rtr-head, .rsett-head, .ri-header, .statement-head,
+  .evidence-heading, .cash-head, .report-head, .locations-head, .catalogue-header,
+  .conversion-header, .counts-head, .coverage-heading) p:not([class$="eyebrow"]):not([class$="kicker"]) {
+  color: #5b6b89;
+  line-height: 1.6;
+}
+body :is(.ops-eyebrow, .gst-eyebrow, .fin-eyebrow, .acct-kicker, .orders-kicker,
+  .batch-eyebrow, .returns-eyebrow, .rtr-kicker, .rsett-eyebrow, .ri-eyebrow,
+  .statement-kicker, .evidence-eyebrow, .cash-eyebrow, .report-eyebrow,
+  .locations-kicker, .catalogue-kicker, .conversion-kicker, .counts-kicker,
+  .pricing-eyebrow, .credit-eyebrow, .access-eyebrow, .coverage-eyebrow, .sim-eyebrow) {
+  color: #4264a0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+body :is(.ops-panel, .gst-panel, .fin-panel, .acct-card, .orders-card, .batch-panel,
+  .returns-panel, .rtr-list, .rtr-detail, .rsett-panel, .ri-panel, .statement-card,
+  .evidence-card, .cash-card, .report-records, .locations-register, .locations-forms form,
+  .catalogue-search, .catalogue-results, .catalogue-detail, .catalogue-category-tools,
+  .conversion-panel, .counts-card, .pricing-panel, .credit-card, .credit-summary,
+  .access-card, .stat-life-card, .sim-card, .coverage-item) {
+  border-color: #dce7f4;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgb(43 78 129 / 3%);
+  min-width: 0;
+}
+body :is(.ops-toolbar, .fin-panel-head, .acct-card-head, .orders-card-head,
+  .batch-panel-head, .returns-panel-title, .rsett-panel-head, .ri-panel-top,
+  .statement-card-head, .evidence-card-head, .report-records-head,
+  .counts-card-head, .pricing-section-head, .credit-card-title) {
+  border-color: #e7eef8;
+}
+body :is(.ops-toolbar, .fin-panel-head, .acct-card-head, .orders-card-head,
+  .batch-panel-head, .returns-panel-title, .rsett-panel-head, .ri-panel-top,
+  .statement-card-head, .evidence-card-head, .report-records-head,
+  .counts-card-head, .pricing-section-head, .credit-card-title) h2 { color: #182b58; }
+
+/* Domain controls: blue denotes an action, never approval or filing. */
+body :is(.ops-page, .gst-page, .fin-page, .acct-page, .orders-page, .batch-page,
+  .returns-page, .rtr-page, .rsett-page, .return-inspection, .statement-page,
+  .evidence-page, .cash-page, .report-page, .locations-page, .catalogue-page,
+  .conversion-page, .counts-page, .pricing-page, .credit-page, .access-page,
+  .stat-life-page, .sim-page, .coverage-page, .studio-page)
+  :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-color: #cddbf0;
+  background-color: #fff;
+  color: #22375e;
+  border-radius: 9px;
+  min-height: 42px;
+  max-width: 100%;
+}
+body :is(.ops-page, .gst-page, .fin-page, .acct-page, .orders-page, .batch-page,
+  .returns-page, .rtr-page, .rsett-page, .return-inspection, .statement-page,
+  .evidence-page, .cash-page, .report-page, .locations-page, .catalogue-page,
+  .conversion-page, .counts-page, .pricing-page, .credit-page, .access-page,
+  .stat-life-page, .sim-page, .coverage-page, .studio-page)
+  :is(button, input, select, textarea, summary, a):focus-visible {
+  outline: 3px solid #306adc;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgb(70 130 240 / 12%);
+}
+body :is(.acct-primary, .orders-primary, .batch-primary, .returns-primary,
+  .rsett-form button, .ri-actions button, .ri-form button:not(.ri-cancel),
+  .statement-primary, .evidence-primary, .cash-form button, .report-filters button,
+  .locations-head button, .locations-page form button, .locations-register button,
+  .catalogue-page button:not(.catalogue-secondary):not(.catalogue-result),
+  .conversion-actions button, .conversion-header button, .conversion-detail-title button,
+  .counts-primary, .credit-form button, .credit-review button:not(.secondary),
+  .stat-life-primary, .sim-primary, .returns-record-footer button,
+  .evidence-actions button, .gst-button:not(.secondary):not(.danger)) {
+  background: #245cd4;
+  color: #fff;
+  border-color: #245cd4;
+  border-radius: 9px;
+  min-height: 40px;
+}
+body :is(.acct-primary, .orders-primary, .batch-primary, .returns-primary,
+  .statement-primary, .counts-primary, .report-filters button,
+  .gst-button:not(.secondary):not(.danger)):hover:not(:disabled) { background: #1948b0; }
+body :is(.acct-secondary, .fin-reload, .batch-refresh, .rsett-refresh,
+  .counts-secondary, .catalogue-page button.catalogue-secondary,
+  .pricing-page button.pricing-secondary, .gst-button.secondary,
+  .ri-form .ri-cancel, .credit-hero button) {
+  background: #edf4ff;
+  border-color: #cddff7;
+  color: #2457ba;
+  border-radius: 9px;
+  min-height: 40px;
+}
+body :is(.ops-link, .fin-link, .acct-link, .report-source, .gst-document-link,
+  .orders-text-button, .statement-link, .counts-link, .credit-details summary,
+  .coverage-open, .orders-invoice-link, .batch-jump, .evidence-jump) { color: #245cd4; }
+
+/* Tabs and record selection stay distinct from success badges. */
+body :is(.ops-tabs, .fin-tabs, .acct-tabs, .orders-tabs, .batch-tabs,
+  .counts-tabs, .stat-life-tabs) { background: #edf3fc; border-color: #dce7f4; }
+body :is(.ops-tab, .fin-tabs button, .acct-tabs button, .orders-tabs button,
+  .batch-tabs button, .counts-tabs button, .report-tabs button,
+  .stat-life-tabs button, .acct-bank-filter button) { color: #526588; min-height: 42px; }
+body :is(.ops-tab.active, .fin-tabs button.active, .acct-tabs button.active,
+  .orders-tabs button.active, .batch-tabs button.selected,
+  .counts-tabs button[aria-selected="true"], .stat-life-tabs button.active,
+  .acct-bank-filter button.active) { background: #fff; color: #245cd4; border-color: #cddff7; }
+body .report-tabs button[aria-selected="true"] { color: #245cd4; border-color: #245cd4; }
+body :is(.orders-row.selected, .orders-row:hover, .rtr-row.active, .rtr-row:hover,
+  .rsett-row.selected, .rsett-row:hover, .evidence-row.selected, .evidence-row:hover,
+  .cash-session-list button.selected, .catalogue-page .catalogue-result.selected,
+  .conversion-list button.selected, .counts-session-list button.chosen,
+  .counts-session-list button:hover, .sim-type.active) {
+  background: #eef5ff;
+  color: #1e4389;
+  border-color: #91b7f1;
+}
+body .gst-period.active { background: #245cd4; color: #fff; border-color: #245cd4; }
+body .gst-period.active small { color: #e4edff; }
+
+/* Pastel metrics and context preserve separate legal and operating identities. */
+body :is(.fin-summary>div, .acct-metrics>div, .rtr-metrics article, .rsett-stats>div,
+  .ri-metrics>div, .cash-metrics>div, .report-kpis article, .pricing-metrics>div,
+  .gst-metric:not(.gst-net):not(.gst-surplus)) {
+  background: #f1f7ff;
+  border-color: #dce8f8;
+  border-radius: 13px;
+}
+body :is(.fin-summary>div, .acct-metrics>div, .rtr-metrics article, .rsett-stats>div,
+  .ri-metrics>div, .report-kpis article, .pricing-metrics>div):nth-child(3n+2) { background: #f5f1ff; }
+body :is(.fin-summary, .acct-metrics, .rtr-metrics, .rsett-stats, .ri-metrics,
+  .cash-metrics, .report-kpis, .pricing-metrics) strong { color: #182b58; font-variant-numeric: tabular-nums; }
+body :is(.fin-summary, .acct-metrics, .rtr-metrics, .rsett-stats, .ri-metrics,
+  .cash-metrics, .report-kpis, .pricing-metrics) :is(small, span) { color: #5b6b89; }
+body :is(.acct-scope, .cash-scope, .report-scope, .statement-scope, .ri-scope,
+  .locations-scope, .catalogue-scope, .conversion-scope>*, .counts-context,
+  .orders-context, .pricing-scope, .returns-count, .rtr-count, .evidence-count) {
+  background: #f1f7ff;
+  border-color: #dce8f8;
+  color: #345886;
+}
+body :is(.catalogue-identity, .catalogue-suggestions li, .catalogue-audit li,
+  .conversion-preview, .pricing-rule, .pricing-exception, .pricing-audit p,
+  .credit-request-list article, .gst-document-detail, .acct-report-lines .total,
+  .orders-detail-meta, .ops-context-summary, .ops-detail-totals, .fin-balance) {
+  background: #f5f8ff;
+  border-color: #dce7f4;
+}
+body .catalogue-badges em { background: #eee9ff; color: #654397; }
+body .catalogue-page .catalogue-result:not(.selected) { background: #fafcff; color: #22375e; border-color: #e1e9f6; }
+body .pricing-quote { background: #effaf6; }
+body .credit-summary-heading .credit-eyebrow { color: #4264a0; }
+
+/* Former dark heroes become light informational panels; simulation labelling is retained. */
+body :is(.pricing-hero, .credit-hero, .access-hero, .stat-life-hero, .sim-banner) {
+  background: linear-gradient(120deg, #edf6ff 0%, #f7f9ff 60%, #f0edff 100%);
+  color: #182b58;
+  border: 1px solid #dce7f4;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgb(43 78 129 / 3%);
+  padding: 24px;
+}
+body :is(.pricing-hero, .credit-hero, .access-hero, .stat-life-hero) h1 {
+  color: #182b58;
+  font-size: clamp(25px, 2.2vw, 33px);
+  letter-spacing: -.045em;
+}
+body :is(.pricing-hero, .credit-hero, .access-hero, .stat-life-hero, .sim-banner) p { color: #53668b; }
+body :is(.pricing-hero .pricing-eyebrow, .credit-hero .credit-eyebrow,
+  .access-eyebrow, .stat-life-kicker, .stat-life-step) { color: #4767a1; }
+body :is(.pricing-scope span, .pricing-scope small) { color: #5b6b89; }
+body .sim-watermark { color: #536eb1; opacity: .14; }
+body .stat-life-hero::after { opacity: .12; }
+
+/* Table rhythm and containment, including the newer inventory workspaces. */
+body :is(.ops-table-wrap, .fin-table-wrap, .acct-table-wrap, .report-table-wrap,
+  .gst-table-wrap, .batch-table-wrap, .locations-table-wrap, .counts-table-wrap) {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-color: #b7ccec #f1f6fe;
+  scrollbar-width: thin;
+}
+body :is(.ops-table, .fin-table, .acct-table, .report-table, .gst-transactions table,
+  .batch-register table, .locations-page table, .counts-table-wrap table) th {
+  background: #f3f7fe;
+  color: #536a94;
+  border-color: #e5edf8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .025em;
+  padding-block: 12px;
+}
+body :is(.ops-table, .fin-table, .acct-table, .report-table, .gst-transactions table,
+  .batch-register table, .locations-page table, .counts-table-wrap table) td {
+  color: #33496f;
+  border-color: #e7eef8;
+  padding-block: 14px;
+  font-variant-numeric: tabular-nums;
+}
+body :is(.ops-table, .fin-table, .acct-table, .report-table, .gst-transactions table,
+  .batch-register table, .locations-page table, .counts-table-wrap table) td small { color: #617295; }
+body :is(.ops-table, .fin-table, .acct-table, .report-table, .gst-transactions table) tbody tr:hover > * { background: #f7faff; }
+body :is(.ops-empty, .fin-empty, .acct-empty, .report-empty, .gst-empty,
+  .catalogue-empty, .counts-empty, .credit-empty, .pricing-empty, .evidence-empty,
+  .cash-empty, .locations-empty, .ri-readonly, .rsett-readonly) { color: #5b6b89; }
+body :is(.ops-dialog, .fin-drawer, .acct-drawer) { color: #182b58; border-color: #dce7f4; scrollbar-color: #b7ccec #f1f6fe; }
+body :is(.ops-overlay, .fin-overlay, .acct-overlay) { background: rgb(20 39 77 / 35%); }
+body .report-definition { background: #eef5ff; border-left-color: #6399e7; color: #48618b; }
+body .report-definition strong { color: #244f91; }
+
+@media (max-width: 700px) {
+  body :is(.pricing-hero, .credit-hero, .access-hero, .stat-life-hero, .sim-banner) { padding: 20px; }
+  body :is(.catalogue-header, .conversion-header, .counts-head, .credit-summary-heading) { gap: 14px; }
+  body :is(.catalogue-scope, .pricing-scope) { min-width: 0; width: 100%; }
+  body :is(.catalogue-actions, .conversion-actions, .counts-tabs, .credit-review>div) { flex-wrap: wrap; }
+  body :is(.credit-request-top, .counts-proposals article>div:first-child) { flex-wrap: wrap; }
+  body .credit-metrics strong { overflow-wrap: anywhere; }
+  body :is(.pricing-page, .catalogue-page, .conversion-page, .credit-page)
+    :is(button, summary) { min-height: 44px; }
+  body :is(.catalogue-page, .pricing-page, .credit-page, .counts-page)
+    :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body :is(.ops-page, .gst-page, .catalogue-page, .counts-page, .credit-page)
+    :is(button, a) { transition: none; }
+}
+
+/* Neutral form context and indicative totals follow the shared palette. */
+body :is(.ops-context-summary > span, .ops-line) { background: #f5f8ff; border-color: #e0e8f5; }
+body :is(.ops-context-summary small, .ops-field > span, .ops-line-total > span) { color: #536a8d; }
+body .gst-net { background: #edf0ff; border-color: #d8defa; color: #243f7a; }
+body .gst-net small { color: #526991; }

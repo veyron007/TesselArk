@@ -1,0 +1,73 @@
+# TesselArk ERP (active build)
+
+This is a working local ERP under active development against the researched [85-group feature register](research/consolidated/feature-register.csv). Connected workflows are implemented in the app; Build Status records verified partial coverage and remaining work. A generic record must not stand in for a specialist business workflow.
+
+## Run
+
+Requires Node 26+ and Python 3 for refreshing the research catalogue.
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://127.0.0.1:5173](http://127.0.0.1:5173). The web app proxies `/api` to the Node server on port 3001. Both servers bind to loopback. The API uses a local SQLite file and seeds synthetic demo records on first start. `npm test` runs API tests; `npm run build` checks the frontend build. After building, `ERP_AUTH_MODE=demo npm start` serves both the API and built web app at [http://127.0.0.1:3001](http://127.0.0.1:3001).
+
+Use the company/GSTIN/branch selectors and **Demo user** selector to explore staff preparation and accountant approval. The selector is a demonstration control; it is not production sign-in. Demo mode accepts user headers and is restricted to loopback. Do not expose demo mode to an untrusted network.
+
+Demo users have explicit, durable GSTIN and branch grants. API lists, source reads and writes enforce those grants; an admin can manage them in **Access Grants** with an audit trail. The sample users start with grants across their own companies. Bank statement lines and company-wide ledger summaries require full-company grants because those records lack narrower scope fields. Shared item and party masters remain company-wide for any user with a branch grant.
+
+`ERP_AUTH_MODE=production` enables explicit email/password provisioning, HttpOnly sessions, CSRF checks, server-derived user identity, and the sign-in screen. Provision an existing user with `ERP_DB_PATH`, `ERP_AUTH_USER_ID`, `ERP_AUTH_EMAIL`, and `ERP_AUTH_PASSWORD` set in the environment, then run `node server/auth-provision.cjs`. Start with `ERP_AUTH_MODE=production npm start` behind a private HTTPS reverse proxy. The app itself binds only to loopback; production cookies require HTTPS. Configure `ERP_AUTH_TRUSTED_PROXY_IPS` with numeric proxy peer IPs if relying on the app's per-client rate limits behind a proxy. This authenticated path has local tests, but the product still needs specialist workflows, operational deployment review and verified statutory integration before public production use.
+
+## First-open synthetic examples
+
+- **Aster Medical · Bengaluru:** `DEMO-SO-BLR-301` has 10 ordered, 4 dispatched and 6 remaining; `DEMO-SAL-BLR-301` is its linked approved invoice. `DEMO-PO-BLR-302` has 12 ordered, 5 received and 7 remaining, with linked `DEMO-PUR-BLR-302`.
+- **Delivery Proof · Bengaluru:** the `DEMO-DISP-BLR-301` dispatch has a staff-reported partial handover of 2 of 4 units, leaving 2 units visible. The report is synthetic and is not independently verified customer proof or an allocated payment.
+- **Aster Medical · Mumbai:** the Batches page contains `DEMO-SALINE-NEAR-EXPIRY`, allocated from existing stock without a second physical receipt. The Evidence Library contains `SYNTHETIC DEMO: Pharmacy receiving note`, with locally reviewed version 1 and pending version 2.
+- **Return Tax Review:** `DEMO-CRN-MUM-201` is an approved physical sales return awaiting an internal tax decision. Accepting it shows ₹5.40 in a separate local preview; it does not alter recorded GST totals.
+- **Return Inspection:** `DEMO-CRN-MUM-QA-001` is a synthetic approved sales return held outside saleable stock until inspection and explicit release or rejection.
+- **Across companies:** Pune and Bengaluru have additional draft orders and lot specimens; Aster Services has a service sale with partial payment and a simulated IRN; Nila Retail has a zero-GST sale and draft return. See the [synthetic fixture map](qa/demo-fixtures.md) for exact states.
+
+All examples are synthetic training records. The generated SQLite file is local to this workspace.
+
+The default local database also seeds a repeatable operating history: 84 approved invoices across eight calendar months, linked partial order fulfillments, documented payments, draft returns, and additional parties and items across Mumbai, Pune, Bengaluru, Aster Services, and Nila Retail. `HIST-` document numbers and notes identify these as synthetic examples. Reopening the app does not repost stock or duplicate documents.
+
+Supporting examples populate five local bank accounts with six months of statement lines, 18 closed cashier sessions, item catalogue details, advisory pricing and credit policies, and draft stock counts. Bank lines include matched, explained and pending cases; the synthetic bank statements are not bank confirmations. These fixtures use fixed dates and repeat safely on startup.
+
+Invoice item identity is captured when each new line is created. Older rows migrated from a database without those fields are labeled as recovered from the then-current item master in the print preview; compare such copies with their original source before external use.
+
+For explicit SQLite snapshot, migration and restore commands, see the [local recovery runbook](qa/sqlite-recovery.md). Test recovery on an isolated database path and stop the server before replacing a database.
+
+## Scope and limits
+
+- Invoice drafts and approval, stock movements, source-linked returns, commercial return settlements, and receivable/payable payment allocations are local records. An accountant can post the approved return subtotal to the commercial ledger and invoice balance once; the tax proposal remains separate and does not automatically change GST. Bank settlement is not verified. Tax rates in sample records are fixture values, not tax advice.
+- Sales and purchase orders support partial dispatch/receipt. A confirmed fulfillment can be linked to exactly one invoice so approving that invoice does not post the same stock twice. Independent invoices still post their own stock; use the linked path when billing a fulfillment. Indents, quotes and broad procurement controls remain to be built.
+- Batches support dated receipt, issue and branch transfer with atomic stock movements and expiry checks. Outbound sale invoices, order dispatches, manual issues and purchase returns allocate available lots by earliest expiry first. Inbound purchase invoices and order receipts initially create unbatched stock; use the separate allocation action to assign existing stock to a lot without receiving it twice. An inter-GSTIN transfer does not generate tax or e-way documents.
+- Locations & Transfers creates scoped warehouse/store/rack hierarchies, assigns already-posted unbatched branch stock without another receipt, and records same-GSTIN dispatch and partial receipt with in-transit balances and audit. Inter-GSTIN dispatch is blocked until separate tax and transport document workflows exist; batch-level location tracking is not connected yet.
+- A synthetic Mumbai medical godown → dispatch store → rack hierarchy and Pune receiving godown populate this screen. Six already-posted glucose-strip boxes are classified to the rack, and a three-box transfer remains a draft until a user supplies dispatch evidence. Seeding these examples does not post physical stock.
+- Stock Conversion previews exact whole-unit packing ratios, wastage and a documented cost basis, then requires staff submission and an independent review before atomic source/target quantity posting. The cost basis is a referenced user input; it does not post stock valuation, accounting or tax.
+- Catalogue adds company-scoped search, sourced category curation and audited human-reviewed alternative suggestions. Suggestions do not certify medicinal equivalence or change an order automatically.
+- Counts & Replenishment records a scoped physical snapshot and requires independent variance review before replay-safe stock adjustment, protecting recorded batch and location allocations. It calculates purchasing needs from current stock, actual sales, open orders and pending supply. Reviewed proposals do not automatically create purchase orders.
+- Pricing Controls stores dated, scoped price rules, discount limits and independent exception decisions. Quotes are advisory; existing invoice and order prices are not silently changed.
+- Consignment records incoming and outgoing custody separately from ownership, supports evidenced activation and unsold returns, and sends proposed settlements through independent review. Incoming goods never enter owned stock. Reviewed settlements still need separate sale or purchase, tax and ledger documents.
+- Price Adjustments calculates quantity-scoped differences from approved invoice lines, snapshots old and new rates, and separates commercial and tax review. These proposals do not rewrite source invoices or post GST or ledger entries.
+- Supplier Comparison normalizes paid and free packs, base units, quoted tax and freight, shows source-linked purchase history, and records an independently reviewed supplier choice. It does not create a purchase order or determine ITC.
+- Bundles & Schemes saves versioned component formulas, previews stock needs, records independently reviewed discount and free-goods assumptions, and shows original approved deal history. It does not post stock, change invoice prices or infer tax treatment.
+- Budgets & Targets records scoped cost centres and independently reviewed expense budgets, sales targets and collection targets. Reviewed source allocations drive separate period variances; accounting and GST remain unchanged.
+- Customer Follow-up keeps customer requests, owners, due actions, immutable commitments and dispositions with an optional exact sales-order link and fulfilment blockers. It does not send messages or change the order's commercial state.
+- Delivery Proof links confirmed sales dispatches to assignments and partial visit records with remaining quantities. Recipient names and reference codes are staff-reported metadata; collection reports remain unallocated until a separate Finance action.
+- Document Output captures immutable invoice print copies with the exact source status, line values, template version and English, Hindi or Marathi labels. It is a local operational copy; the stable item identity text is not a tested scannable barcode or validated legal format.
+- Item Import previews company-wide item-master CSV rows, records rejected reasons and source hashes, checks stale previews, and commits exact replays once under accountant/admin and full-company grants. It creates no stock or invoice transactions; other import types remain pending.
+- Credit Controls calculates selected customer exposure from approved and submitted invoices, payment allocations and open confirmed orders, with scoped base policies and independently reviewed temporary limits. Hold blocks new over-limit sales order confirmations and sales invoice submissions; warn remains advisory. Cheque clearance and overdue aging remain pending.
+- Newly approved tracked sales returns create source-linked quarantine receipts. An authorized inspection can release eligible units into saleable stock once, or reject them; the receipt alone does not increase available stock. Legacy approved demo returns posted before this workflow retain their historical stock movement.
+- The evidence library stores small versioned PDF, PNG, JPEG and text files locally with SHA-256 hashes, exact company/GSTIN/branch links and internal review. File checks cover size and basic format signatures, not document integrity or authenticity. Its client-audience value is a label only; production client sharing and permissions are not implemented.
+- The GST workspace compares local purchases with synthetic seed rows or user-imported supplier statement rows and records accountant eligibility decisions. Its payable/surplus figures are local arithmetic without tax-head utilization. There is no GST portal integration, official evidence verification, statutory filing, e-invoice registration or government acknowledgement.
+- Purchase Statement Import accepts a local five-column CSV (`supplier_gstin,invoice_number,invoice_date,taxable_amount,tax_amount`) for a selected company GSTIN and period. It previews conflicts before an atomic accountant import, records source name/hash/user/time, and keeps exact replays idempotent. Imported rows are user-provided comparison sources, not a verified GSTR-2B or an ITC decision.
+- The Statutory Sandbox records scoped simulated authentication, IRN and e-way actions, GST return stages, retries and immutable event snapshots with `SIM-*` references. It never changes the invoice or period's official state and never sends a network request to a government service.
+- Accounting posts balanced, source-linked journals for approved invoices, payments and explicitly settled commercial return subtotals, backfills seeded sources, and reports a trial balance plus periodic P&L and balance-sheet arithmetic. Return tax, opening balances and stock valuation are not posted in this ledger yet.
+- Local bank reconciliation imports a company-scoped CSV with duplicate controls, then matches each statement line to a recorded payment or keeps an audited explanation. It does not connect to a bank or verify provider settlement.
+- Branch cashier sessions attach cash receipts, record payouts, reconcile a physical count and require independent review of discrepancies. Cash receipts entered in Finance are assigned atomically to an open drawer for the same branch and day.
+- Management Reports keep invoice, payment, return-proposal and GST-review measures distinct, with company/GSTIN/branch/date scope and source IDs.
+- Specialist groups without tested domain behavior are recorded as incomplete on **Build Status**. The earlier generic All Modules prototype is no longer in product navigation.
+- The [demo acceptance scenarios](qa/demo-scenarios.md) cover the intended longer product journey. They are a specification, not a claim that each scenario works today.
+- Research in `research/` is preserved and can be compared with the app's Coverage screen. Run `npm run coverage:sync` after changing the canonical feature register.

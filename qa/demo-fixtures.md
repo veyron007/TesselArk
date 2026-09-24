@@ -1,0 +1,22 @@
+# Synthetic demo fixture map
+
+The database seed creates named records for presentations and local testing. All `DEMO-` and `SIM-DEMO-` identifiers are invented. Amounts are integer paise, and the tax rates are supplied test values. These records do not establish legal tax treatment or official filing.
+
+| Context | Linked specimens | Persisted state |
+|---|---|---|
+| Aster Medical, Maharashtra, Pune Depot | `DEMO-SO-PUN-401` for 12 Glucose Strips; `DEMO-PUN-GLU-READY` (6 units) and `DEMO-PUN-GLU-EXPIRED` (4 units) assigned from the 20-unit opening stock | Order confirmed, no dispatch; lots assigned without adding physical stock. Expired lot remains identifiable and unsaleable. |
+| Aster Medical, Karnataka, Bengaluru | `DEMO-SO-BLR-402` for Mysuru Care | Draft order for seven Glucose Strips; no dispatch, invoice, or stock effect. |
+| Aster Medical, Maharashtra and Karnataka | `DEMO-COMMON-MH-001` and `DEMO-COMMON-KA-001` from Kaveri Labs | Separate purchase drafts for each GSTIN. No receipt, AP, ITC approval, or common-credit allocation is implied. |
+| Aster Services, Maharashtra | `DEMO-SVC-MUM-501`, `DEMO-SVC-BANK-501`, and a pending synthetic service acceptance note | Locally approved service sale for ₹1,770, partly paid by ₹600; no stock movement. The linked `SIM-DEMO-IRN-SVC-501` is a local statutory simulation with an audit event, not an official IRN. |
+| Aster Services, Maharashtra | `DEMO-RCM-REVIEW-502` from unregistered Bright Repairs | Purchase draft for classification review. No RCM liability, payment, or ITC claim is posted. |
+| Nila Retail, Maharashtra | `DEMO-NILA-BOS-601` and `DEMO-NILA-RET-601` | Approved zero-GST composition sale of five packs; draft one-pack return with no stock or tax adjustment. The invoice model has no distinct bill-of-supply document type, so the invoice note identifies this as a specimen. |
+| Default local database, all three companies | `HIST-` invoices, orders, fulfillments, payments and returns | Eight calendar months of clearly synthetic operating history. Purchases add stock; sales dispatch or invoice posting removes stock once. Linked invoices do not post a second dispatch. Payments remain below invoice totals and draft returns have no stock or tax posting. |
+| Default local database, all branches | `SYNTHETIC DEMO` bank accounts and statements, cashier sessions, catalogue, pricing, credit and count records | Six statement months include matched, explained and pending lines; 18 closed cash drawers include one independently reviewed variance. Advisory prices and credit limits do not change historic invoices. Draft counts do not post stock adjustments. |
+
+Existing seed records also cover Bengaluru partial purchase and sale fulfilments, Mumbai and Bengaluru partial collections and returns, Northstar purchase/2B matching examples, a near-expiry Saline lot, and a Mumbai pharmacy evidence version pair. The [acceptance scenarios](demo-scenarios.md) describe a wider target; many steps remain unimplemented. In particular, this fixture adds no actual filed snapshot, official acknowledgement, common-credit engine, RCM assessment, or composition document workflow.
+
+The expanded seed uses natural keys and one transaction, so opening a database again does not duplicate records or reapply stock movements. `server/tests/demo-fixtures.test.js` verifies reopening, company and GSTIN scope, accounting balance, batch allocation, and synthetic statutory provenance using a temporary SQLite file.
+
+The separate `HIST-` operating history runs only for the default local database. `server/tests/operating-history.test.js` checks multiple months, row sums, stock, linked fulfillment posting, and repeatable startup. These are fabricated training transactions, not evidence of real trading or statutory compliance.
+
+`server/tests/auxiliary-seed.test.js` verifies supporting bank and cashier examples, scoped source links, correct signed payment matches, foreign keys and startup replay. All fixture dates are fixed to the September 2026 demo timeline so a later calendar month does not add another batch.

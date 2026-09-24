@@ -1,0 +1,28 @@
+{
+  "name": "tesselark-erp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "ERP_AUTH_MODE=demo node --watch server/index.js",
+    "dev:web": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "start": "node server/index.js",
+    "test": "node --test server/tests/*.test.js qa/dashboard-data.test.js qa/route.test.js",
+    "db:check": "node scripts/sqlite-maintenance.cjs check",
+    "db:backup": "node scripts/sqlite-maintenance.cjs backup",
+    "db:restore": "node scripts/sqlite-maintenance.cjs restore",
+    "db:migrate": "node scripts/sqlite-maintenance.cjs migrate",
+    "coverage:sync": "python3 scripts/sync_coverage.py"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "vite": "^7.1.7"
+  }
+}

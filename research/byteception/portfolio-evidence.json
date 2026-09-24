@@ -1,0 +1,379 @@
+{
+  "retrieved_date": "2026-09-24",
+  "scope": "Read-only public portfolio research; no login, signup, client application access or live workflow testing.",
+  "observations": [
+    {
+      "observation_id": "BCP-001",
+      "product": "JCSS PM",
+      "source_observation": "Proposals support signatures and locked exports.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Engagement scope and acceptance",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24"
+      ],
+      "proposed_workflow": "Record covered companies, GSTINs, periods, services and reviewer rights; accept a versioned engagement scope; changes require a new acceptance.",
+      "constraint": "Optional supporting capability for external-CA relationships; not government filing authorization or proof of legal e-signature support."
+    },
+    {
+      "observation_id": "BCP-002",
+      "product": "JCSS PM",
+      "source_observation": "Accepted proposals become assignments.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Engagement-to-period work",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24",
+        "GST-13"
+      ],
+      "proposed_workflow": "An accepted GST engagement creates only its applicable period work, checklist and responsible preparer/reviewer; detect overlapping engagements.",
+      "constraint": "Our proposed GST adaptation; JCSS native GST calculation or filing is not established."
+    },
+    {
+      "observation_id": "BCP-003",
+      "product": "JCSS PM",
+      "source_observation": "Assignments contain teams, forms and milestones.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Structured review packages",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24",
+        "GST-19"
+      ],
+      "proposed_workflow": "Offer editable templates for period close, notice response and migration; show missing evidence, dependencies, responsibility and completion criteria.",
+      "constraint": "Templates must be reviewed for taxpayer applicability; a completed task does not imply statutory completion."
+    },
+    {
+      "observation_id": "BCP-004",
+      "product": "JCSS PM",
+      "source_observation": "Company profiles reuse statutory identifiers.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Reusable reviewed entity profiles",
+      "mapping_status": "already_covered",
+      "current_feature_ids": [
+        "GST-01",
+        "ADD-061",
+        "ADD-062"
+      ],
+      "proposed_workflow": "Use the existing company/GSTIN/branch records consistently in documents and engagements; flag stale verification and retain effective-dated changes.",
+      "constraint": "No need to add corporate-secretarial director/shareholder registers merely because they appear in JCSS."
+    },
+    {
+      "observation_id": "BCP-005",
+      "product": "JCSS PM",
+      "source_observation": "Tasks have owner, due date and status.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Dependency-aware compliance tasks",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-13",
+        "GST-19",
+        "GST-24"
+      ],
+      "proposed_workflow": "Separate statutory due date, internal target and reminder; record blocking dependencies, reason for delay, reassignment and evidence for closure.",
+      "constraint": "Source establishes basic task controls; dependency rules are our proposal."
+    },
+    {
+      "observation_id": "BCP-006",
+      "product": "JCSS PM",
+      "source_observation": "Recurring monthly and quarterly tasks are generated.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Recurring obligation register",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-01",
+        "GST-13",
+        "GST-24"
+      ],
+      "proposed_workflow": "Create each obligation once for the active registration and period; preview a rule change; suspend after cancellation; preserve previously generated work.",
+      "constraint": "Do not hardcode dates from screenshots or confuse scheduled task creation with return filing."
+    },
+    {
+      "observation_id": "BCP-007",
+      "product": "JCSS PM",
+      "source_observation": "Portfolio tasks support filters and bulk actions.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Scoped accountant work queues",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24",
+        "MARG-040"
+      ],
+      "proposed_workflow": "Save GSTIN/period/owner/reason filters; preview selected rows; limit bulk actions by permissions; retain per-record outcomes.",
+      "constraint": "Bulk approval must not silently approve hidden records or bypass case evidence."
+    },
+    {
+      "observation_id": "BCP-008",
+      "product": "JCSS PM",
+      "source_observation": "Clients see only their engagements.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Business and CA shared status view",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24",
+        "ADD-063"
+      ],
+      "proposed_workflow": "Business staff see requests and period readiness; assigned CAs see permitted client work; revoke client access and export a handover pack.",
+      "constraint": "Company isolation, business-scope permissions and GST filing authority remain distinct."
+    },
+    {
+      "observation_id": "BCP-009",
+      "product": "JCSS PM",
+      "source_observation": "Documents, changes and sign-offs have history.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Versioned approval evidence",
+      "mapping_status": "already_covered",
+      "current_feature_ids": [
+        "GST-13",
+        "GST-19",
+        "GST-24",
+        "MARG-077"
+      ],
+      "proposed_workflow": "Preserve preparation snapshot, reviewer decision, changes after approval and the official acknowledgement; require renewed review of affected changes.",
+      "constraint": "Reaffirm existing scope; do not count as a separate new module."
+    },
+    {
+      "observation_id": "BCP-010",
+      "product": "JCSS PM",
+      "source_observation": "Internal comments and client notifications are described.",
+      "source_url": "https://byteception.com/gallery/jcss",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Audience-aware collaboration",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-10",
+        "GST-24",
+        "MARG-068"
+      ],
+      "proposed_workflow": "Separate internal review notes from business-visible document requests; keep discussions on the affected invoice or period; consolidate reminders.",
+      "constraint": "External message delivery remains a later authorized connector decision."
+    },
+    {
+      "observation_id": "BCP-011",
+      "product": "BOLT",
+      "source_observation": "Bulk imports offer validation previews.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Import preview and correction workbench",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-06",
+        "GST-18",
+        "ADD-014"
+      ],
+      "proposed_workflow": "Preview column mappings, duplicates, missing fields and monetary control totals; import accepted rows; produce a rejected-row correction file.",
+      "constraint": "Mortgage file formats are not ERP requirements; our supported formats need actual customer examples."
+    },
+    {
+      "observation_id": "BCP-012",
+      "product": "BOLT",
+      "source_observation": "Scenarios specify steps, evidence and failures.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Tax-change scenario evidence",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-20"
+      ],
+      "proposed_workflow": "For a reviewed tax policy revision, compare representative customer transactions before and after; attach reason and accountant sign-off.",
+      "constraint": "This proposes business validation evidence, not a mortgage UAT subsystem or statutory assurance."
+    },
+    {
+      "observation_id": "BCP-013",
+      "product": "BOLT",
+      "source_observation": "Reruns preserve prior result versions.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Review reruns with differences",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-07",
+        "GST-13",
+        "GST-20"
+      ],
+      "proposed_workflow": "When a statement import or invoice changes, show differences against the previous reconciliation/review; supersede its result without erasing it.",
+      "constraint": "Record which approvals were affected; recalculation must not silently rewrite filed snapshots."
+    },
+    {
+      "observation_id": "BCP-014",
+      "product": "BOLT",
+      "source_observation": "Notes, files and PDF evidence accompany tests.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Linked portable evidence dossiers",
+      "mapping_status": "already_covered",
+      "current_feature_ids": [
+        "GST-19",
+        "GST-13"
+      ],
+      "proposed_workflow": "Build a filtered dossier with source documents, calculations, unresolved cases and reviewer decisions; include scope and generation timestamp.",
+      "constraint": "Exported evidence is not independently certified or accepted by a tax authority merely because it is a PDF."
+    },
+    {
+      "observation_id": "BCP-015",
+      "product": "BOLT",
+      "source_observation": "Dashboards report failures, trends and workload.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Compliance quality and workload trends",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-24",
+        "GST-13",
+        "MARG-040"
+      ],
+      "proposed_workflow": "Show recurring mismatch causes, evidence backlog, reopened review count and reviewer capacity alongside affected amounts.",
+      "constraint": "Operational indicators must not be presented as legal risk scores without a defined and reviewed basis."
+    },
+    {
+      "observation_id": "BCP-016",
+      "product": "BOLT",
+      "source_observation": "Tester, manager, admin and owner roles are described.",
+      "source_url": "https://byteception.com/gallery/bolt",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Permissioned preparation and review",
+      "mapping_status": "already_covered",
+      "current_feature_ids": [
+        "MARG-039",
+        "MARG-042",
+        "ADD-063"
+      ],
+      "proposed_workflow": "Keep the existing staff/accountant model; test visibility and actions independently across company, branch, GSTIN and approval responsibilities.",
+      "constraint": "Do not copy mortgage role names into our webapp."
+    },
+    {
+      "observation_id": "BCP-017",
+      "product": "Jupikit",
+      "source_observation": "Indexed landing page advertises finance capture and private beta.",
+      "source_url": "https://jupikit.com/",
+      "evidence_level": "search_indexed_first_party_page_direct_fetch_403",
+      "proposed_feature": "Connected financial visibility",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "MARG-030",
+        "MARG-034",
+        "MARG-047",
+        "GST-14"
+      ],
+      "proposed_workflow": "Connect spending, open supplier bills, receivables and reconciled bank position; show as-of dates and unresolved differences.",
+      "constraint": "Indexed page was crawled approximately three months before retrieval; live status and production completeness unverified."
+    },
+    {
+      "observation_id": "BCP-018",
+      "product": "Jupikit",
+      "source_observation": "Mockup shows tax, contributor, currency and payment columns.",
+      "source_url": "https://jupikit.com/",
+      "evidence_level": "search_indexed_marketing_mockup_not_functional_test",
+      "proposed_feature": "Expense and reimbursement evidence",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-06",
+        "GST-08",
+        "MARG-030",
+        "MARG-047"
+      ],
+      "proposed_workflow": "Record invoice owner, company GSTIN, paid-by party, payment proof, department and purpose; review reimbursements and prevent double claims or postings.",
+      "constraint": "Mockup tax labels are not tax advice; overseas purchases require contextual GST review, not automatic out-of-scope classification."
+    },
+    {
+      "observation_id": "BCP-019",
+      "product": "Jupikit",
+      "source_observation": "Mockup shows cash, receivables, expenses and tax estimate.",
+      "source_url": "https://jupikit.com/",
+      "evidence_level": "search_indexed_marketing_mockup_not_functional_test",
+      "proposed_feature": "Owner finance and tax overview",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-14",
+        "ADD-037"
+      ],
+      "proposed_workflow": "Show reconciled cash separately from forecast cash; distinguish estimated liability from approved liability and payments; drill down to calculation evidence.",
+      "constraint": "Example amounts and a generic due date have no statutory significance."
+    },
+    {
+      "observation_id": "BCP-020",
+      "product": "Jupikit",
+      "source_observation": "Mockup navigation includes vendors, clients and payslips.",
+      "source_url": "https://jupikit.com/",
+      "evidence_level": "search_indexed_marketing_mockup_not_functional_test",
+      "proposed_feature": "Existing party and payroll workspaces",
+      "mapping_status": "already_covered",
+      "current_feature_ids": [
+        "MARG-030",
+        "ADD-043"
+      ],
+      "proposed_workflow": "Retain existing vendor/customer masters and documented payroll scope; link permitted expense reimbursements without exposing confidential salary details.",
+      "constraint": "Navigation alone proves neither payroll engine breadth nor implemented vendor/client workflows."
+    },
+    {
+      "observation_id": "BCP-021",
+      "product": "Jupikit blog",
+      "source_observation": "Email and WhatsApp receipt capture are posed as possibilities.",
+      "source_url": "https://byteception.com/blog/financial-hygiene-is-a-feature",
+      "evidence_level": "first_party_blog_design_intent",
+      "proposed_feature": "Low-friction source intake",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-06",
+        "MARG-068"
+      ],
+      "proposed_workflow": "Extend the evidence inbox with source, sender and received time; preview extracted fields and potential duplicates before reviewer-approved posting.",
+      "constraint": "Email/WhatsApp integration remains unverified and deferred; local uploaded examples can define the workflow without choosing connectivity."
+    },
+    {
+      "observation_id": "BCP-022",
+      "product": "Jupikit blog",
+      "source_observation": "Discusses missed reimbursements and disconnected payments.",
+      "source_url": "https://byteception.com/blog/your-financial-data-is-fragmented",
+      "evidence_level": "first_party_blog_problem_statement",
+      "proposed_feature": "Payment-aware follow-up controls",
+      "mapping_status": "extends",
+      "current_feature_ids": [
+        "GST-10",
+        "MARG-034"
+      ],
+      "proposed_workflow": "Before drafting a customer reminder, inspect payment allocation and unresolved bank entries; mark suspected receipt cases for review.",
+      "constraint": "Bank evidence does not by itself prove tax eligibility, return filing or invoice classification."
+    },
+    {
+      "observation_id": "BCP-023",
+      "product": "Stadia",
+      "source_observation": "Sports scoring, operator control and live displays.",
+      "source_url": "https://byteception.com/gallery/stadia",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Live business status freshness",
+      "mapping_status": "exclude_domain_reuse_generic_pattern",
+      "current_feature_ids": [],
+      "proposed_workflow": "Use the already planned collaboration pattern to show freshness, pending changes and refresh needs in authorized business screens.",
+      "constraint": "No sports scoreboards, clocks, branding or venue-management product scope is added."
+    },
+    {
+      "observation_id": "BCP-024",
+      "product": "Cyber Attack Monitor",
+      "source_observation": "Threat dashboards, event logs and honeypot management.",
+      "source_url": "https://byteception.com/gallery/cyber-attacks",
+      "evidence_level": "first_party_case_study_claim_not_logged_in_test",
+      "proposed_feature": "Security operations product",
+      "mapping_status": "excluded",
+      "current_feature_ids": [],
+      "proposed_workflow": "No additional ERP feature proposed from domain-specific cybersecurity tooling.",
+      "constraint": "Protecting our ERP remains necessary; building a SOC/honeypot product is unrelated scope."
+    }
+  ],
+  "source_quality_notes": [
+    "Byteception is a product engineering studio; client case studies are not features of one ERP SKU.",
+    "JCSS case study contains an unfinished testimonial placeholder, so its outcome assertions lack independent testimonial corroboration on that page.",
+    "Direct Jupikit fetch returned HTTP403; only indexed first-party landing content was inspected.",
+    "Sense IoT and video-wall portfolio references are unrelated industry projects, not ERP parity requirements.",
+    "Proposed workflows are our adaptations to the existing Marg+GST scope, not claims of Byteception GST capabilities."
+  ]
+}

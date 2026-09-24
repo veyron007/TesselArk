@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.playwright-cli/
+data/*.sqlite
+data/*.sqlite-*
+server/*.sqlite
+server/*.sqlite-*
+.DS_Store

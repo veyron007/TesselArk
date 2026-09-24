@@ -1,0 +1,15 @@
+.coverage-page { max-width: 1160px; margin: 0 auto; }
+.coverage-heading { margin-bottom: 20px; }.coverage-heading h1 { margin: 8px 0 4px; font-size: 28px; color: #17332f; }.coverage-heading p { margin: 0; color: #65786d; font-size: 14px; }
+.coverage-eyebrow { color: #397d66; font-size: 10px; font-weight: 800; letter-spacing: .15em; }
+.coverage-summary { padding: 16px 20px; border: 1px solid #dbe6dc; border-radius: 14px; background: #f3f8f2; color: #435f51; margin: 20px 0; }
+.coverage-summary strong { color: #173c32; }.coverage-summary span { margin: 0 10px; color: #9aafa1; }
+.coverage-controls { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 10px; }
+.coverage-controls input, .coverage-controls select { padding: 10px 12px; border-radius: 9px; border: 1px solid #cbdcd1; background: white; color: #244637; font: inherit; }
+.coverage-controls input { flex: 1; min-width: 210px; }.coverage-count { color: #65758a; font-size: 13px; margin: 10px 0; }
+.coverage-list { display: grid; gap: 8px; }.coverage-item { border: 1px solid #dce7df; background: white; border-radius: 10px; overflow: hidden; }
+.coverage-item summary { list-style: none; display: flex; gap: 16px; align-items: center; padding: 13px 16px; cursor: pointer; }.coverage-item summary::-webkit-details-marker { display: none; }
+.coverage-id { color: #347b5d; font-size: 12px; font-weight: 700; min-width: 65px; }.coverage-title { flex: 1; font-weight: 650; }.coverage-title small { display: block; margin-top: 3px; color: #738779; font-weight: 400; }
+.coverage-status { background: #eff2f0; color: #667a6d; border-radius: 20px; padding: 5px 10px; font-size: 12px; }.coverage-status.partial { background: #e4f3e9; color: #236849; }
+.coverage-details { border-top: 1px solid #e8eee9; padding: 4px 16px 12px 97px; color: #4c6454; font-size: 14px; line-height: 1.5; }
+.coverage-open { border: 1px solid #b8d7c2; background: #f2faf4; color: #1f6643; border-radius: 7px; font-weight: 700; padding: 9px 12px; }
+@media(max-width: 600px) { .coverage-details { padding-left: 16px; } .coverage-item summary { gap: 8px; } }

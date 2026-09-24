@@ -1,0 +1,247 @@
+{
+  "schema_version": "1.0",
+  "retrieved_date": "2026-09-24",
+  "source_url": "https://byteception.com/",
+  "scope": "Homepage capability claims compared with the existing 156-row Marg map, 24 GST capability groups and product-and-gst-workflow-map.md. Portfolio evidence is researched separately.",
+  "source_context": "Byteception identifies itself as a product engineering studio. Its 15 homepage capability areas describe systems it builds for clients; this is not a feature licence, public application demonstration or verified packaged ERP. Screenshot alt descriptions are illustrative metadata. Image contents were not successfully rendered by the web retrieval tool.",
+  "comparison_values": {
+    "already_explicit": "The existing feature map already states the core user capability.",
+    "deepen_existing": "An existing capability covers the underlying job, but the recommended behaviour needs a more explicit specification.",
+    "add_explicit": "The existing map has related prerequisites but does not explicitly commit to this distinct user capability.",
+    "not_product_feature": "Studio identity or engineering service; do not add to the ERP feature inventory.",
+    "unverified": "No sufficient public evidence supports the proposed competitor capability."
+  },
+  "entries": [
+    {
+      "id": "BYTE-CAP-001",
+      "title": "Roles and permissions",
+      "vendor_evidence": "Record-level viewing and editing controls.",
+      "evidence_type": "studio_capability_claim; illustrative_member_role_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-039", "MARG-093", "ADD-061", "ADD-063", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Make permissions inspectable by user, company, GSTIN, branch and action. Separately govern document preparation, posting, sensitive-field access, export, overrides and approval. Preview the scope of an invitation or permission change; explain a denied action without revealing another client's data.",
+      "limitations": "The existing baseline already requires scoped access. Fine-grained actions are proposed ERP requirements; the homepage does not establish its exact policy model or demonstrate access enforcement."
+    },
+    {
+      "id": "BYTE-CAP-002",
+      "title": "Sign-in and account security",
+      "vendor_evidence": "SSO, second-factor and link-based login options.",
+      "evidence_type": "studio_capability_claim; illustrative_connected_account_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-039", "MARG-093", "GST-24"],
+      "comparison": "add_explicit",
+      "recommended_erp_behavior": "Specify invitation acceptance, sign-in, second-factor enrollment/recovery, active-session visibility, session revocation and offboarding. Owner/admin should see which access remains active. Decide optional corporate or social sign-in later; local development does not require selecting an external identity provider now.",
+      "limitations": "User and role management exists in the baseline, but authentication and recovery workflows are not explicit. The homepage does not prove supported identity vendors, account recovery behaviour or security certification."
+    },
+    {
+      "id": "BYTE-CAP-003",
+      "title": "Organisation workspaces",
+      "vendor_evidence": "Separated organisation data and client access.",
+      "evidence_type": "studio_capability_claim; illustrative_workspace_switcher_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-093", "ADD-061", "ADD-062", "GST-01", "GST-15", "GST-24"],
+      "comparison": "already_explicit",
+      "recommended_erp_behavior": "Retain the company/GSTIN/branch context on every page and document. Keep CA client selection explicit, show only authorised entities in search and export, and retain independent statutory records when a management dashboard combines results.",
+      "limitations": "Already required by the user's multi-company brief and existing access acceptance cases. A workspace is not automatically a legal company, GST registration or warehouse; those identities must remain distinct."
+    },
+    {
+      "id": "BYTE-CAP-004",
+      "title": "Grouped notifications and task inbox",
+      "vendor_evidence": "Grouped notifications across multiple channels.",
+      "evidence_type": "studio_capability_claim; illustrative_notification_inbox_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-068", "MARG-078", "MARG-088", "GST-10", "GST-13", "GST-19", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Provide a browser inbox grouped by case or document with owner, financial amount, company/GSTIN, due date, current blocker and permitted next action. Let users distinguish required work from informational changes, acknowledge or snooze reminders, and inspect delivery failures. Escalation must follow an agreed review policy. Email or messaging remains a separately authorised channel.",
+      "limitations": "Existing maps contain reminders, assignments and scheduled messages but do not define a unified notification experience. Mobile alerts on the vendor page do not expand this project's webapp-only scope."
+    },
+    {
+      "id": "BYTE-CAP-005",
+      "title": "Concurrent collaboration and review awareness",
+      "vendor_evidence": "Shared changes appear without manual refresh.",
+      "evidence_type": "studio_capability_claim; illustrative_discussion_thread_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-042", "MARG-077", "ADD-063", "GST-10", "GST-13", "GST-24"],
+      "comparison": "add_explicit",
+      "recommended_erp_behavior": "Show who is preparing or reviewing a document, present new comments and changes, warn before overwriting another user's work, and compare conflicting edits. Recheck the reviewed version before posting, approval or filing-related actions. A stale browser session should explain what changed and offer reload or a controlled merge; preserve financial history.",
+      "limitations": "Comments and stale-approval handling already exist in the GST plan, but simultaneous-edit behaviour is not explicit. The vendor's broad conflict-free wording is not a verified guarantee and should not be repeated as our acceptance criterion."
+    },
+    {
+      "id": "BYTE-CAP-006",
+      "title": "Audit history",
+      "vendor_evidence": "Changes attributed to an actor and time.",
+      "evidence_type": "studio_capability_claim; illustrative_expense_timeline_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-040", "MARG-077", "ADD-058", "GST-13", "GST-20", "GST-24"],
+      "comparison": "already_explicit",
+      "recommended_erp_behavior": "Retain before/after values, actor, business scope, time, reason and approval for consequential changes. Link source documents, corrections and review versions. Keep human, import and assisted actions distinguishable, and export an authorised audit pack with its provenance.",
+      "limitations": "The prior plan already specifies versions, decision history and re-review after changes. The homepage does not establish retention, tamper resistance, statutory suitability or the coverage of its audit implementation."
+    },
+    {
+      "id": "BYTE-CAP-007",
+      "title": "Document drafting and versioned templates",
+      "vendor_evidence": "Document drafting, versions, signing and export.",
+      "evidence_type": "studio_capability_claim; illustrative_board_resolution_editor_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-041", "MARG-049", "GST-10", "GST-16", "GST-19", "GST-24"],
+      "comparison": "add_explicit",
+      "recommended_erp_behavior": "Add reusable, permissioned templates for supplier discrepancy letters, review queries, management declarations, notice-response working drafts and engagement handover notes. Fill references from approved business records, compare versions and export a reviewable document. Record review and any signed copy separately from the draft.",
+      "limitations": "Invoice layouts and supporting-document generation already exist; a general reviewable drafting workspace is new explicit scope. Vendor examples do not establish legally valid digital signatures. Document signature, internal approval and GST return signing must stay distinct; signing providers and filing connectivity remain undecided."
+    },
+    {
+      "id": "BYTE-CAP-008",
+      "title": "Evidence and document repository",
+      "vendor_evidence": "Permissioned storage for uploads and signed copies.",
+      "evidence_type": "studio_capability_claim; illustrative_client_document_library_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-069", "MARG-076", "MARG-083", "ADD-013", "ADD-015", "GST-06", "GST-16", "GST-19", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Give each source file one identity with company/GSTIN, period, document type, source, uploader, date and linked transactions/cases. Support versions, duplicate detection, missing-evidence requests, scoped search, download history, retention decisions and export packs. Preserve the precise evidence version used for an approval even when a later file arrives.",
+      "limitations": "Evidence capture and preservation already exist across GST workflows; the improvement is a coherent cross-module repository experience. Storage encryption on a marketing page is not proof of a security audit or appropriate retention rules."
+    },
+    {
+      "id": "BYTE-CAP-009",
+      "title": "Role-specific dashboards",
+      "vendor_evidence": "Summarised business metrics.",
+      "evidence_type": "studio_capability_claim; illustrative_finance_dashboard_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-051", "MARG-061", "MARG-079", "MARG-087", "ADD-037", "GST-08", "GST-13", "GST-14", "GST-24"],
+      "comparison": "already_explicit",
+      "recommended_erp_behavior": "Retain role-specific owner, staff and CA overviews with company/GSTIN/period scope, data freshness, definitions, actionable blockers and source-record drilldown. Separate cash, liability and unresolved-credit measures; disclose overlap rather than summing the same exposure twice.",
+      "limitations": "The current plan already describes scoped dashboards and non-overlapping financial exposure. The screenshot's metrics are examples, not evidence of Byteception inventory or GST functionality."
+    },
+    {
+      "id": "BYTE-CAP-010",
+      "title": "Searchable records and controlled bulk work",
+      "vendor_evidence": "Search, filtering and bulk record updates.",
+      "evidence_type": "studio_capability_claim; illustrative_bank_transaction_table_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-014", "MARG-046", "MARG-067", "ADD-013", "ADD-048", "GST-03", "GST-07", "GST-13"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Provide saved scoped views, useful columns, combined filters and document drilldown across records. Bulk actions must preview eligible records, protected or excluded records and resulting changes, then report outcomes per row. Editing posted financial documents must follow correction rules; a spreadsheet-style grid is not authority to rewrite history.",
+      "limitations": "Filtering and bulk error reporting already occur in the existing map. Large-volume responsiveness needs later acceptance measurements; the homepage's scale language is not a benchmark."
+    },
+    {
+      "id": "BYTE-CAP-011",
+      "title": "Connected-tool intake and exchange visibility",
+      "vendor_evidence": "Bring existing-tool data into an application.",
+      "evidence_type": "studio_capability_claim; illustrative_connected_apps_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-068", "MARG-070", "MARG-090", "MARG-091", "ADD-013", "ADD-014", "ADD-044", "ADD-045", "GST-06", "GST-07"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Specify an integration intake workspace showing source, authorised business scope, last acquisition, freshness, mapping errors, duplicates and retry history. Imported records should enter the appropriate review workflow with their provenance. Prioritise actual business needs later; neither a specific messaging platform nor a live GST connection is chosen now.",
+      "limitations": "The existing map already covers integrations and exchange monitoring. Connected-app illustrations do not prove available APIs, permissions, pricing, production reliability or GST portal access."
+    },
+    {
+      "id": "BYTE-CAP-012",
+      "title": "Assisted capture and drafting",
+      "vendor_evidence": "Assisted importing, data entry and first drafts.",
+      "evidence_type": "studio_capability_claim; illustrative_invoice_extraction_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-076", "ADD-013", "ADD-015", "GST-03", "GST-06", "GST-07", "GST-10", "GST-19"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Show extracted values beside source evidence with uncertainty and field provenance. Suggest item mappings, match candidates, missing-information requests and first drafts. Require meaningful confirmation before committing consequential changes. Tax determinations and eligibility decisions need explainable rules and review; a generated explanation must cite actual record evidence rather than invent it.",
+      "limitations": "Capture and proposed matches are already explicit. Broad drafting and correction feedback can be specified more clearly. No accuracy, model, GST expertise or autonomy level was demonstrated on the homepage."
+    },
+    {
+      "id": "BYTE-CAP-013",
+      "title": "Supervised multi-step assistance",
+      "vendor_evidence": "Multi-step assistance with human handoffs.",
+      "evidence_type": "studio_capability_claim; illustrative_transaction_workflow_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-042", "ADD-063", "GST-06", "GST-07", "GST-10", "GST-13", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Define reviewable runs such as capture bill, propose mapping, compare receipt, suggest portal match, assemble exceptions and hand the pack to its accountant. Show completed steps, evidence, pending decisions, failed steps and permitted continuation. Stop for missing facts or changed scope. External communication, financial posting, tax elections, signing and filing need explicit authority and their own controls.",
+      "limitations": "The current map already links preparation to human review. This makes the automation run and handoff inspectable; it does not add autonomous filing, unsupervised legal judgment or a chosen AI provider."
+    },
+    {
+      "id": "BYTE-CAP-014",
+      "title": "Recurring obligations and review templates",
+      "vendor_evidence": "Recurring filing and review schedules.",
+      "evidence_type": "studio_capability_claim; illustrative_schedule_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-088", "GST-01", "GST-08", "GST-10", "GST-13", "GST-18", "GST-19", "GST-20", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Generate period-specific preparation and review tasks from effective applicability and approved templates. Each task carries taxpayer/period, owner, reviewer, dependencies, due-date basis and missing evidence. Distinguish internal target dates from verified statutory deadlines and extensions. Resolve duplicates, absences and reopened periods without silently marking work complete.",
+      "limitations": "Obligations, reminders and period checklists already exist. The explicit addition is reusable recurrence with dependable ownership and completion evidence. Scheduled work is not proof of official submission; current legal dates still require verification."
+    },
+    {
+      "id": "BYTE-CAP-015",
+      "title": "Configurable business workflow policies",
+      "vendor_evidence": "Business-specific enquiry-to-delivery processes.",
+      "evidence_type": "studio_capability_claim; illustrative_meeting_lifecycle_image_alt",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["MARG-004", "MARG-009", "MARG-028", "MARG-029", "MARG-042", "MARG-078", "GST-10", "GST-13", "GST-24"],
+      "comparison": "deepen_existing",
+      "recommended_erp_behavior": "Offer controlled workflow templates with configurable ownership, thresholds, required evidence, review gates, escalation and exception reasons. Preview affected open work before activating a policy version. Preserve mandatory posting and tax controls; a workflow editor must not permit users to remove statutory requirements or rewrite completed approvals.",
+      "limitations": "Existing workflows and approvals are substantial; the proposal makes selected policy variation explicit. A generic low-code platform or arbitrary workflow scripting is not justified by this reference."
+    },
+    {
+      "id": "BYTE-CAP-016",
+      "title": "Studio identity",
+      "vendor_evidence": "Custom product engineering studio.",
+      "evidence_type": "vendor_self_description",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": [],
+      "comparison": "not_product_feature",
+      "recommended_erp_behavior": "Use the capability examples as design references and assess the separately named portfolio products on their own evidence.",
+      "limitations": "Do not label the homepage a licensed ERP, tax suite or packaged competitor, or combine unrelated client products into one verified application."
+    },
+    {
+      "id": "BYTE-CAP-017",
+      "title": "Infrastructure consulting",
+      "vendor_evidence": "Cloud architecture consulting.",
+      "evidence_type": "studio_service_offering",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": [],
+      "comparison": "not_product_feature",
+      "recommended_erp_behavior": "Exclude from the ERP functional feature count. Keep hosting and architecture discussions deferred.",
+      "limitations": "A service offering does not establish a user-facing feature or a required hosting provider. Development remains local per user direction."
+    },
+    {
+      "id": "BYTE-CAP-018",
+      "title": "Deployment automation consulting",
+      "vendor_evidence": "Deployment process modernisation.",
+      "evidence_type": "studio_service_offering",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": [],
+      "comparison": "not_product_feature",
+      "recommended_erp_behavior": "Exclude from the product feature list; delivery processes can be discussed when the user requests implementation planning.",
+      "limitations": "No technology, delivery priority or production deployment choice follows from this service claim."
+    },
+    {
+      "id": "BYTE-CAP-019",
+      "title": "Solutions engineering",
+      "vendor_evidence": "Custom software problem solving.",
+      "evidence_type": "studio_service_offering",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": [],
+      "comparison": "not_product_feature",
+      "recommended_erp_behavior": "Translate only evidenced user jobs into the ERP map; do not count generic engineering service language as a new business module.",
+      "limitations": "The phrase does not specify a testable application workflow."
+    },
+    {
+      "id": "BYTE-CAP-020",
+      "title": "Legacy modernisation",
+      "vendor_evidence": "Modernisation of legacy code.",
+      "evidence_type": "studio_service_offering",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": [],
+      "comparison": "not_product_feature",
+      "recommended_erp_behavior": "Retain existing migration and import/export features on their own requirements; defer implementation language choices.",
+      "limitations": "Code modernisation is not evidence of a Marg data migration tool, import-format compatibility or automatic migration correctness."
+    },
+    {
+      "id": "BYTE-CAP-021",
+      "title": "Packaged GST functionality",
+      "vendor_evidence": "No homepage GST product specification found.",
+      "evidence_type": "research_limitation",
+      "source_url": "https://byteception.com/",
+      "existing_feature_ids": ["GST-01", "GST-02", "GST-03", "GST-04", "GST-05", "GST-06", "GST-07", "GST-08", "GST-09", "GST-10", "GST-11", "GST-12", "GST-13", "GST-14", "GST-15", "GST-16", "GST-17", "GST-18", "GST-19", "GST-20", "GST-21", "GST-22", "GST-23", "GST-24"],
+      "comparison": "unverified",
+      "recommended_erp_behavior": "Preserve all 24 researched GST groups. Use the homepage to improve task ownership, evidence, document collaboration and review usability; verify any tax or portal requirement from its appropriate official source.",
+      "limitations": "Homepage references to filings, finance, invoices or transaction matching do not establish GSTIN validation, IMS actions, return filing, e-invoicing, e-way bills or statutory coverage. This limitation applies to the homepage; individual portfolio evidence must be assessed separately."
+    }
+  ]
+}
