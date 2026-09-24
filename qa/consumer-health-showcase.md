@@ -1,0 +1,7 @@
+# Consumer health presentation scenario
+
+TesselArk's consumer health records are fictional, local demonstration data. They are designed to exercise distribution workflows that may be familiar to a consumer health company. They do **not** represent Haleon's actual products, customers, distributors, prices, tax classification, stock, orders, transactions, or any business relationship with TesselArk.
+
+The six catalogue categories follow the public category names on [Haleon's brand portfolio page](https://www.haleon.com/our-brands): Oral Health; Vitamins, Minerals and Supplements; Pain Relief; Respiratory Health; Digestive Health; and Therapeutic Skin Health. Product SKUs and counterparties in TesselArk are generic fictional examples. The public page provides category inspiration only.
+
+For a walkthrough, select Aster Medical Supplies Pvt Ltd (Demo). Open Catalogue to view the six categories and 18 generic items. In Orders, `CHD-SO-` references show fictional pharmacy orders and dispatches. In Operations, `CHD-PUR-` and `CHD-SAL-` show the linked purchases and sales; `CHD-CRN-` records are draft returns. Finance shows partial collections. GST Workspace shows local purchase review states. Keep the synthetic labels visible. The category demo does not seed product batch specifications, real tax classifications, or portal evidence. Internal approval and local arithmetic do not establish real tax or regulatory outcomes.

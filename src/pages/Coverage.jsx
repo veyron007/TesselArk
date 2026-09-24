@@ -31,7 +31,7 @@ const implemented = {
   'ERP-030': 'Confirmed sales dispatches can be assigned for delivery, with replay-safe partial visits, remaining quantities and staff-reported proof metadata; no verified customer signature, collection allocation or carrier integration',
   'ERP-032': 'Company-wide item-master CSV preview and commit with row validation, rejection reasons, source audit, duplicate SKU checks and exact replay; no transaction or third-party ERP imports',
   'TAX-01': 'Synthetic company, GSTIN and branch records with context selection; no registration lifecycle',
-  'TAX-03': 'Demo tax calculation on invoice lines from entered rates; no legal classification or GST component split',
+  'TAX-03': 'Entered-rate invoice arithmetic, internal effective-dated item tax policy review, invoice evidence findings and reasoned accountant override of reviewed-policy mismatches; no official rate lookup, legal classification or posted GST component split',
   'TAX-06': 'Synthetic seed rows and validated local supplier-statement CSV import, with source audit and approved purchase-bill matching; no GST portal verification',
   'TAX-07': 'Local books-versus-demo-fixture match and mismatch review; no GST portal connection',
   'TAX-08': 'Accountant eligible/blocked decisions with reasons; only matched eligible credit enters local preview',

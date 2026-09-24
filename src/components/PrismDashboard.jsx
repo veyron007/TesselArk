@@ -4,6 +4,7 @@ import './prism-dashboard.css';
 
 const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format((value ?? 0) / 100);
 const shortMoney = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', notation: 'compact', maximumFractionDigits: 1 }).format(value / 100);
+const kpiMoney = value => Math.abs(Number(value || 0)) >= 1_000_000_000 ? shortMoney(value) : money(value);
 const monthLabel = month => new Date(`${month}-01T12:00:00`).toLocaleDateString('en-IN', { month: 'short', year: '2-digit' });
 const dateLabel = date => date ? new Date(`${date.slice(0, 10)}T12:00:00`).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Date unavailable';
 const modules = [
@@ -155,7 +156,7 @@ export default function Dashboard({ context, refreshKey, onNavigate }) {
     <div className="prism-layout"><div className="prism-main">
       <nav className="prism-module-strip" aria-label="Workspace shortcuts">{modules.map(module => <button key={module.id} className={module.id === 'dashboard' ? 'is-current' : ''} aria-current={module.id === 'dashboard' ? 'page' : undefined} onClick={() => onNavigate(module.id)}><span className={`prism-icon-tile ${module.tone}`}><Icon name={module.icon} /></span><span>{module.name}</span></button>)}</nav>
       <section aria-label="All-time branch totals"><div className="prism-section-meta"><span>Selected branch & registration</span><span>All recorded dates</span></div>
-        <div className="prism-kpis">{cards.map(card => <article className={`prism-kpi ${card.tone}`} key={card.label}><div className="prism-kpi-top"><span className={`prism-icon-tile ${card.tone}`}><Icon name={card.icon} /></span><div><h2>{card.label}</h2><strong>{summary ? money(card.value) : '—'}</strong></div></div><p>{!resources ? 'Loading…' : resources.summary.error ? 'Data unavailable' : card.meta}</p></article>)}</div>
+        <div className="prism-kpis">{cards.map(card => <article className={`prism-kpi ${card.tone}`} key={card.label}><div className="prism-kpi-top"><span className={`prism-icon-tile ${card.tone}`}><Icon name={card.icon} /></span><h2>{card.label}</h2></div><strong className="prism-kpi-value" aria-label={summary ? money(card.value) : undefined} title={summary ? money(card.value) : undefined}>{summary ? kpiMoney(card.value) : '—'}</strong><p>{!resources ? 'Loading…' : resources.summary.error ? 'Data unavailable' : card.meta}</p></article>)}</div>
       </section>
       <div className="prism-chart-pair">
         <section className="prism-panel prism-chart-panel"><div className="prism-panel-heading"><h2>Sales vs purchases</h2><span className="prism-period-label">6 months</span></div><p className="prism-chart-subtitle">Approved subtotals · selected branch · excludes tax</p><div className="prism-legend"><span className="sales">Sales</span><span className="purchases">Purchases · dashed</span></div>

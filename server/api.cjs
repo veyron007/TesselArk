@@ -32,6 +32,7 @@ const { registerBudgetsRoutes } = require('./budgets.cjs');
 const { registerDocumentOutputRoutes } = require('./document-output.cjs');
 const { registerDeliveryRoutes } = require('./delivery.cjs');
 const { registerMasterImportRoutes } = require('./master-import.cjs');
+const { registerGstInvoiceAssistantRoutes, assertInvoiceTaxReady } = require('./gst-invoice-assistant.cjs');
 const { createAuth } = require('./auth.cjs');
 
 const fields = (row) => Object.fromEntries(Object.entries(row).map(([key, value]) => [key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()), value]));
@@ -288,6 +289,7 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
     const id = integer(Number(req.params.id),'id',1), invoice = invoiceRow(req,id);
     if (invoice.status !== 'submitted') throw bad('Only submitted invoices can be approved',409);
     if (invoice.created_by === req.user.id || invoice.submitted_by === req.user.id) throw bad('Invoice creator or submitter cannot approve the same invoice',403);
+    assertInvoiceTaxReady(db,{ companyId:req.company.id, invoiceId:id });
     const party = db.prepare('SELECT name,gstin FROM parties WHERE id=?').get(invoice.party_id);
     if (invoice.type === 'purchase' && supplierKey(invoice.supplier_invoice_number)) {
       const reference = supplierKey(invoice.supplier_invoice_number);
@@ -504,6 +506,7 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
   registerDocumentOutputRoutes(app, db);
   registerDeliveryRoutes(app, db);
   registerMasterImportRoutes(app, db);
+  registerGstInvoiceAssistantRoutes(app, db);
   app.use((error, _req, res, _next) => {
     const status = error.status || (error.code?.startsWith('SQLITE_CONSTRAINT') || [1555,2067].includes(error.errcode) ? 409 : 500);
     res.status(status).json({ error: status === 500 ? 'Internal server error' : error.message });

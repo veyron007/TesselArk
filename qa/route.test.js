@@ -6,6 +6,7 @@ test('workspace routes restore pages and supported source records from direct UR
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/orders?record=42')), { page: 'orders', recordId: 42 });
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/operations?record=7')), { page: 'operations', recordId: 7 });
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/documents?record=7')), { page: 'documents', recordId: 7 });
+  assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/invoice-checks?record=7')), { page: 'invoice-checks', recordId: 7 });
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/budgets')), { page: 'budgets', recordId: null });
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/?page=coverage')), { page: 'coverage', recordId: null });
   assert.deepEqual(readWorkspaceRoute(new URL('http://localhost:3001/unknown?record=1')), { page: 'dashboard', recordId: null });
@@ -17,6 +18,7 @@ test('workspace URLs are bookmarkable and keep unrelated query settings', () => 
   assert.equal(workspaceUrl('operations', 7, current), '/operations?preview=1&record=7');
   assert.equal(workspaceUrl('dashboard', null, current), '/?preview=1');
   assert.equal(workspaceUrl('coverage', null, current), '/coverage?preview=1');
+  assert.equal(workspaceUrl('invoice-checks', 7, current), '/invoice-checks?preview=1&record=7');
   assert.equal(workspaceUrl('operations', 7, current, { gstinId: 1, branchId: 2 }),
     '/operations?preview=1&record=7&gstin=1&branch=2');
 });

@@ -14,7 +14,7 @@ Open <http://127.0.0.1:3001>. If that command fails because the server is stoppe
 
 ```bash
 npm run build
-npm start
+ERP_AUTH_MODE=demo npm start
 ```
 
 Then confirm bootstrap again:
@@ -29,7 +29,9 @@ The response should include the three demo companies, their GSTINs and branches,
 
 ## Set the context
 
-Start with **Aster Medical Supplies Pvt Ltd (Demo)**, **Mumbai Central**, GSTIN `27DEMOA0000A1Z1`, and **Maya Staff · staff**. Use **Dev Accountant · accountant** for review actions. Keep the context bar visible so the audience can see the company, GSTIN, branch and demo user. The API scopes users to a company, but it does not enforce the narrower branch/GSTIN grants in the future acceptance scenarios.
+Start with **Aster Medical Supplies Pvt Ltd (Demo)**, **Mumbai Central**, GSTIN `27DEMOA0000A1Z1`, and **Maya Staff · staff**. Use **Dev Accountant · accountant** for review actions. Keep the context bar visible so the audience can see the company, GSTIN, branch and demo user. Company, registration and branch grants apply server side; the user switcher remains a local demo control.
+
+For a consumer health audience, begin with [the category scenario](consumer-health-showcase.md): Catalogue has 18 fictional products in six public consumer-health category types; `CHD-` orders and invoices show Mumbai, Pune and Bengaluru trade flows with fictional pharmacies and wholesalers. There is no Haleon counterparty or branded SKU, and prices, HSNs and rates are illustrative.
 
 The currently seeded sale `SAL-01-00001` is locally approved for Harbor Clinic: 2 Glucose Strips, ₹200 taxable value, ₹24 recorded GST and ₹224 total. It posted a stock movement and creates a ₹224 open receivable. It is not a filed tax record.
 
@@ -41,7 +43,7 @@ printf 'Synthetic pharmacy receiving note, presentation demo only. Version three
 
 ## Click-through flows
 
-The current navigation labels are **Dashboard**, **Orders**, **Operations**, **Batches**, **Finance**, **Returns**, **Return Tax Review**, **Evidence Library**, **GST Workspace**, **Statement Import**, **Statutory Simulator**, **All Modules**, and **Feature Coverage**. Simulator and module prototypes are tagged **SIM** and **PROTO** under “Explore the roadmap.”
+Use the current sidebar for **Dashboard**, **Catalogue**, **Orders**, **Operations**, **Finance**, **Returns**, **GST Workspace**, **Statutory Sandbox**, and **Build Status**. Additional workflows are grouped by business area. Statutory outcomes remain explicitly simulated.
 
 1. **Partial order fulfillment linked to an invoice.** Change the branch to **Bengaluru Branch**; the GSTIN should change to `29DEMOA0000A1Z7`. Open **Orders → Sales orders** and select the seeded business reference `DEMO-SO-BLR-301`. It is confirmed for Harbor Clinic, with 4 of 10 Glucose Strips dispatched and 6 remaining. The confirmed dispatch is `DEMO-DISP-BLR-301`; the linked invoice `DEMO-SAL-BLR-301` is approved. Point out that fulfillment posted physical stock once and invoice approval records the accounting/tax event without posting that stock again. For the purchase side, **Purchase orders** includes `DEMO-PO-BLR-302` (12 Saline Packs ordered, 5 received, 7 remaining), receipt `DEMO-GRN-BLR-302`, and linked bill `DEMO-PUR-BLR-302`. These are synthetic, local records; the order/dispatch does not represent e-waybill or portal evidence.
 
@@ -55,13 +57,15 @@ The current navigation labels are **Dashboard**, **Orders**, **Operations**, **B
 
 6. **GST books and synthetic purchase evidence.** Open **GST Workspace** for the Mumbai GSTIN. The seeded Northstar bills `DEMO-NS-501` and `DEMO-NS-502` appear beside synthetic imported fixture rows: NS-501 amounts match; NS-502 differs. Show books amount, candidate source, source period, match state and eligibility state. A local accountant can match the first, mark it eligible with a reason, and block the differing row with a reason. These decisions are local and do not come from a live GST portal. Show the selected period preview and its internal review state; do not call it a filed return or official liability calculation.
 
+   **Invoice correctness check.** Open **Invoice Checks** and select a consumer-health invoice to show captured line rates, missing HSN/evidence prompts and the dated-policy comparison. In **Tax policy register**, `CHD-01-01` has a pending synthetic internal proposal. Switch from Maya Staff to Dev Accountant to inspect the independent review controls; approve only after entering a reason and explaining that this is an illustrative internal policy, not an official rate. The approval gate prevents a new submitted invoice with a mismatch against a reviewed policy from posting until a different accountant records a reasoned, invoice-specific override. It does not verify a legal rate or file with a portal.
+
 7. **Statement Import: staff prepares, accountant commits, GST review stays separate.** Open **Statement Import** as Maya Staff. Choose an open source period, source name, and a CSV (or paste CSV) with the five displayed columns; for a safe repeat/provenance demo use Northstar supplier GSTIN `27DEMOS0000A1Z2`, invoice `NS-501`, taxable ₹300.00, tax ₹36.00, and the invoice date shown on seeded bill `DEMO-NS-501`. Select **Preview and validate** and show the repeat/new/conflict/invalid counts. Switch to **Dev Accountant · accountant**; the current build preserves the CSV and preview across this role switch, and **Commit statement** becomes available. Commit and show **Imported sources**: the exact repeat is skipped, while the local import history records source/user/period and file hash. Separately, in **GST Workspace** use the corresponding open period and `DEMO-NS-501` to show its already-seeded statement candidate; **Check statement match** changes its match state while credit stays **pending**. Only a separate reasoned **Mark eligible** action changes the local ITC decision and claim period. This seeded match is not caused by the repeat import. Optional full new-source path, only if time allows: in **Operations**, create and approve a synthetic purchase bill with a unique supplier invoice reference; import a CSV row with that same supplier GSTIN, reference, date and amounts, then match that newly imported candidate in **GST Workspace**. Do not imply either CSV path is portal-verified or that a match alone grants ITC.
 
 8. **Demonstrate the statutory simulator.** Open **Statutory Simulator**, keep its **SIMULATED** banner and no-portal boundary visible, choose **IRN response**, select approved sale `SAL-01-00001`, choose **Synthetic success**, then **Prepare local request → Run simulation**. The history displays a generated `SIM-*` reference and **Simulated Success**; do not rely on a fixed number because it changes with prior runs. Refresh to show persistence. This records only a synthetic response through `/api/simulations`; it does not create an IRN or register an invoice with the government.
 
-9. **Show the all-module prototype boundary.** Open **All Modules (PROTO)**, search `ERP-003`, and select **Godowns, stores and racks**. Its label says **Planned · prototype case only**. Choose **＋ New case** and save a synthetic draft, for example “Rack transfer planning note,” with a fake reference and notes that explicitly call it planning. The case register persists it. Optionally submit it and switch to Dev Accountant to **Approve case**; the history records human review only. No stock transfer, valuation or specialist inventory effect is posted. Prototype cases do not count as implemented workflows.
+9. **Show the prototype boundary honestly.** Open **Build Status**, search `ERP-003`, and point out that planned catalogue rows are not working specialist modules until a tested domain workflow exists. The former generic prototype workspace is not in primary navigation; coverage rows and synthetic examples are evidence of scope, not a claim of full parity.
 
-10. **Close on coverage.** Open **Feature Coverage**. The current coverage page reports 85 researched groups: 19 **Partial**, 66 **Planned**, and 0 full-parity claims. Partial means only the described slice is available. The added lot, evidence, order, return-tax and statement-import screens represent bounded workflows; a generic prototype case or a simulated statutory response does not make a planned specialist capability implemented.
+10. **Close on coverage.** Open **Build Status**. The current coverage page reports 85 researched groups: 38 **Partial**, 47 **Planned**, and 0 full-parity claims. Partial means only the described slice is available. A generic prototype case or simulated statutory response does not make a planned specialist capability implemented.
 
 ## Limits to state plainly
 
@@ -73,6 +77,6 @@ There is no live GST portal, bank, e-invoice or government integration. All `SIM
 1. Run `curl -fsS http://127.0.0.1:3001/api/bootstrap` and say: “This is a local SQLite demo. The selected business is synthetic, and the role selector is not production authentication.”
 2. Run `curl -fsS -H 'x-company-id: 1' -H 'x-user-id: 1' 'http://127.0.0.1:3001/api/orders?gstinId=2&branchId=3'` and point to the stable business references `DEMO-SO-BLR-301`, `DEMO-DISP-BLR-301`, and linked `DEMO-SAL-BLR-301`: 4 of 10 units dispatched, 6 remaining, invoice approved.
 3. Say: “Batches records lot-level stock events and expiry; Evidence Library stores versioned local files and internal review. Neither proves statutory acceptance or document authenticity.” If prepared, show the single synthetic v3 text file and the seeded v1/v2 version history.
-4. Close with: “The coverage page reports 19 partial slices, 66 planned groups, and zero full-parity claims. The statutory simulator is local only; no portal or bank integration and no official filing is claimed.”
+4. Close with: “The coverage page reports 38 partial slices, 47 planned groups, and zero full-parity claims. The statutory simulator is local only; no portal or bank integration and no official filing is claimed.”
 
 Do not reset or delete the SQLite database during presentation setup. Refresh the affected page after a mutation to show that the local record persists.

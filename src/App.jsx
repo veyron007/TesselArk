@@ -31,6 +31,7 @@ const ReturnTaxReview = lazy(() => import('./pages/ReturnTaxReview.jsx'));
 const ReturnSettlement = lazy(() => import('./pages/ReturnSettlement.jsx'));
 const ReturnInspection = lazy(() => import('./pages/ReturnInspection.jsx'));
 const Gst = lazy(() => import('./pages/Gst.jsx'));
+const InvoiceChecks = lazy(() => import('./pages/InvoiceChecks.jsx'));
 const StatementImport = lazy(() => import('./pages/StatementImport.jsx'));
 const Coverage = lazy(() => import('./pages/Coverage.jsx'));
 const StatutoryLifecycle = lazy(() => import('./pages/StatutoryLifecycle.jsx'));
@@ -67,6 +68,7 @@ const navigation = [
   { id: 'return-tax', label: 'Return Tax Review', icon: '◈', description: 'Local credit & debit note arithmetic' },
   { id: 'evidence', label: 'Evidence Library', icon: '▣', description: 'Files, provenance & review' },
   { id: 'gst', label: 'GST Workspace', icon: '◇', description: 'GST review & period preview' },
+  { id: 'invoice-checks', label: 'Invoice Checks', icon: '✓', description: 'Invoice evidence and reviewed tax policy' },
   { id: 'statement-import', label: 'Statement Import', icon: '⇧', description: 'Local supplier statement CSV' },
   { id: 'simulator', label: 'Statutory Sandbox', icon: '⌁', description: 'Local filing flow simulation', tag: 'SIM' },
   { id: 'access-grants', label: 'Access Grants', icon: '⛨', description: 'GSTIN and branch permissions', adminOnly: true },
@@ -144,7 +146,7 @@ function App() {
   }, [mobileMenuOpen]);
   const [initialInvoiceId, setInitialInvoiceId] = useState(() => {
     const route = readWorkspaceRoute(window.location);
-    return ['operations', 'documents'].includes(route.page) ? route.recordId : null;
+    return ['operations', 'documents', 'invoice-checks'].includes(route.page) ? route.recordId : null;
   });
   const [initialOrderId, setInitialOrderId] = useState(() => {
     const route = readWorkspaceRoute(window.location);
@@ -233,7 +235,7 @@ function App() {
       const route = readWorkspaceRoute(window.location);
       const scope = readWorkspaceScope(window.location);
       setActivePage(route.page);
-      setInitialInvoiceId(['operations', 'documents'].includes(route.page) ? route.recordId : null);
+      setInitialInvoiceId(['operations', 'documents', 'invoice-checks'].includes(route.page) ? route.recordId : null);
       setInitialOrderId(route.page === 'orders' ? route.recordId : null);
       if (bootstrap) setSelection(previous => {
         const company = bootstrap.companies?.find(item => String(item.id) === String(previous.companyId));
@@ -359,7 +361,7 @@ function App() {
     const url = workspaceUrl(page, recordId, window.location.href, selection);
     if (`${window.location.pathname}${window.location.search}` !== url)
       window.history.pushState(null, '', url);
-    setInitialInvoiceId(['operations', 'documents'].includes(page) ? recordId : null);
+    setInitialInvoiceId(['operations', 'documents', 'invoice-checks'].includes(page) ? recordId : null);
     setInitialOrderId(page === 'orders' ? recordId : null);
     setActivePage(page);
   }, [selection]);
@@ -372,7 +374,7 @@ function App() {
     && String(bootstrap?.currentUserId) === String(selection.userId);
   useEffect(() => {
     if (!scopeReady) return;
-    const recordId = ['operations', 'documents'].includes(activePage) ? initialInvoiceId : activePage === 'orders' ? initialOrderId : null;
+    const recordId = ['operations', 'documents', 'invoice-checks'].includes(activePage) ? initialInvoiceId : activePage === 'orders' ? initialOrderId : null;
     const url = workspaceUrl(activePage, recordId, window.location.href, selection);
     if (`${window.location.pathname}${window.location.search}` !== url)
       window.history.replaceState(null, '', url);
@@ -455,6 +457,7 @@ function App() {
             {activePage === 'return-tax' && <ReturnTaxReview {...pageProps} />}
             {activePage === 'evidence' && <EvidenceLibrary {...pageProps} />}
             {activePage === 'gst' && <Gst {...pageProps} />}
+            {activePage === 'invoice-checks' && <InvoiceChecks {...pageProps} />}
             {activePage === 'statement-import' && <StatementImport {...pageProps} />}
             {activePage === 'simulator' && <StatutoryLifecycle {...pageProps} />}
             {activePage === 'access-grants' && selection.role === 'admin' && <AccessGrants {...pageProps} />}

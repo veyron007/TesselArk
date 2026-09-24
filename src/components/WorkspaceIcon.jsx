@@ -17,6 +17,7 @@ const paths = {
   returns: 'M8 4 3 9l5 5 M3 9h11a6 6 0 0 1 0 12h-4',
   evidence: 'M14 3H5v18h14V8z M14 3v5h5 M8 12h8 M8 16h6',
   gst: 'M5 3h14v18H5z M8 7h8 M8 11h8 M8 15h3 M8 18h8',
+  'invoice-checks': 'M5 3h14v18H5z M8 8h8 M8 12l2 2 5-5 M8 18h8',
   simulator: 'M8 3h8 M10 3v6l-6 11h16L14 9V3 M8 15h8',
   'access-grants': 'm12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6z M8 12l3 3 5-6',
   coverage: 'M4 3h16v18H4z M8 8l1 1 2-2 M13 8h4 M8 14l1 1 2-2 M13 14h4',

@@ -3,11 +3,11 @@ const pages = new Set([
   'conversion', 'counts', 'consignment', 'pricing', 'price-adjustments',
   'supplier-comparison', 'bundles', 'credit', 'finance', 'accounting', 'bank',
   'cashier', 'reporting', 'budgets', 'returns', 'return-inspection',
-  'return-settlement', 'return-tax', 'evidence', 'gst', 'statement-import',
+  'return-settlement', 'return-tax', 'evidence', 'gst', 'invoice-checks', 'statement-import',
   'simulator', 'access-grants', 'coverage',
 ]);
 
-const detailPages = new Set(['orders', 'operations', 'documents']);
+const detailPages = new Set(['orders', 'operations', 'documents', 'invoice-checks']);
 
 function validRecord(value) {
   if (typeof value !== 'string' || !/^[1-9]\d*$/.test(value)) return null;
