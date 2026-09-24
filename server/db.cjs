@@ -33,6 +33,7 @@ const { seedOperatingHistory } = require('./operating-history.cjs');
 const { seedConsumerHealthDemo } = require('./consumer-health-seed.cjs');
 const { seedAuxiliaryDemo } = require('./auxiliary-seed.cjs');
 const { installGstInvoiceAssistantSchema, seedGstInvoiceCheckDemo } = require('./gst-invoice-assistant.cjs');
+const { installGstPlaceOfSupplySchema } = require('./gst-place-of-supply-db.cjs');
 
 function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'erp.sqlite')) {
   if (file !== ':memory:') fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -112,6 +113,7 @@ function openDatabase(file = process.env.ERP_DB_PATH || path.join(__dirname, 'er
   installDeliverySchema(db);
   installMasterImportSchema(db);
   installGstInvoiceAssistantSchema(db);
+  installGstPlaceOfSupplySchema(db);
   if (!db.prepare('SELECT 1 FROM companies LIMIT 1').get()) seed(db);
   if (!db.prepare("SELECT 1 FROM users WHERE company_id=2 AND role='admin'").get()) {
     db.prepare("INSERT INTO users(company_id,name,role) VALUES (2,'Aarav Services Owner','admin')").run();

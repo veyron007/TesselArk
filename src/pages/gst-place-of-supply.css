@@ -1,0 +1,53 @@
+.pos-layout{display:grid;grid-template-columns:minmax(265px,.62fr) minmax(650px,1.6fr);gap:15px;align-items:start}
+.pos-register{position:sticky;top:16px}
+.pos-main{display:grid;gap:15px;min-width:0}
+.pos-boundary{padding:13px 16px;border:1px solid #e8dbbb;border-radius:12px;background:#fffaf0;color:#715b30;font-size:12px;line-height:1.55}
+.pos-boundary strong{color:#604a1c}
+.pos-badge{display:inline-flex;align-items:center;border:1px solid #dce8e8;border-radius:999px;background:#f6f9f9;color:#5b7079;padding:6px 10px;font-size:10px;font-weight:800;white-space:nowrap}
+.pos-badge.approved{background:#ecf8f1;border-color:#ccead8;color:#277359}
+.pos-badge.pending{background:#fff7e9;border-color:#f4dfb8;color:#89621e}
+.pos-badge.rejected,.pos-badge.stale{background:#fff1ee;border-color:#efd3cd;color:#a44f48}
+.pos-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px 20px}
+.pos-fact{display:grid;gap:5px;min-width:0;border:1px solid #e2eceb;background:#fafdfb;border-radius:11px;padding:12px 14px}
+.pos-fact span{font-size:10px;color:#72868a}
+.pos-fact strong{font-size:13px;color:#233e47;overflow-wrap:anywhere}
+.pos-fact small{font-size:10px;color:#789095}
+.pos-source-note{margin:0 20px 17px;padding:11px 13px;border:1px solid #d9e8ee;background:#f5fafc;border-radius:10px;color:#52717c;font-size:11px;line-height:1.5}
+.pos-lines{padding:0 20px 18px;border-bottom:1px solid #edf1f1}
+.pos-lines h3{font-size:12px;margin:0 0 10px;color:#2b4650}
+.pos-table-wrap{overflow:auto}
+.pos-table-wrap table{width:100%;border-collapse:collapse;font-size:11px}
+.pos-table-wrap th{color:#748992;background:#f7faf9;text-align:left;font-size:10px;padding:9px 10px;white-space:nowrap}
+.pos-table-wrap td{border-bottom:1px solid #edf2f2;color:#4d6870;padding:10px;min-width:80px}
+.pos-form-panel form{display:grid;gap:14px;padding:18px 20px 21px}
+.pos-form-panel form>.ic-primary{justify-self:start}
+.pos-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.pos-checks{display:flex;flex-wrap:wrap;gap:9px}
+.ic-page .pos-checks label{display:flex;align-items:start;gap:8px;flex:1 1 175px;border:1px solid #e1ebea;border-radius:9px;padding:9px 10px;font-weight:550;line-height:1.35;background:#fafcfb}
+.ic-page .pos-checks input{width:15px;min-width:15px;height:15px;margin:0;accent-color:#0f745f}
+.pos-form-hint{font-size:11px;color:#687f83;background:#f5faf8;border-radius:9px;margin:0;padding:10px 12px;line-height:1.5}
+.pos-proposals{display:grid}
+.pos-proposal{padding:18px 20px;border-bottom:1px solid #e8efef;color:#536e75;font-size:11px;line-height:1.5}
+.pos-proposal:last-child{border-bottom:0}
+.pos-proposal-head{display:flex;justify-content:space-between;align-items:start;gap:12px}
+.pos-proposal-head h3{font-size:15px;letter-spacing:-.025em;color:#233d48;margin:3px 0 0}
+.pos-proposal>p{margin:9px 0 0}
+.pos-proposal>p strong{color:#314d57}
+.pos-meta{display:flex;gap:8px 18px;flex-wrap:wrap;margin-top:9px;color:#849499;font-size:10px}
+.pos-meta strong{color:#526c74}
+.pos-declaration{display:flex;gap:6px;flex-wrap:wrap;margin:13px 0}
+.pos-declaration span{font-size:10px;color:#527269;background:#f2f8f5;border:1px solid #e0eee6;border-radius:999px;padding:4px 8px}
+.pos-reasons{border:1px solid #f0d3c9;background:#fff8f5;border-radius:9px;padding:10px 12px;margin:10px 0;color:#895d4b}
+.pos-reasons.warning{border-color:#f1e3bf;background:#fffbef;color:#816b37}
+.pos-reasons ul{margin:5px 0 0;padding-left:17px}
+.pos-split{margin-top:13px}
+.pos-split p{font-size:10px;color:#7c8f93;margin:7px 0 0}
+.pos-review-record{margin-top:13px;padding:11px 13px;border-radius:9px;background:#f2f8fb;border:1px solid #dbe9ee;display:grid;gap:3px}
+.pos-review-record strong{color:#35566a}
+.pos-review-record small{color:#81949b}
+.pos-review-record p{margin:2px 0 0}
+.pos-review-form{border-top:1px solid #e8efef;margin-top:15px;padding-top:15px}
+.pos-review-form>small{display:block;color:#87999e;margin-top:7px}
+.pos-stale{color:#a45146;background:#fff5f2;border-radius:8px;padding:8px 10px}
+@media(max-width:1080px){.pos-layout{grid-template-columns:1fr}.pos-register{position:static}}
+@media(max-width:650px){.pos-facts,.pos-form-grid{grid-template-columns:1fr}.pos-proposal-head{flex-wrap:wrap}}

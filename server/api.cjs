@@ -34,6 +34,7 @@ const { registerDocumentOutputRoutes } = require('./document-output.cjs');
 const { registerDeliveryRoutes } = require('./delivery.cjs');
 const { registerMasterImportRoutes } = require('./master-import.cjs');
 const { registerGstInvoiceAssistantRoutes, assertInvoiceTaxReady } = require('./gst-invoice-assistant.cjs');
+const { registerGstPlaceOfSupplyRoutes } = require('./gst-place-of-supply.cjs');
 const { registerWorkspaceMenuRoutes } = require('./workspace-menu.cjs');
 const { createAuth } = require('./auth.cjs');
 
@@ -510,6 +511,7 @@ function createApp({ db = openDatabase(), authMode = process.env.ERP_AUTH_MODE |
   registerDeliveryRoutes(app, db);
   registerMasterImportRoutes(app, db);
   registerGstInvoiceAssistantRoutes(app, db);
+  registerGstPlaceOfSupplyRoutes(app, db);
   registerWorkspaceMenuRoutes(app, db);
   app.use((error, _req, res, _next) => {
     const status = error.status || (error.code?.startsWith('SQLITE_CONSTRAINT') || [1555,2067].includes(error.errcode) ? 409 : 500);
