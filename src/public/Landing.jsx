@@ -1,4 +1,6 @@
 import { BrandMark } from '../components/WorkspaceIcon.jsx';
+import LandingMotion from './LandingMotion.jsx';
+import ScopeVisual from './ScopeVisual.jsx';
 import './public.css';
 
 export function PublicHeader({ compact = false }) {
@@ -9,9 +11,10 @@ export function PublicHeader({ compact = false }) {
   </header>;
 }
 
-function ProductScene() {
-  return <div className="product-scene" aria-label="Illustration of scoped operations, invoice checks and GST review in the TesselArk workspace">
+export function ProductScene() {
+  return <div className="product-scene" role="img" aria-label="Illustration of scoped operations, invoice checks and GST review in the TesselArk workspace">
     <div className="scene-halo" aria-hidden="true" />
+    <ScopeVisual compact />
     <div className="scene-platform">
       <div className="scene-top"><span className="scene-brand"><BrandMark /> TesselArk <small>/ Workspace</small></span><span className="scene-live">LOCAL DEMO</span></div>
       <div className="scene-context"><span className="scene-context-label">BUSINESS CONTEXT</span><strong>Aster Medical Supplies</strong><span>Mumbai GSTIN <b>·</b> Main branch <b>·</b> Accountant</span></div>
@@ -33,6 +36,7 @@ const workflow = [
 
 export default function Landing() {
   return <div className="public-page landing-page">
+    <LandingMotion />
     <a className="public-skip" href="#public-main">Skip to content</a>
     <PublicHeader />
     <main id="public-main">
@@ -46,6 +50,8 @@ export default function Landing() {
       <section className="platform-section public-container" id="platform" aria-labelledby="platform-title"><div className="section-intro"><p className="public-kicker">THE PLATFORM</p><h2 id="platform-title">A thread through the work.</h2><p>Each workspace keeps the operational record close to its financial and review context. These are partial, working slices of a larger ERP plan.</p></div><div className="platform-composition"><div className="platform-large"><span className="platform-label">OPERATIONS</span><h3>Trade moves. The source stays visible.</h3><p>Sales and purchase orders support partial fulfilment, with linked invoices that avoid posting stock twice.</p><div className="platform-path"><span>ORDER</span><b aria-hidden="true">→</b><span>FULFILMENT</span><b aria-hidden="true">→</b><span>INVOICE</span></div></div><div className="platform-side"><article><span className="platform-label">INVENTORY</span><h3>Know where stock has been.</h3><p>Inspect movement history, dated batches, locations and in-transit transfers within permitted branches.</p></article><article><span className="platform-label">FINANCE + REPORTS</span><h3>Numbers with a route back.</h3><p>Review payments, journals, balances and scoped reports beside their source documents.</p></article></div></div></section>
 
       <section className="workflow-section" id="workflow" aria-labelledby="workflow-title"><div className="public-container workflow-inner"><div className="section-intro"><p className="public-kicker">A WORKABLE SEQUENCE</p><h2 id="workflow-title">From scope to evidence to review.</h2><p>TesselArk separates the record, the evidence and the human decision, so each step remains legible.</p></div><div className="workflow-list">{workflow.map(item => <article className="workflow-row" key={item.index}><span className="workflow-index">{item.index}</span><div><h3>{item.title}</h3><p>{item.body}</p></div><span className="workflow-meta">{item.meta}</span></article>)}</div><a className="public-button public-button-outline" href="/demo">Choose a demo workspace <span aria-hidden="true">↗</span></a></div></section>
+
+      <section className="scope-section public-container" aria-labelledby="scope-title"><div className="scope-copy"><p className="public-kicker">CONTEXT IS THE CONTROL</p><h2 id="scope-title">Every layer of access, in its place.</h2><p>Company identity, GST registration, branch and user grants are distinct. The workspace keeps that scope visible while the server applies it to the records you can see and change.</p><div className="scope-note"><strong>A boundary you can inspect</strong><span>Switch a prepared demo role and see the permitted context change with it.</span></div><a className="public-text-link" href="/demo">See the roles <span aria-hidden="true">↗</span></a></div><ScopeVisual /></section>
 
       <section className="trust-section public-container" id="trust" aria-labelledby="trust-title"><div className="trust-copy"><p className="public-kicker">CLEAR ABOUT WHAT THIS IS</p><h2 id="trust-title">The record is real.<br />The scenario is synthetic.</h2><p>Explore a local working build with fictional companies and sample transactions. GST purchase matching, invoice checks and statutory screens are review and simulation tools, not live government connections or official filing.</p><a href="/demo" className="public-text-link">Enter and view Build Status <span aria-hidden="true">↗</span></a></div><div className="trust-ledger"><div><strong>85</strong><span>researched feature groups</span></div><div><strong>38</strong><span>partly implemented</span></div><div><strong>47</strong><span>planned</span></div><p>Coverage is shown inside the demo, with the implemented behavior described for each group.</p></div></section>
 

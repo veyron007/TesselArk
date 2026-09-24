@@ -34,7 +34,8 @@ export default function DemoChooser() {
       if (!grouped.has(account.companyId)) grouped.set(account.companyId, { id: account.companyId, name: account.companyName, accounts: [] });
       grouped.get(account.companyId).accounts.push(account);
     }
-    return [...grouped.values()];
+    const roleOrder = { staff: 0, accountant: 1, admin: 2 };
+    return [...grouped.values()].map(group => ({ ...group, accounts: [...group.accounts].sort((a, b) => (roleOrder[a.role] ?? 3) - (roleOrder[b.role] ?? 3)) }));
   }, [state.accounts]);
 
   const enter = (event, account) => {

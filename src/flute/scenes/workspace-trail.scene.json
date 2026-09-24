@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "workspace-trail",
+  "title": "Inside the workspace",
+  "description": "A cinematic survey of the live TesselArk dashboard, retaining its scoped business data.",
+  "definition": {
+    "scene": {
+      "version": 3,
+      "camera": { "x": -20, "y": -25, "z": 0, "perspective": 1500, "rotateX": 9, "rotateY": -22, "rotateZ": -1 },
+      "focus": { "distance": 1500, "fStop": 8, "focalLength": 60, "maxBlur": 4 },
+      "nodes": [
+        { "id": "workspace", "transform": { "x": 0, "y": 0, "z": 0, "rotateX": 0, "rotateY": 0, "rotateZ": 0, "scale": 1 } }
+      ]
+    },
+    "motion": {
+      "durationMs": 4600,
+      "speed": 0.5,
+      "tracks": [
+        { "target": { "kind": "camera" }, "property": "x", "keyframes": [{ "timeMs": 0, "value": -65, "easing": "cinematic" }, { "timeMs": 4600, "value": 65, "easing": "cinematic" }] },
+        { "target": { "kind": "camera" }, "property": "y", "keyframes": [{ "timeMs": 0, "value": -40, "easing": "cinematic" }, { "timeMs": 4600, "value": 45, "easing": "cinematic" }] }
+      ]
+    },
+    "width": 1400,
+    "height": 900
+  }
+}

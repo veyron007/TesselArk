@@ -5,8 +5,11 @@ import './styles.css';
 import './prism-shell.css';
 import './prism-pages.css';
 
-createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+const root = createRoot(document.getElementById('root'));
+if (import.meta.env.DEV && new URLSearchParams(window.location.search).has('flute-preview')) {
+  import('./flute/ProjectPreview.jsx').then(({ FluteProjectPreview }) => {
+    root.render(<React.StrictMode><FluteProjectPreview enabled><App /></FluteProjectPreview></React.StrictMode>);
+  });
+} else {
+  root.render(<React.StrictMode><App /></React.StrictMode>);
+}

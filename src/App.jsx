@@ -107,7 +107,7 @@ function AuthScreen({ onSubmit, busy, error }) {
   </main>;
 }
 
-function WorkspaceApp() {
+export function WorkspaceApp() {
   const [activePage, setActivePage] = useState(() => readWorkspaceRoute(window.location).page);
   const [bootstrap, setBootstrap] = useState(null);
   const [bootError, setBootError] = useState('');
@@ -394,7 +394,7 @@ function WorkspaceApp() {
 
   if (needsLogin) return <AuthScreen onSubmit={signIn} busy={signInBusy} error={signInError} />;
   if (bootError && !bootstrap) return (
-    <div className="boot-screen"><div className="boot-card"><div className="brand-mark large">T</div><h1>Workspace unavailable</h1><p>{bootError}</p><button className="btn btn-primary" onClick={() => setBootstrapRetry((value) => value + 1)}>Try again</button></div></div>
+    <div className="boot-screen"><div className="boot-card"><div className="brand-mark large">T</div><h1>Workspace unavailable</h1><p>{bootError}</p><button className="btn btn-primary" onClick={() => setBootstrapRetry((value) => value + 1)}>Try again</button><a href="/demo" style={{ display: 'block', marginTop: 18 }}>Choose a demo account</a></div></div>
   );
   if (!bootstrap) return <div className="boot-screen"><div className="loading-ring" /><span>Preparing your workspace…</span></div>;
 
