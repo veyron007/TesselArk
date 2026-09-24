@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import WorkspaceIcon, { BrandMark } from './components/WorkspaceIcon.jsx';
 import Dashboard from './components/PrismDashboard.jsx';
+import WorkspaceMenu from './components/WorkspaceMenu.jsx';
 import { readWorkspaceRoute, readWorkspaceScope, resolveWorkspaceScope, workspaceUrl } from './workspace-route.js';
 const Operations = lazy(() => import('./pages/Operations.jsx'));
 const Orders = lazy(() => import('./pages/Orders.jsx'));
@@ -368,7 +369,8 @@ function App() {
   const context = useMemo(() => ({ ...selection, bootstrap, apiFetch }), [selection, bootstrap, apiFetch]);
   const company = bootstrap?.companies?.find((item) => String(item.id) === String(selection.companyId));
   const users = bootstrap?.users?.filter((user) => !user.companyId || String(user.companyId) === String(selection.companyId)) ?? [];
-  const currentUserName = authUser?.name || users.find((user) => String(user.id) === String(selection.userId))?.name || 'User';
+  const currentUser = authUser || users.find((user) => String(user.id) === String(selection.userId));
+  const currentUserName = currentUser?.name || 'User';
   const scopeReady = !bootLoading && !bootError
     && String(bootstrap?.currentCompanyId) === String(selection.companyId)
     && String(bootstrap?.currentUserId) === String(selection.userId);
@@ -406,7 +408,7 @@ function App() {
       <div className="workspace" inert={mobileMenuOpen ? true : undefined}>
         <header className="topbar">
           <div className="topbar-leading"><button ref={menuButtonRef} className="menu-toggle" aria-expanded={mobileMenuOpen} aria-controls="workspace-navigation" aria-label="Open navigation" onClick={() => setMobileMenuOpen(true)}>☰</button><div className="breadcrumb">Workspace <span>/</span> <strong>{active?.label}</strong></div></div>
-          <div className="topbar-trailing"><span className="topbar-user"><strong>{currentUserName}</strong><small>{selection.role}</small></span><div className="live-pill"><span className="status-dot" /> {authMode === 'production' ? 'SIGNED IN' : 'DEMO DATA'}</div><div className="avatar" title={authUser?.name || users.find((user) => String(user.id) === String(selection.userId))?.name}>{(authUser?.name || users.find((user) => String(user.id) === String(selection.userId))?.name || 'U').slice(0, 1).toUpperCase()}</div>{authMode === 'production' && <button className="sign-out-button" type="button" onClick={signOut} disabled={signOutBusy}>{signOutBusy ? 'Signing out…' : 'Sign out'}</button>}</div>
+          <div className="topbar-trailing"><div className="live-pill"><span className="status-dot" /> {authMode === 'production' ? 'SIGNED IN' : 'DEMO DATA'}</div><WorkspaceMenu authMode={authMode} user={currentUser} users={users} company={company} companies={bootstrap.companies} selection={selection} onSelectionChange={onSelectionChange} apiFetch={apiFetch} onNavigate={navigate} activePage={activePage} scopeReady={scopeReady} refreshKey={refreshKey} signOut={signOut} signOutBusy={signOutBusy} /></div>
         </header>
 
         <main id="main-content" tabIndex={-1} className={`main-content ${activePage === 'dashboard' ? 'overview-content' : ''}`}>
